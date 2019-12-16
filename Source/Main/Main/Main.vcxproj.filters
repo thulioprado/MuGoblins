@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{83ef2d49-ac04-4da9-b9f7-c144d207c62b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Library">
+      <UniqueIdentifier>{62db600a-9a97-4008-87fb-feb6ad6e8948}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Library\Memory">
+      <UniqueIdentifier>{a3d55a47-54bc-48da-837c-183b09c3227a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Patch">
+      <UniqueIdentifier>{2c32b4b7-53f4-4189-92aa-efbdcbea1984}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Library\Detours">
+      <UniqueIdentifier>{722d372f-9475-46d4-ab51-d5973187e7e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Window">
+      <UniqueIdentifier>{92eb14cf-185e-4c55-9bdb-2782c1cfee3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Window\Resolution">
+      <UniqueIdentifier>{22bb67ed-cf24-401e-a91e-bad644e45725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Window\Resource">
+      <UniqueIdentifier>{5fb51113-61e2-43cc-a10a-5622b737d35e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Library\Defines">
+      <UniqueIdentifier>{32a51d1e-7ac9-43c8-8c64-7b2151683770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Library\Registry">
+      <UniqueIdentifier>{145f29d3-7505-4562-94e6-529ee3a67841}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Protocol">
+      <UniqueIdentifier>{25fd3726-ab92-45cc-a964-d27ccf4a0e93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Protocol\Packets">
+      <UniqueIdentifier>{94a63feb-5e12-4924-b724-4a3556760468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Player">
+      <UniqueIdentifier>{9b7d69fa-d17f-4996-9441-a6c29c0956e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Library.cpp">
+      <Filter>Source\Library</Filter>
+    </ClCompile>
+    <ClCompile Include="Patch.cpp">
+      <Filter>Source\Patch</Filter>
+    </ClCompile>
+    <ClCompile Include="creatwth.cpp">
+      <Filter>Source\Library\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="detours.cpp">
+      <Filter>Source\Library\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="disasm.cpp">
+      <Filter>Source\Library\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="modules.cpp">
+      <Filter>Source\Library\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="Resolution.cpp">
+      <Filter>Source\Window\Resolution</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Protocol.cpp">
+      <Filter>Source\Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source\Player</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Library.h">
+      <Filter>Source\Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory.h">
+      <Filter>Source\Library\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Patch.h">
+      <Filter>Source\Patch</Filter>
+    </ClInclude>
+    <ClInclude Include="detours.h">
+      <Filter>Source\Library\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="detver.h">
+      <Filter>Source\Library\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="Resolution.h">
+      <Filter>Source\Window\Resolution</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Source\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Source\Window\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>Source\Library\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="Registry.h">
+      <Filter>Source\Library\Registry</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.h">
+      <Filter>Source\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Packets.h">
+      <Filter>Source\Protocol\Packets</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Source\Player</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="logo.ico">
+      <Filter>Source\Window\Resource</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
+      <Filter>Source\Window\Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

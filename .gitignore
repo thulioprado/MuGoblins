@@ -1,0 +1,28 @@
+#
+# Client
+#
+Client/
+
+#
+# Server
+#
+Server/*/*LOG*/
+Server/*/*.iobj
+Server/*/*.ipdb
+Server/*/*.pdb
+Server/*/*.map
+Server/*/*.ilk
+Server/*/*.exe
+
+#
+# Source
+#
+Source/*/.vs
+Source/*/Release
+Source/*/Debug
+Source/*/ReleaseCS
+Source/*/DebugCS
+Source/*/*/Release
+Source/*/*/Debug
+Source/*/*/ReleaseCS
+Source/*/*/DebugCS
