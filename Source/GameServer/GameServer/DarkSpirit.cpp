@@ -927,7 +927,7 @@ bool CDarkSpirit::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BY
 				GCManaSend(lpTarget->Index,0xFF,(int)lpTarget->Mana,lpTarget->BP);
 			}
 
-			if(lpTarget->Inventory[8].IsItem() == 0 || (lpTarget->Inventory[8].m_Index != GET_ITEM(13,2) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,3) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,4) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,37)))
+			if(lpTarget->Inventory[8].IsItem() == 0 || (lpTarget->Inventory[8].m_Index != GET_ITEM(13,2) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,3) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,4)))
 			{
 				if((GetLargeRand()%100) < gServerInfo.m_DamageStuckRate[lpTarget->Class])
 				{
@@ -1035,18 +1035,6 @@ int CDarkSpirit::GetTargetDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) // OK
 	}
 
 	defense = (defense*50)/100;
-
-	#if(GAMESERVER_UPDATE>=602)
-
-	if((GetLargeRand()%100) < gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_DARK_SPIRIT_IGNORE_DEFENSE_RATE))
-	{
-		(*effect) = 1;
-
-		defense = 0;
-	}
-
-	#endif
-
 	defense = ((defense<0)?0:defense);
 
 	return defense;
@@ -1062,14 +1050,9 @@ int CDarkSpirit::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD
 	if(lpItem->IsItem() != 0 && lpItem->m_IsValidItem != 0 && lpItem->m_MagicDamageRate != 0 && (lpItem->m_Index >= GET_ITEM(2,0) && lpItem->m_Index < GET_ITEM(3,0)))
 	{
 		int rise = (int)(((lpItem->m_MagicDamageRate/2)+(lpItem->m_Level*2))*lpItem->m_CurrentDurabilityState);
+		
 		DamageMin += (DamageMin*rise)/100;
-		#if(GAMESERVER_UPDATE>=602)
-		DamageMin += gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_SCEPTER_PET_DAMAGE);
-		#endif
 		DamageMax += (DamageMax*rise)/100;
-		#if(GAMESERVER_UPDATE>=602)
-		DamageMax += gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_SCEPTER_PET_DAMAGE);
-		#endif
 	}
 
 	int range = (DamageMax-DamageMin);
@@ -1078,36 +1061,21 @@ int CDarkSpirit::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD
 
 	int damage = DamageMin+(GetLargeRand()%range);
 
-	#if(GAMESERVER_UPDATE>=602)
-	if((GetLargeRand()%100) < (gServerInfo.m_DarkSpiritCriticalDamageRate+gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_DARK_SPIRIT_CRITICAL_DAMAGE_RATE)))
-	#else
 	if((GetLargeRand()%100) < (gServerInfo.m_DarkSpiritCriticalDamageRate))
-	#endif
 	{
 		(*effect) = 3;
 
 		damage = DamageMax;
 	}
 
-	#if(GAMESERVER_UPDATE>=602)
-	if((GetLargeRand()%100) < (gServerInfo.m_DarkSpiritExcellentDamageRate+gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_DARK_SPIRIT_EXCELLENT_DAMAGE_RATE)))
-	#else
 	if((GetLargeRand()%100) < (gServerInfo.m_DarkSpiritExcellentDamageRate))
-	#endif
 	{
 		(*effect) = 2;
 
 		damage = (DamageMax*120)/100;
 	}
 
-	#if(GAMESERVER_UPDATE>=602)
-
-	damage += gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_DARK_SPIRIT_DAMAGE);
-
-	#endif
-
 	damage -= TargetDefense;
-
 	damage = ((damage<0)?0:damage);
 
 	return damage;
@@ -1123,23 +1091,11 @@ void CDarkSpirit::GetPreviewAttackDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* Dam
 	if(lpItem->IsItem() != 0 && lpItem->m_IsValidItem != 0 && lpItem->m_MagicDamageRate != 0 && (lpItem->m_Index >= GET_ITEM(2,0) && lpItem->m_Index < GET_ITEM(3,0)))
 	{
 		int rise = (int)(((lpItem->m_MagicDamageRate/2)+(lpItem->m_Level*2))*lpItem->m_CurrentDurabilityState);
+		
 		(*DamageMin) += ((*DamageMin)*rise)/100;
-		#if(GAMESERVER_UPDATE>=602)
-		(*DamageMin) += gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_SCEPTER_PET_DAMAGE);
-		#endif
 		(*DamageMax) += ((*DamageMax)*rise)/100;
-		#if(GAMESERVER_UPDATE>=602)
-		(*DamageMax) += gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_SCEPTER_PET_DAMAGE);
-		#endif
 	}
-
-	#if(GAMESERVER_UPDATE>=602)
-
-	(*DamageMin) += gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_DARK_SPIRIT_DAMAGE);
-	(*DamageMin) += gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_DARK_SPIRIT_DAMAGE);
-
-	#endif
-
+	
 	(*AttackSpeed) = this->m_AttackSpeed;
 	(*AttackSuccessRate) = this->m_AttackSuccessRate;
 }

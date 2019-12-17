@@ -63,27 +63,16 @@ void CDefaultClassInfo::Load(char* path) // OK
 			DEFAULT_CLASS_INFO info;
 
 			info.Class = lpMemScript->GetNumber();
-
 			info.Strength = lpMemScript->GetAsNumber();
-
 			info.Dexterity = lpMemScript->GetAsNumber();
-
 			info.Vitality = lpMemScript->GetAsNumber();
-
 			info.Energy = lpMemScript->GetAsNumber();
-
 			info.Leadership = lpMemScript->GetAsNumber();
-
 			info.MaxLife = lpMemScript->GetAsFloatNumber();
-
 			info.MaxMana = lpMemScript->GetAsFloatNumber();
-
 			info.LevelLife = lpMemScript->GetAsFloatNumber();
-
 			info.LevelMana = lpMemScript->GetAsFloatNumber();
-
 			info.VitalityToLife = lpMemScript->GetAsFloatNumber();
-
 			info.EnergyToMana = lpMemScript->GetAsFloatNumber();
 
 			this->SetInfo(info);

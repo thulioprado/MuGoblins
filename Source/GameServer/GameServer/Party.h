@@ -65,11 +65,6 @@ struct PMSG_PARTY_LIST
 	BYTE y;
 	DWORD CurLife;
 	DWORD MaxLife;
-	#if(GAMESERVER_UPDATE>=802)
-	DWORD ServerCode;
-	DWORD CurMana;
-	DWORD MaxMana;
-	#endif
 };
 
 struct PMSG_PARTY_LIFE_SEND
@@ -80,13 +75,7 @@ struct PMSG_PARTY_LIFE_SEND
 
 struct PMSG_PARTY_LIFE
 {
-	#if(GAMESERVER_UPDATE>=802)
-	BYTE life;
-	BYTE mana;
-	char name[11];
-	#else
 	BYTE number;
-	#endif
 };
 
 //**********************************************//

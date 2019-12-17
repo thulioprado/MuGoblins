@@ -312,37 +312,12 @@ bool CItemOptionRate::MakeNewOption(int ItemIndex,int value,BYTE* option) // OK
 
 	int MaxNewOption = MAX_EXC_OPTION;
 
-	if((ItemIndex >= GET_ITEM(12,3) && ItemIndex <= GET_ITEM(12,6)) || ItemIndex == GET_ITEM(12,42) || ItemIndex == GET_ITEM(12,49) || ItemIndex == GET_ITEM(13,30)) // 2sd Wings
+	if((ItemIndex >= GET_ITEM(12,3) && ItemIndex <= GET_ITEM(12,6)) || ItemIndex == GET_ITEM(13,30)) // 2sd Wings
 	{
 		MaxNewOption = ((ItemIndex==GET_ITEM(13,30))?4:3);
 	}
-
-	if((ItemIndex >= GET_ITEM(12,36) && ItemIndex <= GET_ITEM(12,40)) || ItemIndex == GET_ITEM(12,43) || ItemIndex == GET_ITEM(12,50)) // 3rd Wings
-	{
-		MaxNewOption = 4;
-	}
-
-	if(ItemIndex >= GET_ITEM(12,262) && ItemIndex <= GET_ITEM(12,265)) // Monster Wings
-	{
-		MaxNewOption = 2;
-	}
-
-	if(ItemIndex == GET_ITEM(12,266)) // Wings of Conqueror
-	{
-		MaxNewOption = 3;
-	}
-
-	if(ItemIndex == GET_ITEM(12,267)) // Wings of Angel and Devil
-	{
-		MaxNewOption = 3;
-	}
 	
 	if(ItemIndex == GET_ITEM(13,3)) // Dinorant
-	{
-		MaxNewOption = 3;
-	}
-
-	if(ItemIndex == GET_ITEM(13,37)) // Fenrir
 	{
 		MaxNewOption = 3;
 	}

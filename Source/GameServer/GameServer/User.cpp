@@ -37,7 +37,6 @@
 #include "MapServerManager.h"
 #include "MemoryAllocator.h"
 #include "Message.h"
-#include "MiniMap.h"
 #include "Monster.h"
 #include "MonsterSkillManager.h"
 #include "Move.h"
@@ -1182,12 +1181,7 @@ bool gObjCheckResistance(LPOBJ lpObj,int type) // OK
 	{
 		return 1;
 	}
-
-	if((lpObj->Authority & 32) != 0 && (lpObj->Inventory[10].m_Index == GET_ITEM(13,42) || lpObj->Inventory[11].m_Index == GET_ITEM(13,42)))
-	{
-		return 1;
-	}
-
+	
 	if(gEffectManager.CheckEffect(lpObj,EFFECT_IRON_DEFENSE) != 0 || gEffectManager.CheckEffect(lpObj,EFFECT_IRON_DEFENSE_IMPROVED) != 0)
 	{
 		return 1;
@@ -1266,12 +1260,6 @@ bool gObjCheckMapTile(LPOBJ lpObj,int type) // OK
 			gObjMoveGate(lpObj->Index,17);
 			break;
 		case CLASS_DL:
-			gObjMoveGate(lpObj->Index,17);
-			break;
-		case CLASS_SU:
-			gObjMoveGate(lpObj->Index,267);
-			break;
-		case CLASS_RF:
 			gObjMoveGate(lpObj->Index,17);
 			break;
 	}
@@ -2098,7 +2086,7 @@ BOOL gObjMoveGate(int aIndex,int gate) // OK
 		goto ERROR_JUMP;
 	}
 
-	if(map == MAP_ICARUS && lpObj->Inventory[7].IsItem() == 0 && lpObj->Inventory[8].m_Index != GET_ITEM(13,3) && lpObj->Inventory[8].m_Index != GET_ITEM(13,37))
+	if(map == MAP_ICARUS && lpObj->Inventory[7].IsItem() == 0 && lpObj->Inventory[8].m_Index != GET_ITEM(13,3))
 	{
 		gNotice.GCNoticeSend(aIndex,1,0,0,0,0,0,gMessage.GetMessage(275));
 		goto ERROR_JUMP;

@@ -114,7 +114,7 @@ bool CMoveSummon::CheckMoveSummon(LPOBJ lpObj,int map,int x,int y) // OK
 		return 0;
 	}
 
-	if(map == MAP_ICARUS && (lpObj->Inventory[7].IsItem() == 0 && lpObj->Inventory[8].m_Index != GET_ITEM(13,3) && lpObj->Inventory[8].m_Index != GET_ITEM(13,37))) // Dinorant,Fenrir
+	if(map == MAP_ICARUS && (lpObj->Inventory[7].IsItem() == 0 && lpObj->Inventory[8].m_Index != GET_ITEM(13,3))) // Dinorant
 	{
 		return 0;
 	}

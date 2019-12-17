@@ -261,8 +261,6 @@ int CSkillManager::GetSkillNumber(int index, int level) // OK
 			return SKILL_GREATER_CRITICAL_DAMAGE;
 		case GET_ITEM(12, 24):
 			return SKILL_ELECTRIC_SPARK;
-		case GET_ITEM(12, 35):
-			return SKILL_FIRE_SCREAM;
 		case GET_ITEM(15, 16):
 			return SKILL_DECAY;
 		case GET_ITEM(15, 17):
@@ -933,8 +931,6 @@ bool CSkillManager::RunningSkill(int aIndex, int bIndex, CSkill* lpSkill, BYTE x
 			return this->SkillCastleSiege(aIndex, bIndex, lpSkill);
 		case SKILL_BRAND:
 			return this->SkillBrand(aIndex, bIndex, lpSkill);
-		case SKILL_FIRE_SCREAM:
-			return this->MultiSkillAttack(aIndex, bIndex, lpSkill);
 		case SKILL_MONSTER_SUMMON:
 			return this->SkillMonsterSummon(aIndex, bIndex, lpSkill);
 		case SKILL_MAGIC_DAMAGE_IMMUNITY:
@@ -982,7 +978,6 @@ bool CSkillManager::MultiSkillAttack(int aIndex, int bIndex, CSkill* lpSkill) //
 			case SKILL_BLAST:
 			case SKILL_IMPALE:
 			case SKILL_FIRE_SLASH:
-			case SKILL_FIRE_SCREAM:
 				this->BasicSkillAttack(aIndex, bIndex, lpSkill);
 				break;
 		}
@@ -2995,7 +2990,7 @@ void CSkillManager::CGMultiSkillAttackRecv(PMSG_MULTI_SKILL_ATTACK_RECV* lpMsg, 
 		}
 	}
 
-	if (lpSkill->m_skill != SKILL_FLAME && lpSkill->m_skill != SKILL_TWISTER && lpSkill->m_skill != SKILL_EVIL_SPIRIT && lpSkill->m_skill != SKILL_HELL_FIRE && lpSkill->m_skill != SKILL_AQUA_BEAM && lpSkill->m_skill != SKILL_BLAST && lpSkill->m_skill != SKILL_INFERNO && lpSkill->m_skill != SKILL_TRIPLE_SHOT && lpSkill->m_skill != SKILL_IMPALE && lpSkill->m_skill != SKILL_MONSTER_AREA_ATTACK && lpSkill->m_skill != SKILL_PENETRATION && lpSkill->m_skill != SKILL_FIRE_SLASH && lpSkill->m_skill != SKILL_FIRE_SCREAM)
+	if (lpSkill->m_skill != SKILL_FLAME && lpSkill->m_skill != SKILL_TWISTER && lpSkill->m_skill != SKILL_EVIL_SPIRIT && lpSkill->m_skill != SKILL_HELL_FIRE && lpSkill->m_skill != SKILL_AQUA_BEAM && lpSkill->m_skill != SKILL_BLAST && lpSkill->m_skill != SKILL_INFERNO && lpSkill->m_skill != SKILL_TRIPLE_SHOT && lpSkill->m_skill != SKILL_IMPALE && lpSkill->m_skill != SKILL_MONSTER_AREA_ATTACK && lpSkill->m_skill != SKILL_PENETRATION && lpSkill->m_skill != SKILL_FIRE_SLASH)
 	{
 		return;
 	}

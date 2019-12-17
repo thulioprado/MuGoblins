@@ -316,11 +316,6 @@ void CItemOption::InsertOption(LPOBJ lpObj,CItem* lpItem,bool flag) // OK
 				lpObj->MasterExperienceRate += value;
 				break;
 			case ITEM_OPTION_ADD_COMBO_EXPERIENCE_RATE:
-				if(lpObj->Inventory[8].IsItem() != 0 && (lpObj->Inventory[8].m_Index == GET_ITEM(13,80) || lpObj->Inventory[8].m_Index == GET_ITEM(13,123)))
-				{
-					lpObj->ExperienceRate += value;
-					lpObj->MasterExperienceRate += value;
-				}
 				break;
 			case ITEM_OPTION_ADD_HP:
 				lpObj->AddLife += value;

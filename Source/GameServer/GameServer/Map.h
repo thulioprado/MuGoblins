@@ -7,23 +7,7 @@
 #include "MapItem.h"
 #include "MapPath.h"
 
-#if(GAMESERVER_UPDATE>=803)
-#define MAX_MAP 100
-#elif(GAMESERVER_UPDATE>=802)
-#define MAX_MAP 98
-#elif(GAMESERVER_UPDATE>=702)
-#define MAX_MAP 93
-#elif(GAMESERVER_UPDATE>=603)
-#define MAX_MAP 82
-#elif(GAMESERVER_UPDATE>=501)
-#define MAX_MAP 80
-#elif(GAMESERVER_UPDATE>=402)
-#define MAX_MAP 64
-#elif(GAMESERVER_UPDATE>=401)
-#define MAX_MAP 63
-#else
 #define MAX_MAP 57
-#endif
 #define MAX_MAP_ITEM 300
 #define MAX_MAP_WIDTH 256
 #define MAX_MAP_HEIGHT 256

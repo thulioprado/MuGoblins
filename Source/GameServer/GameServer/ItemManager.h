@@ -16,13 +16,8 @@
 #define GET_ITEM(x,y) (((x)*MAX_ITEM_TYPE)+(y))
 #define CHECK_ITEM(x) (((x)<0)?-1:((x)>=MAX_ITEM)?-1:x)
 #define INVENTORY_RANGE(x) (((x)<0)?0:((x)>=INVENTORY_SIZE)?0:1)
-#if(GAMESERVER_UPDATE>=701)
-#define INVENTORY_WEAR_RANGE(x) (((x)<0)?0:((x)>=INVENTORY_WEAR_SIZE)?(((x)==236)?1:0):1)
-#define INVENTORY_FULL_RANGE(x) (((x)<0)?0:((x)>=INVENTORY_EXT4_SIZE)?(((x)==236)?1:0):1)
-#else
 #define INVENTORY_WEAR_RANGE(x) (((x)<0)?0:((x)>=INVENTORY_WEAR_SIZE)?0:1)
 #define INVENTORY_FULL_RANGE(x) (((x)<0)?0:((x)>=INVENTORY_EXT4_SIZE)?0:1)
-#endif
 #define INVENTORY_BASE_RANGE(x) (((x)<INVENTORY_WEAR_SIZE)?0:((x)>=INVENTORY_SIZE)?0:1)
 #define INVENTORY_MAIN_RANGE(x) (((x)<INVENTORY_WEAR_SIZE)?0:((x)>=INVENTORY_MAIN_SIZE)?0:1)
 #define INVENTORY_EXT1_RANGE(x) (((x)<INVENTORY_MAIN_SIZE)?0:((x)>=INVENTORY_EXT1_SIZE)?0:1)
@@ -122,9 +117,6 @@ struct PMSG_ITEM_CHANGE_SEND
 	PBMSG_HEAD header; // C1:25
 	BYTE index[2];
 	BYTE ItemInfo[MAX_ITEM_INFO];
-	#if(GAMESERVER_UPDATE>=701)
-	BYTE attribute;
-	#endif
 };
 
 struct PMSG_ITEM_DELETE_SEND

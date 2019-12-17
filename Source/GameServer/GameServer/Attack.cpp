@@ -65,15 +65,6 @@ bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE f
 		return 0;
 	}
 
-	#if(GAMESERVER_UPDATE>=402)
-
-	if(gDuel.GetDuelArenaBySpectator(lpObj->Index) != 0 || gDuel.GetDuelArenaBySpectator(lpTarget->Index) != 0)
-	{
-		return 0;
-	}
-
-	#endif
-
 	#if(GAMESERVER_TYPE==1)
 
 	if(gCastleSiege.GetCastleState() != CASTLESIEGE_STATE_STARTSIEGE)
@@ -285,17 +276,11 @@ bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE f
 	{
 		if((lpObj->Type != OBJECT_USER || lpTarget->Type != OBJECT_USER) && this->MissCheck(lpObj,lpTarget,lpSkill,send,count,&miss) == 0)
 		{
-			#if(GAMESERVER_UPDATE>=701)
-			this->AttackElemental(lpObj,lpTarget,lpSkill,send,flag,damage,count,combo);
-			#endif
 			return 1;
 		}
 
 		if((lpObj->Type == OBJECT_USER && lpTarget->Type == OBJECT_USER) && this->MissCheckPvP(lpObj,lpTarget,lpSkill,send,count,&miss) == 0)
 		{
-			#if(GAMESERVER_UPDATE>=701)
-			this->AttackElemental(lpObj,lpTarget,lpSkill,send,flag,damage,count,combo);
-			#endif
 			return 1;
 		}
 
@@ -349,7 +334,7 @@ bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE f
 
 		if(skill == SKILL_FALLING_SLASH || skill == SKILL_LUNGE || skill == SKILL_UPPERCUT || skill == SKILL_CYCLONE || skill == SKILL_SLASH || skill == SKILL_TWISTING_SLASH || skill == SKILL_RAGEFUL_BLOW || skill == SKILL_DEATH_STAB || skill == SKILL_CRESCENT_MOON_SLASH || skill == SKILL_STAR_FALL || skill == SKILL_IMPALE || skill == SKILL_FIRE_BREATH || skill == SKILL_ICE_ARROW || skill == SKILL_PENETRATION || skill == SKILL_FIRE_SLASH || skill == SKILL_POWER_SLASH || skill == SKILL_SPIRAL_SLASH)
 		{
-			if(skill != SKILL_IMPALE || lpObj->Inventory[8].m_Index == GET_ITEM(13,2) || lpObj->Inventory[8].m_Index == GET_ITEM(13,3) || lpObj->Inventory[8].m_Index == GET_ITEM(13,37))
+			if(skill != SKILL_IMPALE || lpObj->Inventory[8].m_Index == GET_ITEM(13,2) || lpObj->Inventory[8].m_Index == GET_ITEM(13,3))
 			{
 				if(lpObj->Class == CLASS_DK)
 				{
@@ -361,7 +346,7 @@ bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE f
 				}
 			}
 		}
-		else if(skill == SKILL_FORCE || skill == SKILL_FIRE_BURST || skill == SKILL_EARTHQUAKE || skill == SKILL_ELECTRIC_SPARK || skill == SKILL_FIRE_BLAST || skill == SKILL_FIRE_SCREAM)
+		else if(skill == SKILL_FORCE || skill == SKILL_FIRE_BURST || skill == SKILL_EARTHQUAKE || skill == SKILL_ELECTRIC_SPARK || skill == SKILL_FIRE_BLAST)
 		{
 			damage = (damage*lpObj->DLDamageMultiplierRate)/100;
 		}
@@ -480,49 +465,6 @@ bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE f
 			lpObj->BP = lpObj->MaxBP+lpObj->AddBP;
 			GCManaSend(lpObj->Index,0xFF,(int)lpObj->Mana,lpObj->BP);
 		}
-
-		#if(GAMESERVER_UPDATE>=602)
-
-		if(lpObj->Inventory[0].m_Index >= GET_ITEM(2,0) && lpObj->Inventory[0].m_Index < GET_ITEM(3,0))
-		{
-			if((GetLargeRand()%100) < (gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_MACE_MASTERY)-lpTarget->ResistStunRate))
-			{
-				if(gEffectManager.CheckEffect(lpTarget,EFFECT_IRON_DEFENSE) == 0 && gEffectManager.CheckEffect(lpTarget,EFFECT_IRON_DEFENSE_IMPROVED) == 0)
-				{
-					gEffectManager.AddEffect(lpTarget,0,EFFECT_STERN,2,0,0,0,0);
-				}
-			}
-		}
-
-		if(lpObj->Inventory[1].m_Index >= GET_ITEM(2,0) && lpObj->Inventory[1].m_Index < GET_ITEM(3,0))
-		{
-			if((GetLargeRand()%100) < (gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_MACE_MASTERY)-lpTarget->ResistStunRate))
-			{
-				if(gEffectManager.CheckEffect(lpTarget,EFFECT_IRON_DEFENSE) == 0 && gEffectManager.CheckEffect(lpTarget,EFFECT_IRON_DEFENSE_IMPROVED) == 0)
-				{
-					gEffectManager.AddEffect(lpTarget,0,EFFECT_STERN,2,0,0,0,0);
-				}
-			}
-		}
-
-		if(gEffectManager.CheckEffect(lpObj,EFFECT_BLOOD_HOWLING) != 0 || gEffectManager.CheckEffect(lpObj,EFFECT_BLOOD_HOWLING_IMPROVED) != 0)
-		{
-			int rate = gServerInfo.m_BloodHowlingConstA;
-
-			rate += gMasterSkillTree.GetMasterSkillValue(lpObj,MASTER_SKILL_ADD_BLOOD_HOWLING_IMPROVED);
-
-			if((GetLargeRand()%100) < rate)
-			{
-				if(gEffectManager.CheckEffect(lpTarget,EFFECT_IRON_DEFENSE) == 0 && gEffectManager.CheckEffect(lpTarget,EFFECT_IRON_DEFENSE_IMPROVED) == 0)
-				{
-					int damage = gServerInfo.m_BloodHowlingConstB;
-
-					gEffectManager.AddEffect(lpTarget,0,EFFECT_DEATH_STAB_ENHANCED,10,lpObj->Index,1,SET_NUMBERHW(damage),SET_NUMBERLW(damage));
-				}
-			}
-		}
-
-		#endif
 	}
 
 	if(lpSkill != 0 && count <= 1)
@@ -665,7 +607,7 @@ bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE f
 				GCManaSend(lpTarget->Index,0xFF,(int)lpTarget->Mana,lpTarget->BP);
 			}
 
-			if(lpTarget->Inventory[8].IsItem() == 0 || (lpTarget->Inventory[8].m_Index != GET_ITEM(13,2) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,3) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,4) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,37)))
+			if(lpTarget->Inventory[8].IsItem() == 0 || (lpTarget->Inventory[8].m_Index != GET_ITEM(13,2) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,3) && lpTarget->Inventory[8].m_Index != GET_ITEM(13,4)))
 			{
 				if((GetLargeRand()%100) < gServerInfo.m_DamageStuckRate[lpTarget->Class])
 				{
@@ -691,223 +633,6 @@ bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE f
 	#pragma endregion
 
 	return 1;
-}
-
-bool CAttack::AttackElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE flag,int damage,int count,bool combo) // OK
-{
-	#if(GAMESERVER_UPDATE>=701)
-
-	#pragma region ATTACK_CHECK
-
-	if(lpObj->ElementalAttribute == 0)
-	{
-		return 0;
-	}
-
-	if(lpObj->Type == OBJECT_USER && lpSkill == 0)
-	{
-		return 0;
-	}
-
-	if(lpObj->Type == OBJECT_USER && (lpObj->Inventory[236].IsItem() == 0 || lpObj->Inventory[236].IsPentagramItem() == 0 || lpObj->Inventory[236].m_IsValidItem == 0))
-	{
-		return 0;
-	}
-
-	#pragma endregion
-
-	#pragma region DAMAGE_CALC
-
-	flag = 0;
-
-	BYTE miss = 0;
-
-	WORD effect = lpObj->ElementalAttribute;
-
-	if(this->MissCheckElemental(lpObj,lpTarget,lpSkill,send,count,&miss) == 0)
-	{
-		return 1;
-	}
-
-	int defense = this->GetTargetElementalDefense(lpObj,lpTarget,&effect);
-
-	damage = this->GetAttackDamageElemental(lpObj,lpTarget,lpSkill,&effect,damage,defense);
-
-	if(miss != 0)
-	{
-		damage = (damage*30)/100;
-	}
-
-	if(lpObj->Type == OBJECT_USER && lpTarget->Type == OBJECT_USER)
-	{
-		damage -= (damage*lpTarget->PentagramJewelOption.AddElementalDamageReductionPvP)/100;
-	}
-
-	if(lpObj->Type != OBJECT_USER && lpTarget->Type == OBJECT_USER)
-	{
-		damage -= (damage*lpTarget->PentagramJewelOption.AddElementalDamageReductionPvM)/100;
-	}
-
-	int MinDamage = lpObj->Level/10;
-
-	MinDamage = ((MinDamage<1)?1:MinDamage);
-
-	damage = ((damage<MinDamage)?MinDamage:damage);
-
-	#pragma endregion
-
-	#pragma region DAMAGE_CONFIG
-
-	if(lpObj->Type == OBJECT_USER)
-	{
-		if(lpTarget->Type == OBJECT_USER)
-		{
-			damage = (damage*gServerInfo.m_GeneralElementalDamageRatePvP)/100;
-
-			damage = (damage*gServerInfo.m_ElementalDamageRatePvP[lpObj->Class])/100;
-
-			damage = (damage*gServerInfo.m_ElementalDamageRateTo[lpObj->Class][lpTarget->Class])/100;
-
-			if(gDuel.CheckDuel(lpObj,lpTarget) != 0)
-			{
-				damage = (damage*gServerInfo.m_DuelElementalDamageRate)/100;
-			}
-			else if(gGensSystem.CheckGens(lpObj,lpTarget) != 0)
-			{
-				damage = (damage*gServerInfo.m_GensElementalDamageRate)/100;
-			}
-			else if(CA_MAP_RANGE(lpObj->Map) != 0 && CA_MAP_RANGE(lpTarget->Map) != 0)
-			{
-				damage = (damage*gServerInfo.m_CustomArenaElementalDamageRate)/100;
-			}
-			else if(CC_MAP_RANGE(lpObj->Map) != 0 && CC_MAP_RANGE(lpTarget->Map) != 0)
-			{
-				damage = (damage*gServerInfo.m_ChaosCastleElementalDamageRate)/100;
-			}
-			else if(IT_MAP_RANGE(lpObj->Map) != 0 && IT_MAP_RANGE(lpTarget->Map) != 0)
-			{
-				damage = (damage*gServerInfo.m_IllusionTempleElementalDamageRate)/100;
-			}
-			#if(GAMESERVER_TYPE==1)
-			else if(gCastleSiege.GetCastleState() == CASTLESIEGE_STATE_STARTSIEGE && lpObj->Map == MAP_CASTLE_SIEGE && lpTarget->Map == MAP_CASTLE_SIEGE)
-			{
-				if(lpObj->CsJoinSide == 0 || lpTarget->CsJoinSide == 0 || lpObj->CsJoinSide != lpTarget->CsJoinSide)
-				{
-					damage = (damage*gServerInfo.m_CastleSiegeElementalDamageRate1)/100;
-				}
-				else
-				{
-					damage = (damage*gServerInfo.m_CastleSiegeElementalDamageRate2)/100;
-				}
-			}
-			#endif
-		}
-		else
-		{
-			damage = (damage*gServerInfo.m_GeneralElementalDamageRatePvM)/100;
-
-			damage = (damage*gServerInfo.m_ElementalDamageRatePvM[lpObj->Class])/100;
-		}
-	}
-
-	#pragma endregion
-
-	#pragma region APPLY_EFFECT
-
-	if(lpObj->Type == OBJECT_USER)
-	{
-		if((GetLargeRand()%100) < lpObj->PentagramJewelOption.AddElementalSlowRate)
-		{
-			gEffectManager.AddEffect(lpTarget,0,EFFECT_PENTAGRAM_JEWEL_SLOW,20,0,0,0,0);
-		}
-
-		if((GetLargeRand()%100) < lpObj->PentagramJewelOption.AddElementalDebuffRate)
-		{
-			switch(lpObj->ElementalAttribute)
-			{
-				case ELEMENTAL_ATTRIBUTE_FIRE:
-					gEffectManager.AddEffect(lpTarget,0,EFFECT_PENTAGRAM_JEWEL_HALF_SD,5,0,0,0,0);
-					break;
-				case ELEMENTAL_ATTRIBUTE_WATER:
-					gEffectManager.AddEffect(lpTarget,0,EFFECT_PENTAGRAM_JEWEL_HALF_MP,5,0,0,0,0);
-					break;
-				case ELEMENTAL_ATTRIBUTE_EARTH:
-					gEffectManager.AddEffect(lpTarget,0,EFFECT_PENTAGRAM_JEWEL_HALF_SPEED,5,0,0,0,0);
-					break;
-				case ELEMENTAL_ATTRIBUTE_WIND:
-					gEffectManager.AddEffect(lpTarget,0,EFFECT_PENTAGRAM_JEWEL_HALF_HP,5,0,0,0,0);
-					break;
-				case ELEMENTAL_ATTRIBUTE_DARK:
-					gEffectManager.AddEffect(lpTarget,0,EFFECT_PENTAGRAM_JEWEL_STUN,5,0,0,0,0);
-					break;
-			}
-		}
-	}
-
-	#pragma endregion
-
-	#pragma region DAMAGE_APPLY
-
-	int ShieldDamage = 0;
-
-	if(lpObj->Type == OBJECT_USER && lpTarget->Type == OBJECT_USER)
-	{
-		ShieldDamage = this->GetShieldDamage(lpObj,lpTarget,damage);
-
-		if(lpTarget->Life < (damage-ShieldDamage))
-		{
-			lpTarget->Life = 0;
-		}
-		else
-		{
-			lpTarget->Life -= damage-ShieldDamage;
-		}
-
-		if(lpTarget->Shield < ShieldDamage)
-		{
-			lpTarget->Shield = 0;
-		}
-		else
-		{
-			lpTarget->Shield -= ShieldDamage;
-		}
-
-		GCLifeSend(lpTarget->Index,0xFF,(int)lpTarget->Life,lpTarget->Shield);
-	}
-	else
-	{
-		if(lpTarget->Life < damage)
-		{
-			lpTarget->Life = 0;
-		}
-		else
-		{
-			lpTarget->Life -= damage;
-		}
-	}
-
-	#pragma endregion
-
-	#pragma region ATTACK_FINISH
-
-	if(damage > 0)
-	{
-		gObjectManager.CharacterLifeCheck(lpObj,lpTarget,(damage-ShieldDamage),4,flag,effect,((lpSkill==0)?0:lpSkill->m_skill),ShieldDamage);
-	}
-	else
-	{
-		GCElementalDamageSend(lpObj->Index,lpTarget->Index,(BYTE)effect,0);
-	}
-
-	#pragma endregion
-
-	return 1;
-
-	#else
-
-	return 0;
-
-	#endif
 }
 
 bool CAttack::DecreaseArrow(LPOBJ lpObj) // OK
@@ -968,49 +693,13 @@ void CAttack::WingSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 
 			GCLifeSend(lpObj->Index,0xFF,(int)lpObj->Life);
 
-			if((lpItem->m_Index >= GET_ITEM(12,0) && lpItem->m_Index <= GET_ITEM(12,2)) || lpItem->m_Index == GET_ITEM(12,41)) // 1st wing
+			if((lpItem->m_Index >= GET_ITEM(12,0) && lpItem->m_Index <= GET_ITEM(12,2))) // 1st wing
 			{
 				(*damage) = ((*damage)*(112+(lpItem->m_Level*2)))/100;
 			}
-			else if((lpItem->m_Index >= GET_ITEM(12,3) && lpItem->m_Index <= GET_ITEM(12,6)) || lpItem->m_Index == GET_ITEM(12,42)) // 2sd wing
+			else if((lpItem->m_Index >= GET_ITEM(12,3) && lpItem->m_Index <= GET_ITEM(12,6))) // 2sd wing
 			{
 				(*damage) = ((*damage)*(132+(lpItem->m_Level*1)))/100;
-			}
-			else if((lpItem->m_Index >= GET_ITEM(12,36) && lpItem->m_Index <= GET_ITEM(12,40)) || lpItem->m_Index == GET_ITEM(12,43) || lpItem->m_Index == GET_ITEM(12,50)) // 3rd wing
-			{
-				(*damage) = ((*damage)*(139+(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,49)) // Cloak of Fighter
-			{
-				(*damage) = ((*damage)*(120+(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index >= GET_ITEM(12,130) && lpItem->m_Index <= GET_ITEM(12,135)) // Mini Wings
-			{
-				(*damage) = ((*damage)*(112+(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,262)) // Cloak of Death
-			{
-				(*damage) = ((*damage)*(121+(lpItem->m_Level*1)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,263)) // Wings of Chaos
-			{
-				(*damage) = ((*damage)*(133+(lpItem->m_Level*1)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,264)) // Wings of Magic
-			{
-				(*damage) = ((*damage)*(135+(lpItem->m_Level*1)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,265)) // Wings of Life
-			{
-				(*damage) = ((*damage)*(135+(lpItem->m_Level*1)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,266)) // Wings of Conqueror
-			{
-				(*damage) = ((*damage)*(171+(lpItem->m_Level*0)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,267)) // Wings of Angel and Devil
-			{
-				(*damage) = ((*damage)*(160+(lpItem->m_Level*1)))/100;
 			}
 			else if(lpItem->m_Index == GET_ITEM(13,30)) // Cloak of Lord
 			{
@@ -1025,53 +714,13 @@ void CAttack::WingSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 
 		if(lpItem->IsItem() != 0 && lpItem->m_Durability > 0)
 		{
-			if((lpItem->m_Index >= GET_ITEM(12,0) && lpItem->m_Index <= GET_ITEM(12,2)) || lpItem->m_Index == GET_ITEM(12,41)) // 1st wing
+			if((lpItem->m_Index >= GET_ITEM(12,0) && lpItem->m_Index <= GET_ITEM(12,2))) // 1st wing
 			{
 				(*damage) = ((*damage)*(88-(lpItem->m_Level*2)))/100;
 			}
-			else if((lpItem->m_Index >= GET_ITEM(12,3) && lpItem->m_Index <= GET_ITEM(12,6)) || lpItem->m_Index == GET_ITEM(12,42)) // 2sd wing
+			else if((lpItem->m_Index >= GET_ITEM(12,3) && lpItem->m_Index <= GET_ITEM(12,6))) // 2sd wing
 			{
 				(*damage) = ((*damage)*(75-(lpItem->m_Level*2)))/100;
-			}
-			else if((lpItem->m_Index >= GET_ITEM(12,36) && lpItem->m_Index <= GET_ITEM(12,39)) || lpItem->m_Index == GET_ITEM(12,43) || lpItem->m_Index == GET_ITEM(12,50)) // 3rd wing
-			{
-				(*damage) = ((*damage)*(61-(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,40)) // Mantle of Monarch
-			{
-				(*damage) = ((*damage)*(76-(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,49)) // Cloak of Fighter
-			{
-				(*damage) = ((*damage)*(90-(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index >= GET_ITEM(12,130) && lpItem->m_Index <= GET_ITEM(12,135)) // Mini Wings
-			{
-				(*damage) = ((*damage)*(88-(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,262)) // Cloak of Death
-			{
-				(*damage) = ((*damage)*(87-(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,263)) // Wings of Chaos
-			{
-				(*damage) = ((*damage)*(70-(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,264)) // Wings of Magic
-			{
-				(*damage) = ((*damage)*(71-(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,265)) // Wings of Life
-			{
-				(*damage) = ((*damage)*(71-(lpItem->m_Level*2)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,266)) // Wings of Conqueror
-			{
-				(*damage) = ((*damage)*(29-(lpItem->m_Level*0)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(12,267)) // Wings of Angel and Devil
-			{
-				(*damage) = ((*damage)*(40-(lpItem->m_Level*1)))/100;
 			}
 			else if(lpItem->m_Index == GET_ITEM(13,30)) // Cloak of Lord
 			{
@@ -1105,29 +754,6 @@ void CAttack::HelperSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 
 				(*damage) = ((*damage)*(100+gServerInfo.m_DinorantIncDamageConstA))/100;
 			}
-			else if(lpItem->m_Index == GET_ITEM(13,37)) // Fenrir
-			{
-				if((lpItem->m_NewOption & 1) != 0)
-				{
-					(*damage) = ((*damage)*(100+gServerInfo.m_BlackFenrirIncDamageConstA))/100;
-				}
-			}
-			else if(lpItem->m_Index == GET_ITEM(13,64)) // Demon
-			{
-				lpObj->Life -= 4;
-
-				GCLifeSend(lpObj->Index,0xFF,(int)lpObj->Life);
-
-				(*damage) = ((*damage)*(100+gServerInfo.m_DemonIncDamageConstA))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(13,123)) // Skeleton
-			{
-				lpObj->Life -= 2;
-
-				GCLifeSend(lpObj->Index,0xFF,(int)lpObj->Life);
-
-				(*damage) = ((*damage)*(100+gServerInfo.m_SkeletonIncDamageConstA))/100;
-			}
 		}
 	}
 
@@ -1148,17 +774,6 @@ void CAttack::HelperSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 			else if(lpItem->m_Index == GET_ITEM(13,4)) // Dark Horse
 			{
 				(*damage) = ((*damage)*(100-((gServerInfo.m_DarkHorseDecDamageConstA+lpItem->m_PetItemLevel)/gServerInfo.m_DarkHorseDecDamageConstB)))/100;
-			}
-			else if(lpItem->m_Index == GET_ITEM(13,37)) // Fenrir
-			{
-				if((lpItem->m_NewOption & 2) != 0)
-				{
-					(*damage) = ((*damage)*(100-gServerInfo.m_BlueFenrirDecDamageConstA))/100;
-				}
-			}
-			else if(lpItem->m_Index == GET_ITEM(13,65)) // Maria
-			{
-				(*damage) = ((*damage)*(100-gServerInfo.m_MariaDecDamageConstA))/100;
 			}
 		}
 	}
@@ -1205,37 +820,6 @@ void CAttack::DamageSprite(LPOBJ lpObj,int damage) // OK
 			return;
 		}
 	}
-	else if(lpItem->m_Index == GET_ITEM(13,37)) // Fenrir
-	{
-		if(this->FenrirSprite(lpObj,damage) == 0)
-		{
-			return;
-		}
-	}
-	else if(lpItem->m_Index == GET_ITEM(13,64)) // Demon
-	{
-		lpItem->m_Durability -= (damage*(1.0f*DurabilityValue))/100;
-	}
-	else if(lpItem->m_Index == GET_ITEM(13,65)) // Maria
-	{
-		lpItem->m_Durability -= (damage*(2.0f*DurabilityValue))/100;
-	}
-	else if(lpItem->m_Index == GET_ITEM(13,67)) // Rudolf
-	{
-		lpItem->m_Durability -= (damage*(1.0f*DurabilityValue))/100;
-	}
-	else if(lpItem->m_Index == GET_ITEM(13,80)) // Panda
-	{
-		lpItem->m_Durability -= (damage*(1.0f*DurabilityValue))/100;
-	}
-	else if(lpItem->m_Index == GET_ITEM(13,106)) // Unicorn
-	{
-		lpItem->m_Durability -= (damage*(1.0f*DurabilityValue))/100;
-	}
-	else if(lpItem->m_Index == GET_ITEM(13,123)) // Skeleton
-	{
-		lpItem->m_Durability -= (damage*(1.0f*DurabilityValue))/100;
-	}
 	else
 	{
 		return;
@@ -1253,7 +837,7 @@ void CAttack::DamageSprite(LPOBJ lpObj,int damage) // OK
 
 		gItemManager.GCItemChangeSend(lpObj->Index,8);
 
-		if(lpObj->Map == MAP_ICARUS && lpObj->Inventory[7].IsItem() == 0 && (lpItem->m_Index == GET_ITEM(13,3) || lpItem->m_Index == GET_ITEM(13,37)))
+		if(lpObj->Map == MAP_ICARUS && lpObj->Inventory[7].IsItem() == 0 && lpItem->m_Index == GET_ITEM(13,3))
 		{
 			gObjMoveGate(lpObj->Index,22);
 		}
@@ -1291,37 +875,6 @@ bool CAttack::DarkHorseSprite(LPOBJ lpObj,int damage) // OK
 	}
 
 	return 0;
-}
-
-bool CAttack::FenrirSprite(LPOBJ lpObj,int damage) // OK
-{
-	CItem* lpItem = &lpObj->Inventory[8];
-
-	if(lpItem->m_Durability < 1)
-	{
-		return 0;
-	}
-
-	lpItem->m_DurabilitySmall += ((damage*2)/100)+1;
-
-	int MaxSmallDur = (200*gServerInfo.m_GuardianDurabilityRate)/100;
-
-	MaxSmallDur = (MaxSmallDur*lpObj->GuardianDurabilityRate)/100;
-
-	if(lpItem->m_DurabilitySmall > MaxSmallDur)
-	{
-		lpItem->m_Durability = (((--lpItem->m_Durability)<1)?0:lpItem->m_Durability);
-		lpItem->m_DurabilitySmall = 0;
-
-		if(lpItem->CheckDurabilityState() != 0)
-		{
-			gObjectManager.CharacterCalcAttribute(lpObj->Index);
-		}
-
-		gItemManager.GCItemDurSend(lpObj->Index,8,(BYTE)lpItem->m_Durability,0);
-	}
-
-	return 1;
 }
 
 void CAttack::WeaponDurabilityDown(LPOBJ lpObj,LPOBJ lpTarget) // OK
@@ -1580,62 +1133,6 @@ bool CAttack::MissCheckPvP(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,i
 	return 1;
 }
 
-bool CAttack::MissCheckElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int send,int count,BYTE* miss) // OK
-{
-	#if(GAMESERVER_UPDATE>=701)
-
-	int ElementalAttackSuccessRate = lpObj->ElementalAttackSuccessRate;
-
-	if(lpObj->Type == OBJECT_USER)
-	{
-		ElementalAttackSuccessRate += (ElementalAttackSuccessRate*lpObj->PentagramOption.MulElementalAttackSuccessRate)/100;
-
-		ElementalAttackSuccessRate += (ElementalAttackSuccessRate*lpObj->PentagramJewelOption.MulElementalAttackSuccessRate)/100;
-
-		ElementalAttackSuccessRate = ((ElementalAttackSuccessRate<0)?0:ElementalAttackSuccessRate);
-	}
-
-	int ElementalDefenseSuccessRate = lpTarget->ElementalDefenseSuccessRate;
-
-	if(lpTarget->Type == OBJECT_USER)
-	{
-		ElementalDefenseSuccessRate += (ElementalDefenseSuccessRate*lpTarget->PentagramOption.MulElementalDefenseSuccessRate)/100;
-
-		ElementalDefenseSuccessRate += (ElementalDefenseSuccessRate*lpTarget->PentagramJewelOption.MulElementalDefenseSuccessRate)/100;
-
-		ElementalDefenseSuccessRate = ((ElementalDefenseSuccessRate<0)?0:ElementalDefenseSuccessRate);
-	}
-
-	if(ElementalAttackSuccessRate < ElementalDefenseSuccessRate)
-	{
-		(*miss) = 1;
-
-		if((GetLargeRand()%100) >= 5)
-		{
-			GCElementalDamageSend(lpObj->Index,lpTarget->Index,lpObj->ElementalAttribute,0);
-			return 0;
-		}
-	}
-	else
-	{
-		(*miss) = 0;
-
-		if((GetLargeRand()%((ElementalAttackSuccessRate==0)?1:ElementalAttackSuccessRate)) < ElementalDefenseSuccessRate)
-		{
-			GCElementalDamageSend(lpObj->Index,lpTarget->Index,lpObj->ElementalAttribute,0);
-			return 0;
-		}
-	}
-
-	return 1;
-
-	#else
-
-	return 0;
-
-	#endif
-}
-
 bool CAttack::ApplySkillEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int damage) // OK
 {
 	if(lpTarget->Type != OBJECT_USER && ((lpTarget->Class >= 204 && lpTarget->Class <= 209) || (lpTarget->Class >= 215 && lpTarget->Class <= 219) || lpTarget->Class == 277 || lpTarget->Class == 278 || lpTarget->Class == 283 || lpTarget->Class == 288))
@@ -1706,9 +1203,6 @@ bool CAttack::ApplySkillEffect(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,int da
 		case SKILL_FIRE_BURST:
 			gSkillManager.ApplyFireBurstEffect(lpObj,lpTarget,lpSkill,damage);
 			break;
-		case SKILL_FIRE_SCREAM:
-			gSkillManager.ApplyFireScreamEffect(lpObj,lpTarget,lpSkill,damage);
-			break;
 		case SKILL_EARTHQUAKE:
 			gSkillManager.ApplyEarthquakeEffect(lpObj,lpTarget,lpSkill,damage);
 			break;
@@ -1761,52 +1255,6 @@ int CAttack::GetTargetDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) // OK
 	defense = ((defense<0)?0:defense);
 
 	return defense;
-}
-
-int CAttack::GetTargetElementalDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) // OK
-{
-	#if(GAMESERVER_UPDATE>=701)
-
-	int defense = lpTarget->ElementalDefense;
-
-	if(lpTarget->Type == OBJECT_USER)
-	{
-		defense += (((lpTarget->Inventory[236].IsItem()==0)?0:lpTarget->Inventory[236].m_Defense)*lpTarget->PentagramOption.MulPentagramDefense)/100;
-
-		defense += (lpTarget->Defense*lpTarget->PentagramOption.AddElementalDefenseTransferRate)/100;
-
-		defense += lpTarget->PentagramJewelOption.AddElementalDefense;
-
-		if(lpObj->Type == OBJECT_USER)
-		{
-			defense += lpTarget->PentagramJewelOption.AddElementalDefensePvP;
-
-			if(lpObj->Class == CLASS_DW || lpObj->Class == CLASS_FE || lpObj->Class == CLASS_MG)
-			{
-				defense += lpTarget->PentagramJewelOption.AddElementalDefenseRange;
-			}
-			else
-			{
-				defense += lpTarget->PentagramJewelOption.AddElementalDefenseMelee;
-			}
-		}
-		else
-		{
-			defense += lpTarget->PentagramJewelOption.AddElementalDefensePvM;
-		}
-	}
-
-	gPentagramSystem.GetPentagramRelationshipDefense(lpTarget,lpObj,&defense);
-
-	defense = ((defense<0)?0:defense);
-
-	return defense;
-
-	#else
-
-	return 0;
-
-	#endif
 }
 
 int CAttack::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense) // OK
@@ -2141,149 +1589,6 @@ int CAttack::GetAttackDamageCursed(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WO
 	return damage;
 }
 
-int CAttack::GetAttackDamageFenrir(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int TargetDefense) // OK
-{
-	int BaseDamage = 0;
-
-	if(lpObj->Class == CLASS_DW)
-	{
-		BaseDamage = (lpObj->Strength/gServerInfo.m_DWPlasmaStormDamageConstA)+(lpObj->Dexterity/gServerInfo.m_DWPlasmaStormDamageConstB)+(lpObj->Vitality/gServerInfo.m_DWPlasmaStormDamageConstC)+(lpObj->Energy/gServerInfo.m_DWPlasmaStormDamageConstD);
-	}
-	else if(lpObj->Class == CLASS_DK)
-	{
-		BaseDamage = (lpObj->Strength/gServerInfo.m_DKPlasmaStormDamageConstA)+(lpObj->Dexterity/gServerInfo.m_DKPlasmaStormDamageConstB)+(lpObj->Vitality/gServerInfo.m_DKPlasmaStormDamageConstC)+(lpObj->Energy/gServerInfo.m_DKPlasmaStormDamageConstD);
-	}
-	else if(lpObj->Class == CLASS_FE)
-	{
-		BaseDamage = (lpObj->Strength/gServerInfo.m_FEPlasmaStormDamageConstA)+(lpObj->Dexterity/gServerInfo.m_FEPlasmaStormDamageConstB)+(lpObj->Vitality/gServerInfo.m_FEPlasmaStormDamageConstC)+(lpObj->Energy/gServerInfo.m_FEPlasmaStormDamageConstD);
-	}
-	else if(lpObj->Class == CLASS_MG)
-	{
-		BaseDamage = (lpObj->Strength/gServerInfo.m_MGPlasmaStormDamageConstA)+(lpObj->Dexterity/gServerInfo.m_MGPlasmaStormDamageConstB)+(lpObj->Vitality/gServerInfo.m_MGPlasmaStormDamageConstC)+(lpObj->Energy/gServerInfo.m_MGPlasmaStormDamageConstD);
-	}
-	else if(lpObj->Class == CLASS_DL)
-	{
-		BaseDamage = (lpObj->Strength/gServerInfo.m_DLPlasmaStormDamageConstA)+(lpObj->Dexterity/gServerInfo.m_DLPlasmaStormDamageConstB)+(lpObj->Vitality/gServerInfo.m_DLPlasmaStormDamageConstC)+(lpObj->Energy/gServerInfo.m_DLPlasmaStormDamageConstD)+(lpObj->Leadership/gServerInfo.m_DLPlasmaStormDamageConstE);
-	}
-
-	int range = (lpSkill->m_DamageMax-lpSkill->m_DamageMin);
-
-	range = ((range<1)?1:range);
-
-	int damage = (BaseDamage+lpSkill->m_DamageMin)+(GetLargeRand()%range);
-
-	if((GetLargeRand()%100) < ((lpObj->CriticalDamageRate+lpObj->EffectOption.AddCriticalDamageRate)-lpTarget->ResistCriticalDamageRate))
-	{
-		(*effect) = 3;
-
-		damage = (BaseDamage+lpSkill->m_DamageMax);
-		damage += lpObj->CriticalDamage;
-		damage += lpObj->EffectOption.AddCriticalDamage;
-	}
-
-	if((GetLargeRand()%100) < ((lpObj->ExcellentDamageRate+lpObj->EffectOption.AddExcellentDamageRate)-lpTarget->ResistExcellentDamageRate))
-	{
-		(*effect) = 2;
-
-		damage = ((BaseDamage+lpSkill->m_DamageMax)*120)/100;
-		damage += lpObj->ExcellentDamage;
-		damage += lpObj->EffectOption.AddExcellentDamage;
-	}
-
-	if(lpObj->Type == OBJECT_USER && lpTarget->Type == OBJECT_USER)
-	{
-		damage += lpObj->DamagePvP;
-	}
-
-	damage -= TargetDefense;
-
-	damage = ((damage<0)?0:damage);
-
-	return damage;
-}
-
-int CAttack::GetAttackDamageElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* effect,int AttackDamage,int TargetDefense) // OK
-{
-	#if(GAMESERVER_UPDATE>=701)
-
-	int DamageMin = lpObj->ElementalDamageMin;
-	int DamageMax = lpObj->ElementalDamageMax;
-
-	if(lpObj->Type == OBJECT_USER)
-	{
-		DamageMin += (((lpObj->Inventory[236].IsItem()==0)?0:lpObj->Inventory[236].m_DamageMin)*lpObj->PentagramOption.MulPentagramDamage)/100;
-		DamageMax += (((lpObj->Inventory[236].IsItem()==0)?0:lpObj->Inventory[236].m_DamageMax)*lpObj->PentagramOption.MulPentagramDamage)/100;
-
-		DamageMin += (AttackDamage*lpObj->PentagramOption.AddElementalAttackTransferRate)/100;
-		DamageMax += (AttackDamage*lpObj->PentagramOption.AddElementalAttackTransferRate)/100;
-
-		DamageMin += lpObj->PentagramJewelOption.AddElementalDamage;
-		DamageMax += lpObj->PentagramJewelOption.AddElementalDamage;
-
-		if(lpTarget->Type == OBJECT_USER)
-		{
-			DamageMin += lpObj->PentagramJewelOption.AddElementalDamagePvP;
-			DamageMax += lpObj->PentagramJewelOption.AddElementalDamagePvP;
-
-			if(lpTarget->Class == CLASS_DW || lpTarget->Class == CLASS_FE || lpTarget->Class == CLASS_MG)
-			{
-				DamageMin += lpObj->PentagramJewelOption.AddElementalDamageRange;
-				DamageMax += lpObj->PentagramJewelOption.AddElementalDamageRange;
-			}
-			else
-			{
-				DamageMin += lpObj->PentagramJewelOption.AddElementalDamageMelee;
-				DamageMax += lpObj->PentagramJewelOption.AddElementalDamageMelee;
-			}
-
-			DamageMin += (DamageMin*lpTarget->PentagramJewelOption.MulElementalDamagePvP)/100;
-			DamageMax += (DamageMax*lpTarget->PentagramJewelOption.MulElementalDamagePvP)/100;
-		}
-		else
-		{
-			DamageMin += lpObj->PentagramJewelOption.AddElementalDamagePvM;
-			DamageMax += lpObj->PentagramJewelOption.AddElementalDamagePvM;
-
-			DamageMin += (DamageMin*lpTarget->PentagramJewelOption.MulElementalDamagePvM)/100;
-			DamageMax += (DamageMax*lpTarget->PentagramJewelOption.MulElementalDamagePvM)/100;
-		}
-	}
-
-	int range = (DamageMax-DamageMin);
-
-	range = ((range<1)?1:range);
-
-	int damage = DamageMin+(GetLargeRand()%range);
-
-	if((GetLargeRand()%100) < (lpObj->PentagramOption.AddElementalCriticalDamageRate+((lpTarget->Type==OBJECT_USER)?lpObj->PentagramJewelOption.AddElementalCriticalDamageRatePvP:lpObj->PentagramJewelOption.AddElementalCriticalDamageRatePvM)))
-	{
-		(*effect) = 6;
-
-		damage = DamageMax;
-	}
-
-	if((GetLargeRand()%100) < ((lpTarget->Type==OBJECT_USER)?lpObj->PentagramJewelOption.AddElementalExcellentDamageRatePvP:lpObj->PentagramJewelOption.AddElementalExcellentDamageRatePvM))
-	{
-		(*effect) = 7;
-
-		damage = (DamageMax*120)/100;
-	}
-
-	gPentagramSystem.GetPentagramRelationshipDamage(lpObj,lpTarget,&damage);
-
-	damage -= TargetDefense;
-
-	damage = ((damage<0)?0:damage);
-
-	return damage;
-
-	#else
-
-	return 0;
-
-	#endif
-}
-
 void CAttack::GetPreviewDefense(LPOBJ lpObj,DWORD* defense) // OK
 {
 	(*defense) = lpObj->Defense;
@@ -2474,15 +1779,6 @@ void CAttack::CGAttackRecv(PMSG_ATTACK_RECV* lpMsg,int aIndex) // OK
 	{
 		return;
 	}
-
-	#if(GAMESERVER_UPDATE>=402)
-
-	if(gDuel.GetDuelArenaBySpectator(aIndex) != 0 || gDuel.GetDuelArenaBySpectator(bIndex) != 0)
-	{
-		return;
-	}
-
-	#endif
 
 	if(gMap[lpObj->Map].CheckAttr(lpObj->X,lpObj->Y,1) != 0 || gMap[lpTarget->Map].CheckAttr(lpTarget->X,lpTarget->Y,1) != 0)
 	{

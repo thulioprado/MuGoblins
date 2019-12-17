@@ -191,7 +191,7 @@ void CMove::Move(LPOBJ lpObj,int index) // OK
 		return;
 	}
 
-	if(gGate.GetGateMap(MoveInfo.Gate) == MAP_ICARUS && (lpObj->Inventory[7].IsItem() == 0 && lpObj->Inventory[8].m_Index != GET_ITEM(13,3) && lpObj->Inventory[8].m_Index != GET_ITEM(13,37))) // Dinorant,Fenrir
+	if(gGate.GetGateMap(MoveInfo.Gate) == MAP_ICARUS && (lpObj->Inventory[7].IsItem() == 0 && lpObj->Inventory[8].m_Index != GET_ITEM(13,3))) // Dinorant
 	{
 		gNotice.GCNoticeSend(lpObj->Index,1,0,0,0,0,0,gMessage.GetMessage(228));
 		return;

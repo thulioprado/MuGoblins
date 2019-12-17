@@ -235,7 +235,6 @@
     <ClInclude Include="Mercenary.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MiniDump.h" />
-    <ClInclude Include="MiniMap.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterAI.h" />
     <ClInclude Include="MonsterAIAgro.h" />
@@ -374,7 +373,6 @@
     <ClCompile Include="Mercenary.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MiniDump.cpp" />
-    <ClCompile Include="MiniMap.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterAI.cpp" />
     <ClCompile Include="MonsterAIAgro.cpp" />

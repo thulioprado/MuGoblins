@@ -1520,12 +1520,6 @@ void CCommandManager::DGCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg) // OK
 			case CLASS_DL:
 				gObjMoveGate(lpObj->Index,17);
 				break;
-			case CLASS_SU:
-				gObjMoveGate(lpObj->Index,267);
-				break;
-			case CLASS_RF:
-				gObjMoveGate(lpObj->Index,17);
-				break;
 		}
 	}
 
@@ -1692,12 +1686,6 @@ void CCommandManager::DGCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* l
 				gObjMoveGate(lpObj->Index,17);
 				break;
 			case CLASS_DL:
-				gObjMoveGate(lpObj->Index,17);
-				break;
-			case CLASS_SU:
-				gObjMoveGate(lpObj->Index,267);
-				break;
-			case CLASS_RF:
 				gObjMoveGate(lpObj->Index,17);
 				break;
 		}

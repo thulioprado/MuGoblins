@@ -24,9 +24,6 @@ struct SDHP_CHARACTER_LIST_RECV
 	char account[11];
 	BYTE MoveCnt;
 	BYTE ExtClass;
-#if(GAMESERVER_UPDATE>=602)
-	BYTE ExtWarehouse;
-#endif
 	BYTE count;
 };
 
@@ -139,9 +136,6 @@ struct SDHP_OPTION_DATA_RECV
 	BYTE ChatWindow;
 	BYTE RKey;
 	DWORD QWERLevel;
-#if(GAMESERVER_UPDATE>=701)
-	BYTE ChangeSkin;
-#endif
 };
 
 struct SDHP_PET_ITEM_INFO_RECV
@@ -634,7 +628,6 @@ void GDRankingDevilSquareSaveSend(int aIndex, DWORD Score);
 void GDRankingIllusionTempleSaveSend(int aIndex, DWORD Score);
 void GDCreationCardSaveSend(int aIndex, BYTE ExtClass);
 void GDCrywolfInfoSaveSend(int MapServerGroup, int CrywolfState, int OccupationState);
-void GDSNSDataSaveSend(int aIndex, BYTE* data);
 void GDCustomMonsterRewardSaveSend(int aIndex, int MonsterClass, int MapNumber, int RewardValue1, int RewardValue2);
 void GDRankingCustomArenaSaveSend(int aIndex, DWORD number, DWORD score, DWORD rank);
 void GDConnectCharacterSend(int aIndex);

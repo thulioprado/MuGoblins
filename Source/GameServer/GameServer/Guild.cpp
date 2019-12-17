@@ -330,26 +330,10 @@ void CGuild::CGGuildListRecv(int aIndex) // OK
 	if(lpRivalGuild == 0)
 	{
 		memset(pMsg.RivalGuild,0,sizeof(pMsg.RivalGuild));
-
-		#if(GAMESERVER_UPDATE>=701)
-
-		pMsg.RivalCount = 0;
-
-		memset(pMsg.RivalMark,0,sizeof(pMsg.RivalMark));
-
-		#endif
 	}
 	else
 	{
 		memcpy(pMsg.RivalGuild,lpRivalGuild->Name,sizeof(pMsg.RivalGuild));
-
-		#if(GAMESERVER_UPDATE>=701)
-
-		pMsg.RivalCount = lpRivalGuild->Count;
-
-		memcpy(pMsg.RivalMark,lpRivalGuild->Mark,sizeof(pMsg.RivalMark));
-
-		#endif
 	}
 
 	PMSG_GUILD_LIST info;

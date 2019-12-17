@@ -114,12 +114,6 @@ void CPersonalShop::GetRequireJewelCount(LPOBJ lpObj, int* count, int* table, in
 			require[2] = gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(12, 31), 1);
 			require[3] = gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(12, 31), 2);
 			break;
-		case 2:
-			require[0] = gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(12, 15), 0);
-			require[1] = gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(12, 141), 0);
-			require[2] = gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(12, 141), 1);
-			require[3] = gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(12, 141), 2);
-			break;
 	}
 
 	(*count) = require[0] + (require[1] * 10) + (require[2] * 20) + (require[3] * 30);
@@ -163,12 +157,6 @@ void CPersonalShop::GetRequireJewelCount(LPOBJ lpObj, int* count, int* table, in
 
 void CPersonalShop::GetPaymentJewelCount(LPOBJ lpObj, int* count, int* table, int type, int value) // OK
 {
-#if(GAMESERVER_UPDATE>=802)
-
-	value = (int)GetRoundValue((((float)value * (100 - gServerInfo.m_PersonalShopJewelCommisionRate)) / 100));
-
-#endif
-
 	table[3] = value / 30;
 	value = value % 30;
 
@@ -200,12 +188,6 @@ void CPersonalShop::SetRequireJewelCount(LPOBJ lpObj, int* table, int type) // O
 			gItemManager.DeleteInventoryItemCount(lpObj, GET_ITEM(12, 31), 1, table[2]);
 			gItemManager.DeleteInventoryItemCount(lpObj, GET_ITEM(12, 31), 2, table[3]);
 			break;
-		case 2:
-			gItemManager.DeleteInventoryItemCount(lpObj, GET_ITEM(12, 15), 0, table[0]);
-			gItemManager.DeleteInventoryItemCount(lpObj, GET_ITEM(12, 141), 0, table[1]);
-			gItemManager.DeleteInventoryItemCount(lpObj, GET_ITEM(12, 141), 1, table[2]);
-			gItemManager.DeleteInventoryItemCount(lpObj, GET_ITEM(12, 141), 2, table[3]);
-			break;
 	}
 }
 
@@ -221,9 +203,6 @@ void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj, int* table, int type) // O
 			case 1:
 				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(14, 14), 0, 0, 0, 0, 0, -1, 0, 0, 0);
 				break;
-			case 2:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 15), 0, 0, 0, 0, 0, -1, 0, 0, 0);
-				break;
 		}
 	}
 
@@ -236,9 +215,6 @@ void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj, int* table, int type) // O
 				break;
 			case 1:
 				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 31), 0, 0, 0, 0, 0, -1, 0, 0, 0);
-				break;
-			case 2:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 141), 0, 0, 0, 0, 0, -1, 0, 0, 0);
 				break;
 		}
 	}
@@ -253,9 +229,6 @@ void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj, int* table, int type) // O
 			case 1:
 				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 31), 1, 0, 0, 0, 0, -1, 0, 0, 0);
 				break;
-			case 2:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 141), 1, 0, 0, 0, 0, -1, 0, 0, 0);
-				break;
 		}
 	}
 
@@ -268,9 +241,6 @@ void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj, int* table, int type) // O
 				break;
 			case 1:
 				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 31), 2, 0, 0, 0, 0, -1, 0, 0, 0);
-				break;
-			case 2:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 141), 2, 0, 0, 0, 0, -1, 0, 0, 0);
 				break;
 		}
 	}
@@ -299,33 +269,11 @@ void CPersonalShop::CGPShopSetItemPriceRecv(PMSG_PSHOP_SET_ITEM_PRICE_RECV* lpMs
 
 	int price = MAKE_NUMBERDW(MAKE_NUMBERW(lpMsg->price[3], lpMsg->price[2]), MAKE_NUMBERW(lpMsg->price[1], lpMsg->price[0]));
 
-#if(GAMESERVER_UPDATE>=802)
-
-	int JoBPrice = MAKE_NUMBERW(lpMsg->JoBPrice[1], lpMsg->JoBPrice[0]);
-
-	int JoSPrice = MAKE_NUMBERW(lpMsg->JoSPrice[1], lpMsg->JoSPrice[0]);
-
-	int JoCPrice = MAKE_NUMBERW(lpMsg->JoCPrice[1], lpMsg->JoCPrice[0]);
-
-#endif
-
-#if(GAMESERVER_UPDATE>=802)
-
-	if (price <= 0 && JoBPrice <= 0 && JoSPrice <= 0 && JoCPrice <= 0)
-	{
-		this->GCPShopSetItemPriceSend(aIndex, 4, lpMsg->slot);
-		return;
-	}
-
-#else
-
 	if (price <= 0)
 	{
 		this->GCPShopSetItemPriceSend(aIndex, 4, lpMsg->slot);
 		return;
 	}
-
-#endif
 
 	if (lpObj->Level <= 5)
 	{
@@ -334,16 +282,6 @@ void CPersonalShop::CGPShopSetItemPriceRecv(PMSG_PSHOP_SET_ITEM_PRICE_RECV* lpMs
 	}
 
 	lpObj->Inventory[lpMsg->slot].m_PShopValue = price;
-
-#if(GAMESERVER_UPDATE>=802)
-
-	lpObj->Inventory[lpMsg->slot].m_PShopJoBValue = JoBPrice;
-
-	lpObj->Inventory[lpMsg->slot].m_PShopJoSValue = JoSPrice;
-
-	lpObj->Inventory[lpMsg->slot].m_PShopJoCValue = JoCPrice;
-
-#endif
 
 	this->GCPShopSetItemPriceSend(aIndex, 1, lpMsg->slot);
 }

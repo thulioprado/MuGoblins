@@ -61,40 +61,15 @@ void CMapManager::Load(char* path) // OK
 			memset(&info,0,sizeof(info));
 
 			info.Index = lpMemScript->GetNumber();
-
 			info.NonPK = lpMemScript->GetAsNumber();
-
 			info.ViewRange = lpMemScript->GetAsNumber();
-
 			info.ExperienceRate = lpMemScript->GetAsNumber();
-
 			info.ItemDropRate = lpMemScript->GetAsNumber();
-
 			info.ExcItemDropRate = lpMemScript->GetAsNumber();
-
 			info.SetItemDropRate = lpMemScript->GetAsNumber();
-
 			info.SocketItemDrop = lpMemScript->GetAsNumber();
-
-			#if(GAMESERVER_UPDATE>=603)
-
-			info.HelperEnable = lpMemScript->GetAsNumber();
-
-			#else
-
 			info.HelperEnable = 0;
-
-			#endif
-
-			#if(GAMESERVER_UPDATE>=501)
-
-			info.GensBattle = lpMemScript->GetAsNumber();
-
-			#else
-
 			info.GensBattle = 0;
-
-			#endif
 
 			this->m_MapManagerInfo[info.Index] = info;
 		}

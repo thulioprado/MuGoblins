@@ -35,11 +35,7 @@ struct PMSG_FRIEND_MEMO
 	PWMSG_HEAD h;	//	
 	DWORD WindowGuid;	//	4
 	char Name[10];	//	8
-	#if(GAMESERVER_UPDATE>=603)
-	char Subject[60];	//	12
-	#else
 	char Subject[32];	//	12
-	#endif
 	BYTE Action;	//	32
 	BYTE Dir;	//	33
 	short MemoSize;	//	34
@@ -136,11 +132,7 @@ struct PMSG_FRIEND_MEMO_LIST
 	WORD Number;	// 4
 	char Name[10];	// 6
 	char Date[30];	// 10
-	#if(GAMESERVER_UPDATE>=603)
-	char Subject[60];	// 2E
-	#else
 	char Subject[32];	// 2E
-	#endif
 	BYTE read;	// 4E
 };
 

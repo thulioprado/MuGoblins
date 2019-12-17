@@ -28,7 +28,6 @@
 #include "MapManager.h"
 #include "MapServerManager.h"
 #include "Message.h"
-#include "MiniMap.h"
 #include "MonsterAIAutomata.h"
 #include "MonsterAIElement.h"
 #include "MonsterAIGroup.h"

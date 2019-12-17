@@ -480,26 +480,11 @@ void CParty::CGPartyListRecv(int aIndex) // OK
 			memcpy(info.name,lpTarget->Name,sizeof(info.name));
 
 			info.number = n;
-
 			info.map = lpTarget->Map;
-
 			info.x = (BYTE)lpTarget->X;
-
 			info.y = (BYTE)lpTarget->Y;
-
 			info.CurLife = (DWORD)(lpTarget->Life);
-
 			info.MaxLife = (DWORD)(lpTarget->MaxLife+lpTarget->AddLife);
-
-			#if(GAMESERVER_UPDATE>=801)
-
-			info.ServerCode = gServerInfo.m_ServerCode+1;
-
-			info.CurMana = (DWORD)(lpTarget->Mana);
-
-			info.MaxMana = (DWORD)(lpTarget->MaxMana+lpTarget->AddMana);
-
-			#endif
 
 			memcpy(&send[size],&info,sizeof(info));
 			size += sizeof(info);
@@ -594,26 +579,11 @@ void CParty::GCPartyListSend(int index) // OK
 		memcpy(info.name,lpObj->Name,sizeof(info.name));
 
 		info.number = n;
-
 		info.map = lpObj->Map;
-
 		info.x = (BYTE)lpObj->X;
-
 		info.y = (BYTE)lpObj->Y;
-
 		info.CurLife = (DWORD)(lpObj->Life);
-
 		info.MaxLife = (DWORD)(lpObj->MaxLife+lpObj->AddLife);
-
-		#if(GAMESERVER_UPDATE>=801)
-
-		info.ServerCode = gServerInfo.m_ServerCode+1;
-
-		info.CurMana = (DWORD)(lpObj->Mana);
-
-		info.MaxMana = (DWORD)(lpObj->MaxMana+lpObj->AddMana);
-
-		#endif
 
 		memcpy(&send[size],&info,sizeof(info));
 		size += sizeof(info);
@@ -632,18 +602,6 @@ void CParty::GCPartyListSend(int index) // OK
 			DataSend(this->m_PartyInfo[index].Index[n],send,size);
 		}
 	}
-
-	#if(GAMESERVER_UPDATE>=803)
-
-	for(int n=0;n < MAX_PARTY_USER;n++)
-	{
-		if(OBJECT_RANGE(this->m_PartyInfo[index].Index[n]) != 0)
-		{
-			gEffectManager.GCPartyEffectListSend(&gObj[this->m_PartyInfo[index].Index[n]]);
-		}
-	}
-
-	#endif
 }
 
 void CParty::GCPartyDelMemberSend(int aIndex) // OK
@@ -683,29 +641,12 @@ void CParty::GCPartyLifeSend(int index) // OK
 
 		LPOBJ lpObj = &gObj[this->m_PartyInfo[index].Index[n]];
 
-		#if(GAMESERVER_UPDATE>=801)
-
-		info.life = (BYTE)(lpObj->Life/((lpObj->MaxLife+lpObj->AddLife)/100));
-
-		info.mana = (BYTE)(lpObj->Mana/((lpObj->MaxMana+lpObj->AddMana)/100));
-
-		memcpy(info.name,lpObj->Name,sizeof(info.name));
-
-		memcpy(&send[size],&info,sizeof(info));
-		size += sizeof(info);
-
-		pMsg.count++;
-
-		#else
-
 		info.number = ((n*16) & 0xF0) | ((BYTE)(lpObj->Life/((lpObj->MaxLife+lpObj->AddLife)/10)) & 0x0F);
 
 		memcpy(&send[size],&info,sizeof(info));
 		size += sizeof(info);
 
 		pMsg.count++;
-
-		#endif
 	}
 
 	pMsg.header.size = size;
@@ -719,16 +660,4 @@ void CParty::GCPartyLifeSend(int index) // OK
 			DataSend(this->m_PartyInfo[index].Index[n],send,size);
 		}
 	}
-
-	#if(GAMESERVER_UPDATE>=803)
-
-	for(int n=0;n < MAX_PARTY_USER;n++)
-	{
-		if(OBJECT_RANGE(this->m_PartyInfo[index].Index[n]) != 0)
-		{
-			gEffectManager.GCPartyEffectListSend(&gObj[this->m_PartyInfo[index].Index[n]]);
-		}
-	}
-
-	#endif
 }

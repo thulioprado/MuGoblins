@@ -29,14 +29,6 @@ enum eChaosMixNumber
 	CHAOS_MIX_SENIOR = 18,
 	CHAOS_MIX_PLUS_ITEM_LEVEL3 = 22,
 	CHAOS_MIX_PLUS_ITEM_LEVEL4 = 23,
-	CHAOS_MIX_WING3 = 24,
-	CHAOS_MIX_PIECE_OF_HORN = 25,
-	CHAOS_MIX_BROKEN_HORN = 26,
-	CHAOS_MIX_HORN_OF_FENRIR = 27,
-	CHAOS_MIX_HORN_OF_FENRIR_UPGRADE = 28,
-	CHAOS_MIX_SHIELD_POTION1 = 30,
-	CHAOS_MIX_SHIELD_POTION2 = 31,
-	CHAOS_MIX_SHIELD_POTION3 = 32,
 };
 
 //**********************************************//
@@ -74,8 +66,6 @@ public:
 	void ChaosBoxItemDown(LPOBJ lpObj,int slot);
 	void ChaosBoxItemKeep(LPOBJ lpObj,int slot);
 	void ChaosBoxItemSave(LPOBJ lpObj);
-	bool GetTalismanOfLuckRate(LPOBJ lpObj,int* rate);
-	bool GetElementalTalismanOfLuckRate(LPOBJ lpObj,int* rate);
 	void ChaosItemMix(LPOBJ lpObj);
 	void DevilSquareMix(LPOBJ lpObj);
 	void PlusItemLevelMix(LPOBJ lpObj,int type);
@@ -88,11 +78,6 @@ public:
 	void SiegePotionMix(LPOBJ lpObj,int type);
 	void LifeStoneMix(LPOBJ lpObj);
 	void SeniorMix(LPOBJ lpObj);
-	void PieceOfHornMix(LPOBJ lpObj);
-	void BrokenHornMix(LPOBJ lpObj);
-	void HornOfFenrirMix(LPOBJ lpObj);
-	void HornOfFenrirUpgradeMix(LPOBJ lpObj);
-	void ShieldPotionMix(LPOBJ lpObj,int type);
 	void CGChaosMixRecv(PMSG_CHAOS_MIX_RECV* lpMsg,int aIndex);
 	void CGChaosMixCloseRecv(int aIndex);
 	void GCChaosBoxSend(LPOBJ lpObj,BYTE type);

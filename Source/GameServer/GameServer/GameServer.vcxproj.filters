@@ -396,9 +396,6 @@
     <ClInclude Include="MemoryAllocatorInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MiniMap.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RandomManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -804,9 +801,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MemoryAllocatorInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MiniMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RandomManager.cpp">

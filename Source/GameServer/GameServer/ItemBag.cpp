@@ -83,15 +83,10 @@ void CItemBag::Load(char* path) // OK
 					strcpy_s(this->m_EventName,lpMemScript->GetString());
 
 					this->m_DropZen = lpMemScript->GetAsNumber();
-
 					this->m_ItemDropRate = lpMemScript->GetAsNumber();
-
 					this->m_ItemDropCount = lpMemScript->GetAsNumber();
-
 					this->m_SetItemDropRate = lpMemScript->GetAsNumber();
-
 					this->m_ItemDropType = lpMemScript->GetAsNumber();
-
 					this->m_SendFirework = lpMemScript->GetAsNumber();
 				}
 				else if(section == 1)
@@ -108,19 +103,12 @@ void CItemBag::Load(char* path) // OK
 					info.Index = SafeGetItem(GET_ITEM(lpMemScript->GetNumber(),lpMemScript->GetAsNumber()));
 
 					info.MinLevel = lpMemScript->GetAsNumber();
-
 					info.MaxLevel = lpMemScript->GetAsNumber();
-
 					info.Option1 = lpMemScript->GetAsNumber();
-
 					info.Option2 = lpMemScript->GetAsNumber();
-
 					info.Option3 = lpMemScript->GetAsNumber();
-
 					info.NewOption = lpMemScript->GetAsNumber();
-
 					info.SetOption = 0;
-
 					info.SocketOption = 0;
 
 					this->SetInfo(info);
@@ -139,19 +127,12 @@ void CItemBag::Load(char* path) // OK
 					info.Index = SafeGetItem(GET_ITEM(lpMemScript->GetNumber(),lpMemScript->GetAsNumber()));
 
 					info.MinLevel = lpMemScript->GetAsNumber();
-
 					info.MaxLevel = lpMemScript->GetAsNumber();
-
 					info.Option1 = lpMemScript->GetAsNumber();
-
 					info.Option2 = lpMemScript->GetAsNumber();
-
 					info.Option3 = lpMemScript->GetAsNumber();
-
 					info.NewOption = lpMemScript->GetAsNumber();
-
 					info.SetOption = lpMemScript->GetAsNumber();
-
 					info.SocketOption = lpMemScript->GetAsNumber();
 
 					this->SetInfo(info);

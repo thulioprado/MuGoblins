@@ -1613,7 +1613,7 @@ void CBloodCastle::NpcAngelMessenger(LPOBJ lpNpc, LPOBJ lpObj) // OK
 		return;
 	}
 
-	if (gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(13, 18), (level + 1)) == 0 && gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(13, 47), 0) == 0)
+	if (gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(13, 18), (level + 1)) == 0)
 	{
 		GCServerCommandSend(lpObj->Index, 1, 21, 0);
 		return;
@@ -2026,7 +2026,7 @@ void CBloodCastle::CGBloodCastleEnterRecv(PMSG_BLOOD_CASTLE_ENTER_RECV* lpMsg, i
 		return;
 	}
 
-	if (lpObj->Inventory[lpMsg->slot].m_Index != GET_ITEM(13, 18) && lpObj->Inventory[lpMsg->slot].m_Index != GET_ITEM(13, 47))
+	if (lpObj->Inventory[lpMsg->slot].m_Index != GET_ITEM(13, 18))
 	{
 		pMsg.result = 1;
 		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);

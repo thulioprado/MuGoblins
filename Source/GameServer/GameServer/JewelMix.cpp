@@ -37,16 +37,8 @@ int CJewelMix::GetJewelSimpleIndex(int type) // OK
 			return GET_ITEM(14,22);
 		case 4:
 			return GET_ITEM(14,31);
-		case 5:
-			return GET_ITEM(14,41);
-		case 6:
-			return GET_ITEM(14,42);
 		case 7:
 			return GET_ITEM(12,15);
-		case 8:
-			return GET_ITEM(14,43);
-		case 9:
-			return GET_ITEM(14,44);
 	}
 
 	return -1;
@@ -60,22 +52,6 @@ int CJewelMix::GetJewelBundleIndex(int type) // OK
 			return GET_ITEM(12,30);
 		case 1:
 			return GET_ITEM(12,31);
-		case 2:
-			return GET_ITEM(12,136);
-		case 3:
-			return GET_ITEM(12,137);
-		case 4:
-			return GET_ITEM(12,138);
-		case 5:
-			return GET_ITEM(12,139);
-		case 6:
-			return GET_ITEM(12,140);
-		case 7:
-			return GET_ITEM(12,141);
-		case 8:
-			return GET_ITEM(12,142);
-		case 9:
-			return GET_ITEM(12,143);
 	}
 
 	return -1;

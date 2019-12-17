@@ -72,7 +72,6 @@ void CItemBagEx::Load(char* path) // OK
 					ITEM_BAG_EX_INFO info;
 
 					info.Index = lpMemScript->GetNumber();
-
 					info.DropRate = lpMemScript->GetAsNumber();
 
 					this->m_ItemBagInfo[info.Index] = info;
@@ -87,13 +86,9 @@ void CItemBagEx::Load(char* path) // OK
 					ITEM_BAG_EX_DROP_INFO info;
 
 					info.Index = lpMemScript->GetNumber();
-
 					info.Section = lpMemScript->GetAsNumber();
-
 					info.SectionRate = lpMemScript->GetAsNumber();
-
 					info.MoneyAmount = lpMemScript->GetAsNumber();
-
 					info.OptionValue = lpMemScript->GetAsNumber();
 
 					for (int n = 0; n < MAX_CLASS; n++)
@@ -118,25 +113,15 @@ void CItemBagEx::Load(char* path) // OK
 					ITEM_BAG_EX_ITEM_INFO info;
 
 					info.Index = lpMemScript->GetNumber();
-
 					info.Level = lpMemScript->GetAsNumber();
-
 					info.Grade = lpMemScript->GetAsNumber();
-
 					info.Option0 = lpMemScript->GetAsNumber();
-
 					info.Option1 = lpMemScript->GetAsNumber();
-
 					info.Option2 = lpMemScript->GetAsNumber();
-
 					info.Option3 = lpMemScript->GetAsNumber();
-
 					info.Option4 = lpMemScript->GetAsNumber();
-
 					info.Option5 = lpMemScript->GetAsNumber();
-
 					info.Option6 = lpMemScript->GetAsNumber();
-
 					info.Duration = lpMemScript->GetAsNumber();
 
 					auto it = this->m_ItemBagItemInfo.find(section);

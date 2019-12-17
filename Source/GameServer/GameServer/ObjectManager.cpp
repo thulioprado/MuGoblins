@@ -1353,81 +1353,6 @@ void CObjectManager::CharacterMakePreviewCharSet(int aIndex) // OK
 	lpObj->CharSet[7] = level >> 8;
 	lpObj->CharSet[8] = level;
 
-#if(GAMESERVER_UPDATE>=601)
-
-	if (TempInventory[7] >= 0 && TempInventory[7] <= 2)
-	{
-		lpObj->CharSet[5] |= 4;
-		lpObj->CharSet[9] |= TempInventory[7] + 1;
-	}
-	else if (TempInventory[7] >= 3 && TempInventory[7] <= 6)
-	{
-		lpObj->CharSet[5] |= 8;
-		lpObj->CharSet[9] |= TempInventory[7] - 2;
-	}
-	else if (TempInventory[7] == 30)
-	{
-		lpObj->CharSet[5] |= 8;
-		lpObj->CharSet[9] |= 5;
-	}
-	else if (TempInventory[7] >= 36 && TempInventory[7] <= 40)
-	{
-		lpObj->CharSet[5] |= 12;
-		lpObj->CharSet[9] |= TempInventory[7] - 35;
-	}
-	else if (TempInventory[7] == 41)
-	{
-		lpObj->CharSet[5] |= 4;
-		lpObj->CharSet[9] |= 4;
-	}
-	else if (TempInventory[7] == 42)
-	{
-		lpObj->CharSet[5] |= 8;
-		lpObj->CharSet[9] |= 6;
-	}
-	else if (TempInventory[7] == 43)
-	{
-		lpObj->CharSet[5] |= 12;
-		lpObj->CharSet[9] |= 6;
-	}
-	else if (TempInventory[7] == 49)
-	{
-		lpObj->CharSet[5] |= 8;
-		lpObj->CharSet[9] |= 7;
-	}
-	else if (TempInventory[7] == 50)
-	{
-		lpObj->CharSet[5] |= 12;
-		lpObj->CharSet[9] |= 7;
-	}
-	else if (TempInventory[7] >= 130 && TempInventory[7] <= 135)
-	{
-		lpObj->CharSet[5] |= 12;
-		lpObj->CharSet[17] |= (TempInventory[7] - 129) << 5;
-	}
-	else if (TempInventory[7] >= 262 && TempInventory[7] <= 265)
-	{
-		lpObj->CharSet[5] |= 8;
-		lpObj->CharSet[16] |= (TempInventory[7] - 261) << 2;
-	}
-	else if (TempInventory[7] == 266)
-	{
-		lpObj->CharSet[5] |= 4;
-		lpObj->CharSet[9] |= 5;
-	}
-	else if (TempInventory[7] == 267)
-	{
-		lpObj->CharSet[5] |= 4;
-		lpObj->CharSet[9] |= 6;
-	}
-	else if (gCustomWing.CheckCustomWingByItem(GET_ITEM(12, TempInventory[7])) != 0)
-	{
-		lpObj->CharSet[5] |= 12;
-		lpObj->CharSet[17] |= (gCustomWing.GetCustomWingIndex(GET_ITEM(12, TempInventory[7])) + 1) << 1;
-	}
-
-#else
-
 	if (TempInventory[7] == 0x1FF)
 	{
 		lpObj->CharSet[5] |= 12;
@@ -1471,8 +1396,6 @@ void CObjectManager::CharacterMakePreviewCharSet(int aIndex) // OK
 		lpObj->CharSet[5] |= 12;
 		lpObj->CharSet[17] |= (TempInventory[7] - 129) << 5;
 	}
-
-#endif
 
 	if (TempInventory[8] == 0x1FF)
 	{
@@ -1544,7 +1467,7 @@ bool CObjectManager::CharacterUseScroll(LPOBJ lpObj, CItem* lpItem) // OK
 		return 0;
 	}
 
-	if (lpItem->m_Index >= GET_ITEM(12, 8) && lpItem->m_Index <= GET_ITEM(12, 24) || (lpItem->m_Index >= GET_ITEM(12, 44) && lpItem->m_Index <= GET_ITEM(12, 48)))
+	if (lpItem->m_Index >= GET_ITEM(12, 8) && lpItem->m_Index <= GET_ITEM(12, 24))
 	{
 		if (lpObj->Level < lpItem->m_RequireLevel)
 		{
@@ -1552,7 +1475,7 @@ bool CObjectManager::CharacterUseScroll(LPOBJ lpObj, CItem* lpItem) // OK
 		}
 	}
 
-	if ((lpItem->m_Index >= GET_ITEM(12, 44) && lpItem->m_Index <= GET_ITEM(12, 46)) || lpItem->m_Index == GET_ITEM(15, 18) || lpItem->m_Index == GET_ITEM(15, 27) || lpItem->m_Index == GET_ITEM(15, 28))
+	if (lpItem->m_Index == GET_ITEM(15, 18))
 	{
 		if (gQuest.CheckQuestListState(lpObj, 2, QUEST_FINISH) == 0)
 		{
@@ -1795,19 +1718,7 @@ bool CObjectManager::CharacterUseJewelOfBless(LPOBJ lpObj, int SourceSlot, int T
 
 	CItem* lpItem = &lpObj->Inventory[TargetSlot];
 
-	if (lpObj->Inventory[SourceSlot].m_Index == GET_ITEM(12, 30) && lpItem->m_Index != GET_ITEM(0, 41))
-	{
-		return 0;
-	}
-
-	if (lpItem->m_Index == GET_ITEM(0, 41)) // Pick Axe
-	{
-		lpItem->m_Durability += ((lpObj->Inventory[SourceSlot].m_Index == GET_ITEM(12, 30)) ? ((lpObj->Inventory[SourceSlot].m_Level + 1) * 40) : 4);
-		lpItem->m_Durability = ((lpItem->m_Durability > 255) ? 255 : lpItem->m_Durability);
-		return 1;
-	}
-
-	if (lpItem->m_Index > GET_ITEM(12, 6) && (lpItem->m_Index < GET_ITEM(12, 36) || lpItem->m_Index > GET_ITEM(12, 43)) && lpItem->m_Index != GET_ITEM(12, 49) && lpItem->m_Index != GET_ITEM(12, 50) && (lpItem->m_Index < GET_ITEM(12, 262) || lpItem->m_Index > GET_ITEM(12, 265)) && lpItem->m_Index != GET_ITEM(13, 30))
+	if (lpItem->m_Index > GET_ITEM(12, 6) && lpItem->m_Index != GET_ITEM(13, 30))
 	{
 		return 0;
 	}
@@ -1858,7 +1769,7 @@ bool CObjectManager::CharacterUseJewelOfSoul(LPOBJ lpObj, int SourceSlot, int Ta
 
 	CItem* lpItem = &lpObj->Inventory[TargetSlot];
 
-	if (lpItem->m_Index > GET_ITEM(12, 6) && (lpItem->m_Index < GET_ITEM(12, 36) || lpItem->m_Index > GET_ITEM(12, 43)) && lpItem->m_Index != GET_ITEM(12, 49) && lpItem->m_Index != GET_ITEM(12, 50) && (lpItem->m_Index < GET_ITEM(12, 262) || lpItem->m_Index > GET_ITEM(12, 265)) && lpItem->m_Index != GET_ITEM(13, 30))
+	if (lpItem->m_Index > GET_ITEM(12, 6) && lpItem->m_Index != GET_ITEM(13, 30))
 	{
 		return 0;
 	}
@@ -1930,7 +1841,7 @@ bool CObjectManager::CharacterUseJewelOfLife(LPOBJ lpObj, int SourceSlot, int Ta
 
 	CItem* lpItem = &lpObj->Inventory[TargetSlot];
 
-	if (lpItem->m_Index > GET_ITEM(12, 6) && (lpItem->m_Index < GET_ITEM(12, 36) || lpItem->m_Index > GET_ITEM(12, 43)) && lpItem->m_Index != GET_ITEM(12, 49) && lpItem->m_Index != GET_ITEM(12, 50) && (lpItem->m_Index < GET_ITEM(12, 262) || lpItem->m_Index > GET_ITEM(12, 265)) && lpItem->m_Index != GET_ITEM(13, 30))
+	if (lpItem->m_Index > GET_ITEM(12, 6) && lpItem->m_Index != GET_ITEM(13, 30))
 	{
 		return 0;
 	}
@@ -1942,16 +1853,10 @@ bool CObjectManager::CharacterUseJewelOfLife(LPOBJ lpObj, int SourceSlot, int Ta
 
 	if ((GetLargeRand() % 100) < gServerInfo.m_LifeSuccessRate[lpObj->AccountLevel])
 	{
-		if (lpItem->m_Option3 == 0 && ((lpItem->m_Index >= GET_ITEM(12, 3) && lpItem->m_Index <= GET_ITEM(12, 6)) || lpItem->m_Index == GET_ITEM(12, 42) || lpItem->m_Index == GET_ITEM(12, 49)))
+		if (lpItem->m_Option3 == 0 && (lpItem->m_Index >= GET_ITEM(12, 3) && lpItem->m_Index <= GET_ITEM(12, 6)))
 		{
 			lpItem->m_NewOption &= 0xDF;
 			lpItem->m_NewOption |= (32 * (GetLargeRand() % 2));
-		}
-
-		if (lpItem->m_Option3 == 0 && ((lpItem->m_Index >= GET_ITEM(12, 36) && lpItem->m_Index <= GET_ITEM(12, 40)) || lpItem->m_Index == GET_ITEM(12, 43) || lpItem->m_Index == GET_ITEM(12, 50)))
-		{
-			lpItem->m_NewOption &= 0xCF;
-			lpItem->m_NewOption |= (16 * (GetLargeRand() % 3));
 		}
 
 		lpItem->m_Option3++;
@@ -1968,161 +1873,6 @@ bool CObjectManager::CharacterUseJewelOfLife(LPOBJ lpObj, int SourceSlot, int Ta
 	lpItem->Convert(lpItem->m_Index, lpItem->m_Option1, lpItem->m_Option2, lpItem->m_Option3, lpItem->m_NewOption, lpItem->m_SetOption);
 
 	this->CharacterMakePreviewCharSet(lpObj->Index);
-	return 1;
-}
-
-bool CObjectManager::CharacterUseTalismanOfResurrection(LPOBJ lpObj, int SourceSlot) // OK
-{
-	if (lpObj->ResurrectionTalismanActive == 0)
-	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage(226));
-		return 0;
-	}
-
-	if (gMoveSummon.CheckMoveSummon(lpObj, lpObj->ResurrectionTalismanMap, lpObj->ResurrectionTalismanX, lpObj->ResurrectionTalismanY) == 0)
-	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage(226));
-		return 0;
-	}
-
-	gObjTeleport(lpObj->Index, lpObj->ResurrectionTalismanMap, lpObj->ResurrectionTalismanX, lpObj->ResurrectionTalismanY);
-
-	lpObj->ResurrectionTalismanActive = 0;
-
-	lpObj->ResurrectionTalismanMap = 0;
-
-	lpObj->ResurrectionTalismanX = 0;
-
-	lpObj->ResurrectionTalismanY = 0;
-
-	GCServerCommandSend(lpObj->Index, 60, 0, 0);
-	return 1;
-}
-
-bool CObjectManager::CharacterUseTalismanOfMobility(LPOBJ lpObj, int SourceSlot) // OK
-{
-	if (lpObj->MobilityTalismanActive == 0)
-	{
-		lpObj->MobilityTalismanActive = 1;
-		lpObj->MobilityTalismanMap = lpObj->Map;
-		lpObj->MobilityTalismanX = lpObj->X;
-		lpObj->MobilityTalismanY = lpObj->Y;
-		lpObj->Inventory[SourceSlot].m_Durability = 1;
-		gItemManager.GCItemDurSend(lpObj->Index, SourceSlot, (BYTE)lpObj->Inventory[SourceSlot].m_Durability, 1);
-		return 0;
-	}
-
-	if (gMoveSummon.CheckMoveSummon(lpObj, lpObj->MobilityTalismanMap, lpObj->MobilityTalismanX, lpObj->MobilityTalismanY) == 0)
-	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage(226));
-		return 0;
-	}
-
-	gObjTeleport(lpObj->Index, lpObj->MobilityTalismanMap, lpObj->MobilityTalismanX, lpObj->MobilityTalismanY);
-
-	lpObj->MobilityTalismanActive = 0;
-
-	lpObj->MobilityTalismanMap = 0;
-
-	lpObj->MobilityTalismanX = 0;
-
-	lpObj->MobilityTalismanY = 0;
-
-	GCServerCommandSend(lpObj->Index, 61, 0, 0);
-	return 1;
-}
-
-bool CObjectManager::CharacterUseCreationCard(LPOBJ lpObj, CItem* lpItem) // OK
-{
-	switch (lpItem->m_Index)
-	{
-		case GET_ITEM(14, 91):
-			if ((lpObj->ClassCode & 1) == 0 && (lpObj->ClassFlag & 1) != 0)
-			{
-				lpObj->ClassCode |= 1;
-				GDCreationCardSaveSend(lpObj->Index, (lpObj->ClassCode & 9));
-				return 1;
-			}
-			break;
-		case GET_ITEM(14, 97):
-			if ((lpObj->ClassCode & 4) == 0 && (lpObj->ClassFlag & 4) != 0)
-			{
-				lpObj->ClassCode |= 4;
-				GDCreationCardSaveSend(lpObj->Index, (lpObj->ClassCode & 9));
-				return 1;
-			}
-			break;
-		case GET_ITEM(14, 98):
-			if ((lpObj->ClassCode & 2) == 0 && (lpObj->ClassFlag & 2) != 0)
-			{
-				lpObj->ClassCode |= 2;
-				GDCreationCardSaveSend(lpObj->Index, (lpObj->ClassCode & 9));
-				return 1;
-			}
-			break;
-		case GET_ITEM(14, 169):
-			if ((lpObj->ClassCode & 8) == 0 && (lpObj->ClassFlag & 8) != 0)
-			{
-				lpObj->ClassCode |= 8;
-				GDCreationCardSaveSend(lpObj->Index, (lpObj->ClassCode & 9));
-				return 1;
-			}
-			break;
-	}
-
-	return 0;
-}
-
-bool CObjectManager::CharacterUseInventoryExpansion(LPOBJ lpObj, CItem* lpItem) // OK
-{
-	if (lpObj->ExtInventory >= 2)
-	{
-		return 0;
-	}
-
-	lpObj->ExtInventory++;
-	GDCharacterInfoSaveSend(lpObj->Index);
-	return 1;
-}
-
-bool CObjectManager::CharacterUseWarehouseExpansion(LPOBJ lpObj, CItem* lpItem) // OK
-{
-	if (lpObj->ExtWarehouse >= 1)
-	{
-		return 0;
-	}
-
-	lpObj->ExtWarehouse++;
-	GDCharacterInfoSaveSend(lpObj->Index);
-	return 1;
-}
-
-bool CObjectManager::CharacterUseTradeableSeal(LPOBJ lpObj, int SourceSlot, int TargetSlot) // OK
-{
-	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
-	{
-		return 0;
-	}
-
-	if (INVENTORY_FULL_RANGE(TargetSlot) == 0)
-	{
-		return 0;
-	}
-
-	if (lpObj->Inventory[SourceSlot].IsItem() == 0)
-	{
-		return 0;
-	}
-
-	if (lpObj->Inventory[TargetSlot].IsItem() == 0)
-	{
-		return 0;
-	}
-
-	CItem* lpItem = &lpObj->Inventory[TargetSlot];
-
-	lpItem->m_Durability++;
-
 	return 1;
 }
 
@@ -2432,18 +2182,6 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 			lpObj->Inventory[n].m_IsValidItem = 1;
 		}
 	}
-
-#if(GAMESERVER_UPDATE>=701)
-
-	for (int n = INVENTORY_FULL_SIZE; n < INVENTORY_SIZE; n++)
-	{
-		if (lpObj->Inventory[n].IsItem() != 0)
-		{
-			lpObj->Inventory[n].m_IsValidItem = 1;
-		}
-	}
-
-#endif
 
 	lpObj->AddLife = 0;
 	lpObj->AddMana = 0;
@@ -2790,14 +2528,6 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	{
 		lpObj->DefenseSuccessRatePvP = ((lpObj->Level * gServerInfo.m_DLDefenseSuccessRatePvPConstA) / gServerInfo.m_DLDefenseSuccessRatePvPConstB) + (Dexterity / gServerInfo.m_DLDefenseSuccessRatePvPConstC);
 	}
-	else if (lpObj->Class == CLASS_SU)
-	{
-		lpObj->DefenseSuccessRatePvP = ((lpObj->Level * gServerInfo.m_SUDefenseSuccessRatePvPConstA) / gServerInfo.m_SUDefenseSuccessRatePvPConstB) + (Dexterity / gServerInfo.m_SUDefenseSuccessRatePvPConstC);
-	}
-	else if (lpObj->Class == CLASS_RF)
-	{
-		lpObj->DefenseSuccessRatePvP = ((lpObj->Level * gServerInfo.m_RFDefenseSuccessRatePvPConstA) / gServerInfo.m_RFDefenseSuccessRatePvPConstB) + (Dexterity / gServerInfo.m_RFDefenseSuccessRatePvPConstC);
-	}
 
 	int LastItemIndex = -1;
 
@@ -2940,132 +2670,12 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	gDarkSpirit[lpObj->Index].Set(lpObj->Index, &lpObj->Inventory[1]);
 
 	lpObj->Resistance[0] = GET_MAX_RESISTANCE(Amulet->m_Resistance[0], Ring1->m_Resistance[0], Ring2->m_Resistance[0]);
-
 	lpObj->Resistance[1] = GET_MAX_RESISTANCE(Amulet->m_Resistance[1], Ring1->m_Resistance[1], Ring2->m_Resistance[1]);
-
 	lpObj->Resistance[2] = GET_MAX_RESISTANCE(Amulet->m_Resistance[2], Ring1->m_Resistance[2], Ring2->m_Resistance[2]);
-
 	lpObj->Resistance[3] = GET_MAX_RESISTANCE(Amulet->m_Resistance[3], Ring1->m_Resistance[3], Ring2->m_Resistance[3]);
-
 	lpObj->Resistance[4] = GET_MAX_RESISTANCE(Amulet->m_Resistance[4], Ring1->m_Resistance[4], Ring2->m_Resistance[4]);
-
 	lpObj->Resistance[5] = GET_MAX_RESISTANCE(Amulet->m_Resistance[5], Ring1->m_Resistance[5], Ring2->m_Resistance[5]);
-
 	lpObj->Resistance[6] = GET_MAX_RESISTANCE(Amulet->m_Resistance[6], Ring1->m_Resistance[6], Ring2->m_Resistance[6]);
-
-#if(GAMESERVER_UPDATE>=701)
-
-	if (lpObj->Class == CLASS_DW)
-	{
-		lpObj->ElementalAttribute = 0;
-
-		lpObj->ElementalDefense = Dexterity / gServerInfo.m_DWElementalDefenseConstA;
-
-		lpObj->ElementalDamageMin = Energy / gServerInfo.m_DWElementalDamageMinConstA;
-
-		lpObj->ElementalDamageMax = Energy / gServerInfo.m_DWElementalDamageMaxConstA;
-
-		lpObj->ElementalAttackSuccessRate = (lpObj->Level * gServerInfo.m_DWElementalAttackSuccessRateConstA) + (Strength / gServerInfo.m_DWElementalAttackSuccessRateConstB) + ((Dexterity * gServerInfo.m_DWElementalAttackSuccessRateConstC) / gServerInfo.m_DWElementalAttackSuccessRateConstD);
-
-		lpObj->ElementalDefenseSuccessRate = Dexterity / gServerInfo.m_DWElementalDefenseSuccessRateConstA;
-	}
-	if (lpObj->Class == CLASS_DK)
-	{
-		lpObj->ElementalAttribute = 0;
-
-		lpObj->ElementalDefense = Dexterity / gServerInfo.m_DKElementalDefenseConstA;
-
-		lpObj->ElementalDamageMin = Strength / gServerInfo.m_DKElementalDamageMinConstA;
-
-		lpObj->ElementalDamageMax = Strength / gServerInfo.m_DKElementalDamageMaxConstA;
-
-		lpObj->ElementalAttackSuccessRate = (lpObj->Level * gServerInfo.m_DKElementalAttackSuccessRateConstA) + (Strength / gServerInfo.m_DKElementalAttackSuccessRateConstB) + ((Dexterity * gServerInfo.m_DKElementalAttackSuccessRateConstC) / gServerInfo.m_DKElementalAttackSuccessRateConstD);
-
-		lpObj->ElementalDefenseSuccessRate = Dexterity / gServerInfo.m_DKElementalDefenseSuccessRateConstA;
-	}
-	else if (lpObj->Class == CLASS_FE)
-	{
-		lpObj->ElementalAttribute = 0;
-
-		lpObj->ElementalDefense = Dexterity / gServerInfo.m_FEElementalDefenseConstA;
-
-		lpObj->ElementalDamageMin = (Strength / gServerInfo.m_FEElementalDamageMinConstA) + (Dexterity / gServerInfo.m_FEElementalDamageMinConstB);
-
-		lpObj->ElementalDamageMax = (Strength / gServerInfo.m_FEElementalDamageMaxConstA) + (Dexterity / gServerInfo.m_FEElementalDamageMaxConstB);
-
-		lpObj->ElementalAttackSuccessRate = (lpObj->Level * gServerInfo.m_FEElementalAttackSuccessRateConstA) + (Strength / gServerInfo.m_FEElementalAttackSuccessRateConstB) + ((Dexterity * gServerInfo.m_FEElementalAttackSuccessRateConstC) / gServerInfo.m_FEElementalAttackSuccessRateConstD);
-
-		lpObj->ElementalDefenseSuccessRate = Dexterity / gServerInfo.m_FEElementalDefenseSuccessRateConstA;
-	}
-	else if (lpObj->Class == CLASS_MG)
-	{
-		lpObj->ElementalAttribute = 0;
-
-		lpObj->ElementalDefense = Dexterity / gServerInfo.m_MGElementalDefenseConstA;
-
-		lpObj->ElementalDamageMin = (Strength / gServerInfo.m_MGElementalDamageMinConstA) + (Energy / gServerInfo.m_MGElementalDamageMinConstB);
-
-		lpObj->ElementalDamageMax = (Strength / gServerInfo.m_MGElementalDamageMaxConstA) + (Energy / gServerInfo.m_MGElementalDamageMaxConstB);
-
-		lpObj->ElementalAttackSuccessRate = (lpObj->Level * gServerInfo.m_MGElementalAttackSuccessRateConstA) + (Strength / gServerInfo.m_MGElementalAttackSuccessRateConstB) + ((Dexterity * gServerInfo.m_MGElementalAttackSuccessRateConstC) / gServerInfo.m_MGElementalAttackSuccessRateConstD);
-
-		lpObj->ElementalDefenseSuccessRate = Dexterity / gServerInfo.m_MGElementalDefenseSuccessRateConstA;
-	}
-	else if (lpObj->Class == CLASS_DL)
-	{
-		lpObj->ElementalAttribute = 0;
-
-		lpObj->ElementalDefense = Dexterity / gServerInfo.m_DLElementalDefenseConstA;
-
-		lpObj->ElementalDamageMin = (Strength / gServerInfo.m_DLElementalDamageMinConstA) + (Energy / gServerInfo.m_DLElementalDamageMinConstB);
-
-		lpObj->ElementalDamageMax = (Strength / gServerInfo.m_DLElementalDamageMaxConstA) + (Energy / gServerInfo.m_DLElementalDamageMaxConstB);
-
-		lpObj->ElementalAttackSuccessRate = (lpObj->Level * gServerInfo.m_DLElementalAttackSuccessRateConstA) + (Strength / gServerInfo.m_DLElementalAttackSuccessRateConstB) + ((Dexterity * gServerInfo.m_DLElementalAttackSuccessRateConstC) / gServerInfo.m_DLElementalAttackSuccessRateConstD);
-
-		lpObj->ElementalDefenseSuccessRate = Dexterity / gServerInfo.m_DLElementalDefenseSuccessRateConstA;
-	}
-	else if (lpObj->Class == CLASS_SU)
-	{
-		lpObj->ElementalAttribute = 0;
-
-		lpObj->ElementalDefense = Dexterity / gServerInfo.m_SUElementalDefenseConstA;
-
-		lpObj->ElementalDamageMin = Energy / gServerInfo.m_SUElementalDamageMinConstA;
-
-		lpObj->ElementalDamageMax = Energy / gServerInfo.m_SUElementalDamageMaxConstA;
-
-		lpObj->ElementalAttackSuccessRate = (lpObj->Level * gServerInfo.m_SUElementalAttackSuccessRateConstA) + (Strength / gServerInfo.m_SUElementalAttackSuccessRateConstB) + ((Dexterity * gServerInfo.m_SUElementalAttackSuccessRateConstC) / gServerInfo.m_SUElementalAttackSuccessRateConstD);
-
-		lpObj->ElementalDefenseSuccessRate = Dexterity / gServerInfo.m_SUElementalDefenseSuccessRateConstA;
-	}
-	else if (lpObj->Class == CLASS_RF)
-	{
-		lpObj->ElementalAttribute = 0;
-
-		lpObj->ElementalDefense = Dexterity / gServerInfo.m_RFElementalDefenseConstA;
-
-		lpObj->ElementalDamageMin = (Strength / gServerInfo.m_RFElementalDamageMinConstA) + (Vitality / gServerInfo.m_RFElementalDamageMinConstB);
-
-		lpObj->ElementalDamageMax = (Strength / gServerInfo.m_RFElementalDamageMaxConstA) + (Vitality / gServerInfo.m_RFElementalDamageMaxConstB);
-
-		lpObj->ElementalAttackSuccessRate = (lpObj->Level * gServerInfo.m_RFElementalAttackSuccessRateConstA) + (Strength / gServerInfo.m_RFElementalAttackSuccessRateConstB) + ((Dexterity * gServerInfo.m_RFElementalAttackSuccessRateConstC) / gServerInfo.m_RFElementalAttackSuccessRateConstD);
-
-		lpObj->ElementalDefenseSuccessRate = Dexterity / gServerInfo.m_RFElementalDefenseSuccessRateConstA;
-	}
-
-	if (Pentagram->IsItem() != 0 && Pentagram->IsPentagramItem() != 0 && Pentagram->m_IsValidItem != 0)
-	{
-		lpObj->ElementalAttribute = Pentagram->m_SocketOptionBonus % 16;
-
-		lpObj->ElementalDefense += Pentagram->m_Defense;
-
-		lpObj->ElementalDamageMin += Pentagram->m_DamageMin;
-
-		lpObj->ElementalDamageMax += Pentagram->m_DamageMax;
-	}
-
-#endif
 
 	gObjCalcExperience(lpObj);
 	gItemOption.CalcItemCommonOption(lpObj, 0);
@@ -3172,16 +2782,8 @@ bool CObjectManager::CharacterInfoSet(BYTE* aRecv, int aIndex) // OK
 	lpObj->DBClass = lpMsg->Class;
 	lpObj->Class = lpMsg->Class / 16;
 	lpObj->ChangeUp = lpMsg->Class % 16;
-#if(GAMESERVER_UPDATE>=602)
-	lpObj->ExtInventory = lpMsg->ExtInventory;
-	lpObj->ExtWarehouse = lpMsg->ExtWarehouse;
-#endif
 	lpObj->Reset = lpMsg->Reset;
 	lpObj->MasterReset = lpMsg->MasterReset;
-#if(GAMESERVER_UPDATE>=801)
-	lpObj->UseGuildMatching = lpMsg->UseGuildMatching;
-	lpObj->UseGuildMatchingJoin = lpMsg->UseGuildMatchingJoin;
-#endif
 
 	memcpy(lpObj->Name, lpMsg->name, sizeof(lpObj->Name));
 
@@ -3218,14 +2820,6 @@ bool CObjectManager::CharacterInfoSet(BYTE* aRecv, int aIndex) // OK
 		result = gGate.GetGate(17, &gate, &map, &x, &y, &dir, &level);
 	}
 	else if (lpObj->Level < 6 && lpObj->Class == CLASS_DL && gMap[lpObj->Map].CheckAttr(lpObj->X, lpObj->Y, 1) == 0)
-	{
-		result = gGate.GetGate(17, &gate, &map, &x, &y, &dir, &level);
-	}
-	else if (lpObj->Level < 6 && lpObj->Class == CLASS_SU && gMap[lpObj->Map].CheckAttr(lpObj->X, lpObj->Y, 1) == 0)
-	{
-		result = gGate.GetGate(267, &gate, &map, &x, &y, &dir, &level);
-	}
-	else if (lpObj->Level < 6 && lpObj->Class == CLASS_RF && gMap[lpObj->Map].CheckAttr(lpObj->X, lpObj->Y, 1) == 0)
 	{
 		result = gGate.GetGate(17, &gate, &map, &x, &y, &dir, &level);
 	}

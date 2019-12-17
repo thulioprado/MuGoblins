@@ -10,6 +10,7 @@
 #include <memory>
 #include <chrono>
 #include <thread>
+#include <combaseapi.h>
 #include <gl/GL.h>
 
 typedef unsigned __int64 QWORD;

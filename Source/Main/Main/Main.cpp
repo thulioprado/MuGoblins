@@ -7,19 +7,62 @@
 
 HMODULE wzAudio = nullptr;
 
+bool IsElevated()
+{
+	bool Result = false;
+	HANDLE Token = NULL;
+
+	if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &Token))
+	{
+		TOKEN_ELEVATION Elevation;
+		DWORD Size = sizeof(TOKEN_ELEVATION);
+
+		if (GetTokenInformation(Token, TokenElevation, &Elevation, sizeof(Elevation), &Size))
+		{
+			Result = (Elevation.TokenIsElevated > 0);
+		}
+	}
+
+	if (Token)
+	{
+		CloseHandle(Token);
+	}
+
+	return Result;
+}
+
 BOOL APIENTRY DllMain(HINSTANCE Instance, DWORD Reason, LPVOID Reserved)
 {
 	switch (Reason)
 	{
 		case DLL_PROCESS_ATTACH:
 		{
+			//
+			// Verifica se está sendo executado como admin
+			//
+			if (!IsElevated())
+			{
+				MessageBox(NULL, "Please start the game as administrator.", "Error", MB_OK | MB_ICONERROR);
+				ExitProcess(0);
+				return TRUE;
+			}
+
+			//
+			// Carrega a wzAudio original
+			//
 			wzAudio = LoadLibrary(".\\wza.dll");
 			
+			//
+			// Aplica as correções
+			//
 			if (!Patch())
 			{
 				return FALSE;
 			}
 
+			//
+			// Carrega as customizações
+			//
 			Window.Attach(Instance);
 			Protocol.Load();
 			Player.Load();

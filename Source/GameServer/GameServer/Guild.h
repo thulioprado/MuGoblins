@@ -71,10 +71,6 @@ struct PMSG_GUILD_LIST_SEND
 	DWORD TotalScore;
 	BYTE score;
 	char RivalGuild[9];
-	#if(GAMESERVER_UPDATE>=701)
-	BYTE RivalCount;
-	BYTE RivalMark[32];
-	#endif
 };
 
 struct PMSG_GUILD_LIST

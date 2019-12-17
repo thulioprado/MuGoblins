@@ -237,12 +237,6 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 
 	pMsg.count = 0;
 
-#if(GAMESERVER_UPDATE>=602)
-
-	pMsg.ExtWarehouse = lpMsg->ExtWarehouse;
-
-#endif
-
 	PMSG_CHARACTER_LIST info;
 
 	WORD CharacterCreationLevel = 0;
@@ -342,81 +336,6 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 		info.CharSet[7] = level >> 8;
 		info.CharSet[8] = level;
 
-	#if(GAMESERVER_UPDATE>=601)
-
-		if (TempInventory[7] >= 0 && TempInventory[7] <= 2)
-		{
-			info.CharSet[5] |= 4;
-			info.CharSet[9] |= TempInventory[7] + 1;
-		}
-		else if (TempInventory[7] >= 3 && TempInventory[7] <= 6)
-		{
-			info.CharSet[5] |= 8;
-			info.CharSet[9] |= TempInventory[7] - 2;
-		}
-		else if (TempInventory[7] == 30)
-		{
-			info.CharSet[5] |= 8;
-			info.CharSet[9] |= 5;
-		}
-		else if (TempInventory[7] >= 36 && TempInventory[7] <= 40)
-		{
-			info.CharSet[5] |= 12;
-			info.CharSet[9] |= TempInventory[7] - 35;
-		}
-		else if (TempInventory[7] == 41)
-		{
-			info.CharSet[5] |= 4;
-			info.CharSet[9] |= 4;
-		}
-		else if (TempInventory[7] == 42)
-		{
-			info.CharSet[5] |= 8;
-			info.CharSet[9] |= 6;
-		}
-		else if (TempInventory[7] == 43)
-		{
-			info.CharSet[5] |= 12;
-			info.CharSet[9] |= 6;
-		}
-		else if (TempInventory[7] == 49)
-		{
-			info.CharSet[5] |= 8;
-			info.CharSet[9] |= 7;
-		}
-		else if (TempInventory[7] == 50)
-		{
-			info.CharSet[5] |= 12;
-			info.CharSet[9] |= 7;
-		}
-		else if (TempInventory[7] >= 130 && TempInventory[7] <= 135)
-		{
-			info.CharSet[5] |= 12;
-			info.CharSet[17] |= (TempInventory[7] - 129) << 5;
-		}
-		else if (TempInventory[7] >= 262 && TempInventory[7] <= 265)
-		{
-			info.CharSet[5] |= 8;
-			info.CharSet[16] |= (TempInventory[7] - 261) << 2;
-		}
-		else if (TempInventory[7] == 266)
-		{
-			info.CharSet[5] |= 4;
-			info.CharSet[9] |= 5;
-		}
-		else if (TempInventory[7] == 267)
-		{
-			info.CharSet[5] |= 4;
-			info.CharSet[9] |= 6;
-		}
-		else if (gCustomWing.CheckCustomWingByItem(GET_ITEM(12, TempInventory[7])) != 0)
-		{
-			info.CharSet[5] |= 12;
-			info.CharSet[17] |= (gCustomWing.GetCustomWingIndex(GET_ITEM(12, TempInventory[7])) + 1) << 1;
-		}
-
-	#else
-
 		if (TempInventory[7] == 0x1FF)
 		{
 			info.CharSet[5] |= 12;
@@ -460,8 +379,6 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 			info.CharSet[5] |= 12;
 			info.CharSet[17] |= (TempInventory[7] - 129) << 5;
 		}
-
-	#endif
 
 		if (TempInventory[8] == 0x1FF)
 		{
@@ -756,7 +673,7 @@ void DGCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg) // OK
 
 		item.m_Serial = lpMsg->Serial;
 
-		if (lpMsg->ItemIndex == GET_ITEM(13, 18) || lpMsg->ItemIndex == GET_ITEM(13, 37) || lpMsg->ItemIndex == GET_ITEM(13, 51) || lpMsg->ItemIndex == GET_ITEM(14, 7) || lpMsg->ItemIndex == GET_ITEM(14, 19) || lpMsg->ItemIndex == GET_ITEM(14, 109))
+		if (lpMsg->ItemIndex == GET_ITEM(13, 18) || lpMsg->ItemIndex == GET_ITEM(14, 7) || lpMsg->ItemIndex == GET_ITEM(14, 19))
 		{
 			item.m_Durability = (float)lpMsg->Dur;
 		}
@@ -1585,27 +1502,6 @@ void GDCrywolfInfoSaveSend(int MapServerGroup, int CrywolfState, int OccupationS
 	pMsg.OccupationState = OccupationState;
 
 	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
-}
-
-void GDSNSDataSaveSend(int aIndex, BYTE* data) // OK
-{
-#if(GAMESERVER_UPDATE>=801)
-
-	SDHP_SNS_DATA_SAVE_SEND pMsg;
-
-	pMsg.header.set(0x4E, sizeof(pMsg));
-
-	pMsg.index = aIndex;
-
-	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
-
-	memcpy(pMsg.name, gObj[aIndex].Name, sizeof(pMsg.account));
-
-	memcpy(pMsg.data, data, sizeof(pMsg.data));
-
-	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
-
-#endif
 }
 
 void GDCustomMonsterRewardSaveSend(int aIndex, int MonsterClass, int MapNumber, int RewardValue1, int RewardValue2) // OK

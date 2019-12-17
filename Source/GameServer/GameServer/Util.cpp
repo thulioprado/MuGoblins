@@ -207,22 +207,6 @@ void CloseClient(int aIndex) // OK
 
 void PostMessage1(char* name,char* message,char* text) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	char buff[256] = {0};
-
-	wsprintf(buff,message,name,text);
-
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
-	{
-		if(gObjIsConnectedGP(n) != 0)
-		{
-			GCNewMessageSend(&gObj[n],buff);
-		}
-	}
-
-	#else
-
 	char buff[256] = {0};
 
 	wsprintf(buff,message,text);
@@ -248,28 +232,10 @@ void PostMessage1(char* name,char* message,char* text) // OK
 			DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
 		}
 	}
-
-	#endif
 }
 
 void PostMessage2(char* name,char* message,char* text) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	char buff[256] = {0};
-
-	wsprintf(buff,message,name,text);
-
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
-	{
-		if(gObjIsConnectedGP(n) != 0)
-		{
-			GCNewMessageSend(&gObj[n],buff);
-		}
-	}
-
-	#else
-
 	char buff[256] = {'~'};
 
 	wsprintf(&buff[1],message,text);
@@ -295,28 +261,10 @@ void PostMessage2(char* name,char* message,char* text) // OK
 			DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
 		}
 	}
-
-	#endif
 }
 
 void PostMessage3(char* name,char* message,char* text) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	char buff[256] = {0};
-
-	wsprintf(buff,message,name,text);
-
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
-	{
-		if(gObjIsConnectedGP(n) != 0)
-		{
-			GCNewMessageSend(&gObj[n],buff);
-		}
-	}
-
-	#else
-
 	char buff[256] = {'@'};
 
 	wsprintf(&buff[1],message,text);
@@ -342,28 +290,10 @@ void PostMessage3(char* name,char* message,char* text) // OK
 			DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
 		}
 	}
-
-	#endif
 }
 
 void PostMessage4(char* name,char* message,char* text) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	char buff[256] = {0};
-
-	wsprintf(buff,message,name,text);
-
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
-	{
-		if(gObjIsConnectedGP(n) != 0)
-		{
-			GCNewMessageSend(&gObj[n],buff);
-		}
-	}
-
-	#else
-
 	char buff[256] = {'$'};
 
 	wsprintf(&buff[1],message,text);
@@ -389,8 +319,6 @@ void PostMessage4(char* name,char* message,char* text) // OK
 			DataSend(n,(BYTE*)&pMsg,pMsg.header.size);
 		}
 	}
-
-	#endif
 }
 
 void SetLargeRand() // OK

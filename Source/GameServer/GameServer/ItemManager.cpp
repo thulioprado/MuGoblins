@@ -315,12 +315,12 @@ int CItemManager::GetItemDurability(int index, int level, int NewOption, int Set
 	}
 
 
-	if (index == GET_ITEM(14, 21) || index == GET_ITEM(14, 29) || index == GET_ITEM(14, 100) || index == GET_ITEM(14, 215)) // Rena,Symbol of Kundun,Lucky Coin,Card Piece
+	if (index == GET_ITEM(14, 21) || index == GET_ITEM(14, 29)) // Rena,Symbol of Kundun
 	{
 		return 1;
 	}
 
-	if (index == GET_ITEM(13, 18) || index == GET_ITEM(13, 29) || index == GET_ITEM(13, 51) || index == GET_ITEM(14, 19) || index == GET_ITEM(14, 102) || index == GET_ITEM(14, 109) || index == GET_ITEM(14, 110)) // Invisibility Cloak,Armor of Guardsman,Scroll of Blood,Devil's Invitation,Gaion's Order,Complete Secromicon,Sign of Dimensions
+	if (index == GET_ITEM(13, 18) || index == GET_ITEM(13, 29) || index == GET_ITEM(14, 19)) // Invisibility Cloak,Armor of Guardsman,Devil's Invitation
 	{
 		return 1;
 	}
@@ -363,7 +363,7 @@ int CItemManager::GetItemDurability(int index, int level, int NewOption, int Set
 		dur = ItemInfo.Durability + level;
 	}
 
-	if (index != GET_ITEM(0, 19) && index != GET_ITEM(2, 13) && index != GET_ITEM(4, 18) && index != GET_ITEM(5, 10) && index != GET_ITEM(5, 36) && ItemInfo.Slot != 7) // Sword of Archangel,Scepter of Archangel,Crossbow of Archangel,Staff of Archangel,Stick of Archangel
+	if (index != GET_ITEM(0, 19) && index != GET_ITEM(2, 13) && index != GET_ITEM(4, 18) && index != GET_ITEM(5, 10) && ItemInfo.Slot != 7) // Sword of Archangel,Scepter of Archangel,Crossbow of Archangel,Staff of Archangel
 	{
 		if (SetOption != 0)
 		{
@@ -725,13 +725,13 @@ bool CItemManager::CheckItemMoveToInventory(LPOBJ lpObj, CItem* lpItem, int slot
 
 	if (CC_MAP_RANGE(lpObj->Map) != 0)
 	{
-		if (lpItem->m_Index == GET_ITEM(13, 10) || (lpItem->m_Index >= GET_ITEM(13, 39) && lpItem->m_Index <= GET_ITEM(13, 42)) || lpItem->m_Index == GET_ITEM(13, 68) || lpItem->m_Index == GET_ITEM(13, 76) || lpItem->m_Index == GET_ITEM(13, 122)) // Rings
+		if (lpItem->m_Index == GET_ITEM(13, 10)) // Rings
 		{
 			return 0;
 		}
 	}
 
-	if (lpItem->m_Index == GET_ITEM(13, 10) || (lpItem->m_Index == GET_ITEM(13, 20) && lpItem->m_Level == 0) || (lpItem->m_Index >= GET_ITEM(13, 38) && lpItem->m_Index <= GET_ITEM(13, 42)) || lpItem->m_Index == GET_ITEM(13, 68) || lpItem->m_Index == GET_ITEM(13, 76) || lpItem->m_Index == GET_ITEM(13, 107) || lpItem->m_Index == GET_ITEM(13, 122)) // Rings
+	if (lpItem->m_Index == GET_ITEM(13, 10) || (lpItem->m_Index == GET_ITEM(13, 20) && lpItem->m_Level == 0)) // Rings
 	{
 		if (lpObj->Inventory[slot ^ 1].IsItem() != 0 && lpObj->Inventory[slot ^ 1].m_Index == lpItem->m_Index)
 		{
@@ -1611,7 +1611,7 @@ void CItemManager::DBItemByteConvert(BYTE* lpMsg, CItem* lpItem) // OK
 		return;
 	}
 
-	if (lpItem->m_Index == GET_ITEM(13, 19) || lpItem->m_Index == GET_ITEM(14, 64))
+	if (lpItem->m_Index == GET_ITEM(13, 19))
 	{
 		memset(lpMsg, 0xFF, 16);
 		return;
@@ -1668,7 +1668,7 @@ bool CItemManager::ConvertItemByte(CItem* lpItem, BYTE* lpMsg) // OK
 
 	lpItem->m_Durability = lpMsg[2];
 
-	lpItem->m_Durability = ((lpItem->m_Index == GET_ITEM(13, 70)) ? 2 : lpItem->m_Durability);
+	lpItem->m_Durability = lpItem->m_Durability;
 
 	int MaxStack = gItemStack.GetItemMaxStack(lpItem->m_Index);
 
@@ -1832,11 +1832,6 @@ int CItemManager::RepairItem(LPOBJ lpObj, CItem* lpItem, int slot, int type) // 
 		return 0;
 	}
 
-	if (lpItem->m_Index == GET_ITEM(0, 41)) // Minning Axe
-	{
-		return 0;
-	}
-
 	if (lpItem->m_Slot == 8 && lpItem->m_Index != GET_ITEM(13, 4))
 	{
 		return 0;
@@ -1852,11 +1847,6 @@ int CItemManager::RepairItem(LPOBJ lpObj, CItem* lpItem, int slot, int type) // 
 		return 0;
 	}
 
-	if (lpItem->m_Index >= GET_ITEM(12, 130) && lpItem->m_Index <= GET_ITEM(12, 135)) // Mini Wings
-	{
-		return 0;
-	}
-
 	if (lpObj->Interface.type != INTERFACE_TRAINER && (lpItem->m_Index == GET_ITEM(13, 4) || lpItem->m_Index == GET_ITEM(13, 5)))
 	{
 		return 0;
@@ -1867,7 +1857,7 @@ int CItemManager::RepairItem(LPOBJ lpObj, CItem* lpItem, int slot, int type) // 
 		return 0;
 	}
 
-	if (lpItem->m_Index == GET_ITEM(13, 10) || (lpItem->m_Index >= GET_ITEM(13, 38) && lpItem->m_Index <= GET_ITEM(13, 42)) || lpItem->m_Index == GET_ITEM(13, 68) || lpItem->m_Index == GET_ITEM(13, 76) || lpItem->m_Index == GET_ITEM(13, 122)) // Rings
+	if (lpItem->m_Index == GET_ITEM(13, 10)) // Rings
 	{
 		return 0;
 	}
@@ -2156,12 +2146,6 @@ BYTE CItemManager::MoveItemToInventoryFromWarehouse(LPOBJ lpObj, BYTE SourceSlot
 
 	this->UpdateInventoryViewport(lpObj->Index, TargetSlot);
 
-#if(GAMESERVER_UPDATE>=701)
-
-	gPentagramSystem.MovePentagramToInventoryFromWarehouse(lpObj, &lpObj->Inventory[TargetSlot]);
-
-#endif
-
 	return TargetFlag;
 }
 
@@ -2218,7 +2202,6 @@ BYTE CItemManager::MoveItemToInventoryFromChaosBox(LPOBJ lpObj, BYTE SourceSlot,
 	}
 
 	this->ChaosBoxDelItem(lpObj->Index, SourceSlot);
-
 	this->UpdateInventoryViewport(lpObj->Index, TargetSlot);
 
 	return TargetFlag;
@@ -2628,7 +2611,7 @@ void CItemManager::CGItemGetRecv(PMSG_ITEM_GET_RECV* lpMsg, int aIndex) // OK
 		return;
 	}
 
-	if ((lpItem->m_Index == GET_ITEM(13, 20) && lpItem->m_Level == 0) || lpItem->m_Index == GET_ITEM(13, 38)) // Rings
+	if ((lpItem->m_Index == GET_ITEM(13, 20) && lpItem->m_Level == 0)) // Rings
 	{
 		if (this->GetInventoryItemCount(lpObj, lpItem->m_Index, lpItem->m_Level) > 0)
 		{
@@ -2830,16 +2813,6 @@ void CItemManager::CGItemDropRecv(PMSG_ITEM_DROP_RECV* lpMsg, int aIndex) // OK
 			return;
 		}
 
-		this->InventoryDelItem(aIndex, lpMsg->slot);
-	}
-	else if (lpItem->m_Index == GET_ITEM(14, 63)) // Width Gruel
-	{
-		GCFireworksSend(lpObj, lpMsg->x, lpMsg->y);
-		this->InventoryDelItem(aIndex, lpMsg->slot);
-	}
-	else if (lpItem->m_Index == GET_ITEM(14, 99)) // Christmas Firecracker
-	{
-		GCFireworksSend(lpObj, lpMsg->x, lpMsg->y);
 		this->InventoryDelItem(aIndex, lpMsg->slot);
 	}
 	else
@@ -3059,7 +3032,7 @@ void CItemManager::CGItemUseRecv(PMSG_ITEM_USE_RECV* lpMsg, int aIndex) // OK
 		return;
 	}
 
-	if ((lpItem->m_Index >= GET_ITEM(12, 7) && lpItem->m_Index <= GET_ITEM(12, 24)) || lpItem->m_Index == GET_ITEM(12, 35) || (lpItem->m_Index >= GET_ITEM(12, 44) && lpItem->m_Index <= GET_ITEM(12, 48)) || lpItem->m_Index >= GET_ITEM(15, 0))
+	if ((lpItem->m_Index >= GET_ITEM(12, 7) && lpItem->m_Index <= GET_ITEM(12, 24)) || lpItem->m_Index >= GET_ITEM(15, 0))
 	{
 		if (gObjectManager.CharacterUseScroll(lpObj, lpItem) != 0)
 		{
@@ -3095,43 +3068,7 @@ void CItemManager::CGItemUseRecv(PMSG_ITEM_USE_RECV* lpMsg, int aIndex) // OK
 			}
 		}
 	}
-	else if (lpItem->m_Index == GET_ITEM(13, 48)) // Kalima Ticket
-	{
-		if (gKalima.CreateKalimaGate(aIndex, gKalima.GetKalimaGateLevel(lpObj), lpObj->X, lpObj->Y) != 0)
-		{
-			this->DecreaseItemDur(lpObj, lpMsg->SourceSlot, 1);
-		}
-	}
-	else if (lpItem->m_Index >= GET_ITEM(13, 54) && lpItem->m_Index <= GET_ITEM(13, 58)) // Fruit Reset
-	{
-		if (gFruit.UseFruitResetPoint(lpObj, (lpItem->m_Index - GET_ITEM(13, 54)), (int)(lpItem->m_Durability * 10)) != 0)
-		{
-			this->InventoryDelItem(aIndex, lpMsg->SourceSlot);
-			this->GCItemDeleteSend(aIndex, lpMsg->SourceSlot, 1);
-		}
-	}
-	else if (lpItem->m_Index == GET_ITEM(13, 66)) // Santa Town Invitation
-	{
-		gObjTeleport(aIndex, 62, 223, 23);
-		this->DecreaseItemDur(lpObj, lpMsg->SourceSlot, 1);
-	}
-	else if (lpItem->m_Index == GET_ITEM(13, 69)) // Talisman of Resurrection
-	{
-		if (gObjectManager.CharacterUseTalismanOfResurrection(lpObj, lpMsg->SourceSlot) != 0)
-		{
-			this->InventoryDelItem(aIndex, lpMsg->SourceSlot);
-			this->GCItemDeleteSend(aIndex, lpMsg->SourceSlot, 1);
-		}
-	}
-	else if (lpItem->m_Index == GET_ITEM(13, 70)) // Talisman of Mobility
-	{
-		if (gObjectManager.CharacterUseTalismanOfMobility(lpObj, lpMsg->SourceSlot) != 0)
-		{
-			this->InventoryDelItem(aIndex, lpMsg->SourceSlot);
-			this->GCItemDeleteSend(aIndex, lpMsg->SourceSlot, 1);
-		}
-	}
-	else if ((lpItem->m_Index >= GET_ITEM(14, 0) && lpItem->m_Index <= GET_ITEM(14, 6)) || (lpItem->m_Index >= GET_ITEM(14, 35) && lpItem->m_Index <= GET_ITEM(14, 40)) || lpItem->m_Index == GET_ITEM(14, 70) || lpItem->m_Index == GET_ITEM(14, 71) || lpItem->m_Index == GET_ITEM(14, 133))
+	else if (lpItem->m_Index >= GET_ITEM(14, 0) && lpItem->m_Index <= GET_ITEM(14, 6))
 	{
 		if (gObjectManager.CharacterUsePotion(lpObj, lpItem) != 0)
 		{
@@ -3398,16 +3335,9 @@ void CItemManager::CGItemSellRecv(PMSG_ITEM_SELL_RECV* lpMsg, int aIndex) // OK
 		lpObj->Money += lpItem->m_SellMoney;
 	}
 
-#if(GAMESERVER_UPDATE>=701)
-
-	gPentagramSystem.DelAllPentagramJewelInfo(lpObj, lpItem, PENTAGRAM_JEWEL_TYPE_INVENTORY);
-
-#endif
-
 	this->InventoryDelItem(aIndex, lpMsg->slot);
 
 	pMsg.result = 1;
-
 	pMsg.money = lpObj->Money;
 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
@@ -3504,13 +3434,7 @@ void CItemManager::GCItemChangeSend(int aIndex, BYTE slot) // OK
 
 	pMsg.ItemInfo[1] = slot * 16;
 	pMsg.ItemInfo[1] |= ((lpObj->Inventory[slot].m_Level - 1) / 2) & 0x0F;
-
-#if(GAMESERVER_UPDATE>=701)
-
-	pMsg.attribute = lpObj->ElementalAttribute;
-
-#endif
-
+	
 	MsgSendV2(lpObj, (BYTE*)&pMsg, pMsg.header.size);
 }
 
@@ -3521,7 +3445,6 @@ void CItemManager::GCItemDeleteSend(int aIndex, BYTE slot, BYTE flag) // OK
 	pMsg.header.set(0x28, sizeof(pMsg));
 
 	pMsg.slot = slot;
-
 	pMsg.flag = flag;
 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);

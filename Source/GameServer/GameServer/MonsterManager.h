@@ -37,15 +37,6 @@ struct MONSTER_INFO
 	int MaxItemLevel;
 	int Resistance[7];
 	int MonsterSkill;
-	#if(GAMESERVER_UPDATE>=701)
-	int ElementalAttribute;
-	int ElementalPattern;
-	int ElementalDefense;
-	int ElementalDamageMin;
-	int ElementalDamageMax;
-	int ElementalAttackRate;
-	int ElementalDefenseRate;
-	#endif
 };
 
 struct MONSTER_ITEM_INFO

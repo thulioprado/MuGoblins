@@ -1557,7 +1557,7 @@ void CChaosCastle::CGChaosCastleEnterRecv(PMSG_CHAOS_CASTLE_ENTER_RECV* lpMsg, i
 		return;
 	}
 
-	if (lpObj->Inventory[8].m_Index == GET_ITEM(13, 2) || lpObj->Inventory[8].m_Index == GET_ITEM(13, 3) || lpObj->Inventory[8].m_Index == GET_ITEM(13, 37))
+	if (lpObj->Inventory[8].m_Index == GET_ITEM(13, 2) || lpObj->Inventory[8].m_Index == GET_ITEM(13, 3))
 	{
 		pMsg.result = 1;
 		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);

@@ -28,7 +28,6 @@
 #include "Map.h"
 #include "MapServerManager.h"
 #include "Message.h"
-#include "MiniMap.h"
 #include "Move.h"
 #include "Notice.h"
 #include "NpcTalk.h"

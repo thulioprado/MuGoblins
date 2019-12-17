@@ -59,13 +59,9 @@ void CItemBagManager::Load(char* path) // OK
 			ITEM_BAG_MANAGER_INFO info;
 
 			info.Index = lpMemScript->GetNumber();
-
 			info.ItemIndex = lpMemScript->GetAsNumber();
-
 			info.ItemLevel = lpMemScript->GetAsNumber();
-
 			info.MonsterClass = lpMemScript->GetAsNumber();
-
 			info.SpecialValue = lpMemScript->GetAsNumber();
 
 			this->m_ItemBagManagerInfo[info.Index] = info;

@@ -36,12 +36,6 @@ public:
 	bool CharacterUseJewelOfBless(LPOBJ lpObj, int SourceSlot, int TargetSlot);
 	bool CharacterUseJewelOfSoul(LPOBJ lpObj, int SourceSlot, int TargetSlot);
 	bool CharacterUseJewelOfLife(LPOBJ lpObj, int SourceSlot, int TargetSlot);
-	bool CharacterUseTalismanOfResurrection(LPOBJ lpObj, int SourceSlot);
-	bool CharacterUseTalismanOfMobility(LPOBJ lpObj, int SourceSlot);
-	bool CharacterUseCreationCard(LPOBJ lpObj, CItem* lpItem);
-	bool CharacterUseInventoryExpansion(LPOBJ lpObj, CItem* lpItem);
-	bool CharacterUseWarehouseExpansion(LPOBJ lpObj, CItem* lpItem);
-	bool CharacterUseTradeableSeal(LPOBJ lpObj, int SourceSlot, int TargetSlot);
 	void CharacterMonsterDieHunt(LPOBJ lpObj, LPOBJ lpTarget);
 	void CharacterAutoRecuperation(LPOBJ lpObj);
 	void CharacterItemDurationDown(LPOBJ lpObj);

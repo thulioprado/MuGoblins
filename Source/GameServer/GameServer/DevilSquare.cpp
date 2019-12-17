@@ -1187,7 +1187,7 @@ void CDevilSquare::NpcCharon(LPOBJ lpNpc, LPOBJ lpObj) // OK
 		return;
 	}
 
-	if (gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(14, 19), (level + 1)) == 0 && gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(13, 46), 0) == 0)
+	if (gItemManager.GetInventoryItemCount(lpObj, GET_ITEM(14, 19), (level + 1)) == 0)
 	{
 		GCServerCommandSend(lpObj->Index, 1, 2, 0);
 		return;
@@ -1338,7 +1338,7 @@ void CDevilSquare::CGDevilSquareEnterRecv(PMSG_DEVIL_SQUARE_ENTER_RECV* lpMsg, i
 		return;
 	}
 
-	if (lpObj->Inventory[lpMsg->slot].m_Index != GET_ITEM(14, 19) && lpObj->Inventory[lpMsg->slot].m_Index != GET_ITEM(13, 46))
+	if (lpObj->Inventory[lpMsg->slot].m_Index != GET_ITEM(14, 19))
 	{
 		pMsg.result = 1;
 		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);

@@ -22,15 +22,6 @@ CPacketManager::~CPacketManager() // OK
 
 void CPacketManager::Init() // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	BYTE DES_XEX3[24] = {0x0C,0xB0,0x66,0xCC,0xEF,0x92,0x8C,0x5C,0x65,0xF4,0xAC,0x3F,0x71,0xF2,0x7B,0xCE,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-
-	this->m_Encryption.SetKey(DES_XEX3,sizeof(DES_XEX3));
-	this->m_Decryption.SetKey(DES_XEX3,sizeof(DES_XEX3));
-
-	#else
-
 	memset(&this->m_Encryption,0,sizeof(this->m_Encryption));
 	memset(&this->m_Decryption,0,sizeof(this->m_Decryption));
 
@@ -38,50 +29,10 @@ void CPacketManager::Init() // OK
 	this->m_SaveLoadXor[1] = 0xE25CC287;
 	this->m_SaveLoadXor[2] = 0x93D27AB9;
 	this->m_SaveLoadXor[3] = 0x20DEA7BF;
-
-	#endif
-
+	
 	memset(this->m_buff,0,sizeof(this->m_buff));
 
 	this->m_size = 0;
-
-	#if(GAMESERVER_UPDATE>=601)
-
-	this->m_XorFilter[0] = 0xAB;
-	this->m_XorFilter[1] = 0x11;
-	this->m_XorFilter[2] = 0xCD;
-	this->m_XorFilter[3] = 0xFE;
-	this->m_XorFilter[4] = 0x18;
-	this->m_XorFilter[5] = 0x23;
-	this->m_XorFilter[6] = 0xC5;
-	this->m_XorFilter[7] = 0xA3;
-	this->m_XorFilter[8] = 0xCA;
-	this->m_XorFilter[9] = 0x33;
-	this->m_XorFilter[10] = 0xC1;
-	this->m_XorFilter[11] = 0xCC;
-	this->m_XorFilter[12] = 0x66;
-	this->m_XorFilter[13] = 0x67;
-	this->m_XorFilter[14] = 0x21;
-	this->m_XorFilter[15] = 0xF3;
-	this->m_XorFilter[16] = 0x32;
-	this->m_XorFilter[17] = 0x12;
-	this->m_XorFilter[18] = 0x15;
-	this->m_XorFilter[19] = 0x35;
-	this->m_XorFilter[20] = 0x29;
-	this->m_XorFilter[21] = 0xFF;
-	this->m_XorFilter[22] = 0xFE;
-	this->m_XorFilter[23] = 0x1D;
-	this->m_XorFilter[24] = 0x44;
-	this->m_XorFilter[25] = 0xEF;
-	this->m_XorFilter[26] = 0xCD;
-	this->m_XorFilter[27] = 0x41;
-	this->m_XorFilter[28] = 0x26;
-	this->m_XorFilter[29] = 0x3C;
-	this->m_XorFilter[30] = 0x4E;
-	this->m_XorFilter[31] = 0x4D;
-
-	#else
-
 	this->m_XorFilter[0] = 0xE7;
 	this->m_XorFilter[1] = 0x6D;
 	this->m_XorFilter[2] = 0x3A;
@@ -114,44 +65,20 @@ void CPacketManager::Init() // OK
 	this->m_XorFilter[29] = 0x51;
 	this->m_XorFilter[30] = 0xE8;
 	this->m_XorFilter[31] = 0x56;
-
-	#endif
 }
 
 bool CPacketManager::LoadEncryptionKey(char* name) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	return 1;
-
-	#else
-
 	return this->LoadKey(name,4370,0);
-
-	#endif
 }
 
 bool CPacketManager::LoadDecryptionKey(char* name) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	return 1;
-
-	#else
-
 	return this->LoadKey(name,4370,1);
-
-	#endif
 }
 
 bool CPacketManager::LoadKey(char* name,WORD header,bool type) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	return 1;
-
-	#else
-
 	ENCDEC_HEADER HeaderInfo;
 
 	HANDLE file = CreateFile(name,GENERIC_READ,FILE_SHARE_READ,0,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,0);
@@ -207,32 +134,10 @@ bool CPacketManager::LoadKey(char* name,WORD header,bool type) // OK
 
 	CloseHandle(file);
 	return 1;
-
-	#endif
 }
 
 int CPacketManager::Encrypt(BYTE* lpTarget,BYTE* lpSource,int size) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	int OriSize = size;
-
-	BYTE* lpTempSource = lpSource;
-	BYTE* lpTempTarget = lpTarget;
-
-	if((size%8) != 0)
-	{
-		size = (1+(size/8))*8;
-	}
-
-	this->m_Encryption.ProcessData(lpTempTarget,lpTempSource,size);
-
-	lpTempTarget[size] = size-OriSize;
-
-	return (++size);
-
-	#else
-
 	int OriSize = size;
 	int TempSize1,TempSize2;
 
@@ -261,30 +166,10 @@ int CPacketManager::Encrypt(BYTE* lpTarget,BYTE* lpSource,int size) // OK
 	}
 
 	return size;
-
-	#endif
 }
 
 int CPacketManager::Decrypt(BYTE* lpTarget,BYTE* lpSource,int size) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	int OriSize = size;
-
-	BYTE* lpTempSource = lpSource;
-	BYTE* lpTempTarget = lpTarget;
-
-	if(((--size)%8) != 0)
-	{
-		size = (1+(size/8))*8;
-	}
-
-	this->m_Decryption.ProcessData(lpTempTarget,lpTempSource,size);
-
-	return (OriSize-lpTempSource[(OriSize-1)]);
-
-	#else
-
 	int result = (size*8)/11;
 	int DecSize = 0;
 
@@ -312,18 +197,10 @@ int CPacketManager::Decrypt(BYTE* lpTarget,BYTE* lpSource,int size) // OK
 	}
 
 	return result;
-
-	#endif
 }
 
 int CPacketManager::EncryptBlock(BYTE* lpTarget,BYTE* lpSource,int size) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	return 0;
-
-	#else
-
 	DWORD EncBuffer[4] = {0};
 	DWORD EncValue = 0;
 
@@ -362,18 +239,10 @@ int CPacketManager::EncryptBlock(BYTE* lpTarget,BYTE* lpSource,int size) // OK
 	((BYTE*)&EncValue)[1] = CheckSum;
 
 	return this->AddBits(lpTempTarget,BitPos,(BYTE*)&EncValue,0,16);
-
-	#endif
 }
 
 int CPacketManager::DecryptBlock(BYTE* lpTarget,BYTE* lpSource) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	return 0;
-
-	#else
-
 	DWORD DecBuffer[4] = {0};
 
 	BYTE* lpTempSource = lpSource;
@@ -423,18 +292,10 @@ int CPacketManager::DecryptBlock(BYTE* lpTarget,BYTE* lpSource) // OK
 	}
 	
 	return ((BYTE*)DecBuffer)[0];
-
-	#endif
 }
 
 int CPacketManager::AddBits(BYTE* lpTarget,int TargetBitPos,BYTE* lpSource,int SourceBitPos,int size) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	return 0;
-
-	#else
-
 	int SourceBitSize = SourceBitPos+size;
 	int TempSize1 = this->GetByteOfBit(SourceBitSize-1)+(1-this->GetByteOfBit(SourceBitPos));
 
@@ -467,31 +328,15 @@ int CPacketManager::AddBits(BYTE* lpTarget,int TargetBitPos,BYTE* lpSource,int S
 	delete[] lpTempBuff;
 
 	return TargetBitPos+size;
-
-	#endif
 }
 
 int CPacketManager::GetByteOfBit(int value) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	return 0;
-
-	#else
-
 	return value >> 3;
-
-	#endif
 }
 
 void CPacketManager::Shift(BYTE* lpBuff,int size,int ShiftSize) // OK
 {
-	#if(GAMESERVER_UPDATE>=701)
-
-	return;
-
-	#else
-
 	BYTE* lpTempBuff = lpBuff;
 
 	if(ShiftSize != 0)
@@ -523,8 +368,6 @@ void CPacketManager::Shift(BYTE* lpBuff,int size,int ShiftSize) // OK
 			lpTempBuff[size-1] <<= ShiftSize;
 		}
 	}
-
-	#endif
 }
 
 bool CPacketManager::AddData(BYTE* lpBuff,int size) // OK

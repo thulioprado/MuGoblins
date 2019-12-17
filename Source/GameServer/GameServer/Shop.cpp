@@ -65,17 +65,11 @@ void CShop::Load(char* path) // OK
 			}
 
 			int ItemIndex = SafeGetItem(GET_ITEM(lpMemScript->GetNumber(),lpMemScript->GetAsNumber()));
-
 			int ItemLevel = lpMemScript->GetAsNumber();
-
 			int ItemDurability = lpMemScript->GetAsNumber();
-
 			int ItemOption1 = lpMemScript->GetAsNumber();
-
 			int ItemOption2 = lpMemScript->GetAsNumber();
-
 			int ItemOption3 = lpMemScript->GetAsNumber();
-
 			int ItemNewOption = lpMemScript->GetAsNumber();
 
 			this->InsertItem(ItemIndex,ItemLevel,ItemDurability,ItemOption1,ItemOption2,ItemOption3,ItemNewOption,0);
