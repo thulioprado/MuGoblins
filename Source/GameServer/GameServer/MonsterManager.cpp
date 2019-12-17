@@ -9,7 +9,6 @@
 #include "CastleDeep.h"
 #include "CastleSiege.h"
 #include "ChaosCastle.h"
-#include "Crywolf.h"
 #include "DevilSquare.h"
 #include "InvasionManager.h"
 #include "ItemManager.h"
@@ -71,6 +70,8 @@ void CMonsterManager::Load(char* path) // OK
 
 	this->Init();
 
+	char buffer[10000] = "";
+
 	try
 	{
 		while (true)
@@ -90,80 +91,41 @@ void CMonsterManager::Load(char* path) // OK
 			memset(&info, 0, sizeof(info));
 
 			info.Index = lpMemScript->GetNumber();
-
 			info.Rate = lpMemScript->GetAsNumber();
 
 			strcpy_s(info.Name, lpMemScript->GetAsString());
 
 			info.Level = lpMemScript->GetAsNumber();
-
 			info.Life = lpMemScript->GetAsNumber();
-
 			info.Mana = lpMemScript->GetAsNumber();
-
 			info.DamageMin = lpMemScript->GetAsNumber();
-
 			info.DamageMax = lpMemScript->GetAsNumber();
-
 			info.Defense = lpMemScript->GetAsNumber();
-
 			info.MagicDefense = lpMemScript->GetAsNumber();
-
 			info.AttackRate = lpMemScript->GetAsNumber();
-
 			info.DefenseRate = lpMemScript->GetAsNumber();
-
 			info.MoveRange = lpMemScript->GetAsNumber();
-
 			info.AttackType = lpMemScript->GetAsNumber();
-
 			info.AttackRange = lpMemScript->GetAsNumber();
-
 			info.ViewRange = lpMemScript->GetAsNumber();
-
 			info.MoveSpeed = lpMemScript->GetAsNumber();
-
 			info.AttackSpeed = lpMemScript->GetAsNumber();
-
 			info.RegenTime = lpMemScript->GetAsNumber();
-
 			info.Attribute = lpMemScript->GetAsNumber();
-
 			info.ItemRate = lpMemScript->GetAsNumber();
-
 			info.MoneyRate = lpMemScript->GetAsNumber();
-
 			info.MaxItemLevel = lpMemScript->GetAsNumber();
-
 			info.MonsterSkill = lpMemScript->GetAsNumber();
-
 			info.Resistance[0] = lpMemScript->GetAsNumber();
-
 			info.Resistance[1] = lpMemScript->GetAsNumber();
-
 			info.Resistance[2] = lpMemScript->GetAsNumber();
-
 			info.Resistance[3] = lpMemScript->GetAsNumber();
 
-		#if(GAMESERVER_UPDATE>=701)
-
-			info.ElementalAttribute = lpMemScript->GetAsNumber();
-
-			info.ElementalPattern = lpMemScript->GetAsNumber();
-
-			info.ElementalDefense = lpMemScript->GetAsNumber();
-
-			info.ElementalDamageMin = lpMemScript->GetAsNumber();
-
-			info.ElementalDamageMax = lpMemScript->GetAsNumber();
-
-			info.ElementalAttackRate = lpMemScript->GetAsNumber();
-
-			info.ElementalDefenseRate = lpMemScript->GetAsNumber();
-
-		#endif
-
 			this->SetInfo(info);
+
+			char temp[50];
+			sprintf_s(temp, "%d|", info.Index);
+			strcat_s(buffer, temp);
 		}
 	}
 	catch (...)
@@ -310,42 +272,6 @@ void CMonsterManager::SetMonsterData() // OK
 				gCastleSiege.SetCrownIndex(index);
 			}
 		}
-
-		if (lpObj->Map == MAP_CRYWOLF)
-		{
-			if (lpObj->Type == OBJECT_MONSTER)
-			{
-				if (gCrywolf.m_ObjCommonMonster.AddObj(index) == 0)
-				{
-					gObjDel(index);
-					continue;
-				}
-			}
-
-			if (lpObj->Type == OBJECT_NPC)
-			{
-				if (lpObj->Class >= 204 && lpObj->Class <= 209)
-				{
-					if (gCrywolf.m_ObjSpecialNPC.AddObj(index) == 0)
-					{
-						gObjDel(index);
-						continue;
-					}
-				}
-				else
-				{
-					if (lpObj->Class != 406 && lpObj->Class != 407)
-					{
-						if (gCrywolf.m_ObjCommonNPC.AddObj(index) == 0)
-						{
-							gObjDel(index);
-							continue;
-						}
-					}
-				}
-			}
-		}
-
 	#endif
 	}
 

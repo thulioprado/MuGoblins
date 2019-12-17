@@ -318,13 +318,10 @@ long CMonsterAIUtil::FindMonsterToHeal(LPOBJ lpObj,int rate,int distance) // OK
 		{
 			if(lpObj->Index != n && lpObj->Map == gObj[n].Map && gObjCalcDistance(lpObj,&gObj[n]) < distance)
 			{
-				if(lpObj->Class != 524 && lpObj->Class != 525 && lpObj->Class != 526 && lpObj->Class != 527 && lpObj->Class != 528)
+				if(((gObj[n].Life*100)/(gObj[n].MaxLife+gObj[n].AddLife)) < TargetValue)
 				{
-					if(((gObj[n].Life*100)/(gObj[n].MaxLife+gObj[n].AddLife)) < TargetValue)
-					{
-						TargetIndex = n;
-						TargetValue = (int)((gObj[n].Life*100)/(gObj[n].MaxLife+gObj[n].AddLife));
-					}
+					TargetIndex = n;
+					TargetValue = (int)((gObj[n].Life*100)/(gObj[n].MaxLife+gObj[n].AddLife));
 				}
 			}
 		}

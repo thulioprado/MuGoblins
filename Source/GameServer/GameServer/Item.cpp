@@ -1217,16 +1217,6 @@ bool CItem::ArmorDurabilityDown(int aIndex,int damage) // OK
 		defense *= 6;
 		defense += this->m_Option3*4;
 	}
-	else if(ItemInfo.RequireClass[CLASS_SU] != 0)
-	{
-		defense *= 3;
-		defense += this->m_Option3*4;
-	}
-	else if(ItemInfo.RequireClass[CLASS_RF] != 0)
-	{
-		defense *= 6;
-		defense += this->m_Option3*4;
-	}
 
 	this->m_DurabilitySmall += ((defense==0)?0:(damage/defense));
 

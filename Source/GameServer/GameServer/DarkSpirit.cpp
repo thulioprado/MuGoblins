@@ -7,7 +7,6 @@
 #include "Attack.h"
 #include "BattleSoccerManager.h"
 #include "CastleSiege.h"
-#include "Crywolf.h"
 #include "DefaultClassInfo.h"
 #include "Duel.h"
 #include "EffectManager.h"
@@ -531,7 +530,7 @@ bool CDarkSpirit::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BY
 			return 0;
 		}
 
-		if((lpTarget->Class >= 100 && lpTarget->Class <= 110) || lpTarget->Class == 523) // Trap
+		if((lpTarget->Class >= 100 && lpTarget->Class <= 110)) // Trap
 		{
 			return 0;
 		}

@@ -127,7 +127,7 @@ int CGate::GetGateMap(int index) // OK
 
 int CGate::GetMoveLevel(LPOBJ lpObj,int map,int level) // OK
 {
-	if((lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL || lpObj->Class == CLASS_RF))
+	if (lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL)
 	{
 		return ((level*2)/3);
 	}

@@ -180,22 +180,6 @@ struct SDHP_CHARACTER_NAME_CHANGE_RECV
 	BYTE result;
 };
 
-struct SDHP_CRYWOLF_SYNC_RECV
-{
-	PBMSG_HEAD header; // C1:1E
-	WORD MapServerGroup;
-	DWORD CrywolfState;
-	DWORD OccupationState;
-};
-
-struct SDHP_CRYWOLF_INFO_RECV
-{
-	PBMSG_HEAD header; // C1:1F
-	WORD MapServerGroup;
-	DWORD CrywolfState;
-	DWORD OccupationState;
-};
-
 struct SDHP_GLOBAL_POST_RECV
 {
 	PBMSG_HEAD header; // C1:20
@@ -623,8 +607,6 @@ void DGCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg);
 void DGCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg);
 void DGCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg);
 void DGPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg);
-void DGCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg);
-void DGCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg);
 void DGGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg);
 void DGGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg);
 void DGGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg);

@@ -5,7 +5,6 @@
 #include "stdafx.h"
 #include "ItemDrop.h"
 #include "BonusManager.h"
-#include "CrywolfSync.h"
 #include "DSProtocol.h"
 #include "ItemManager.h"
 #include "ItemOptionRate.h"
@@ -183,16 +182,5 @@ int CItemDrop::DropItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
 
 int CItemDrop::GetItemDropRate(LPOBJ lpObj,LPOBJ lpTarget,int ItemIndex,int ItemLevel,int DropRate) // OK
 {
-	if(ItemIndex == GET_ITEM(12,25) || ItemIndex == GET_ITEM(14,13) || ItemIndex == GET_ITEM(14,14) || ItemIndex == GET_ITEM(14,16) || ItemIndex == GET_ITEM(14,22) || ItemIndex == GET_ITEM(14,31))
-	{
-		if(gCrywolfSync.CheckApplyPenalty() != 0 && gCrywolfSync.GetOccupationState() == 1)
-		{
-			if((GetLargeRand()%100) >= gCrywolfSync.GetGemDropPenaltiyRate())
-			{
-				return 0;
-			}
-		}
-	}
-
 	return gBonusManager.GetBonusValue(lpTarget,BONUS_INDEX_CMN_ITEM_DROP_RATE,DropRate,ItemIndex,ItemLevel,lpObj->Class,lpObj->Level);
 }

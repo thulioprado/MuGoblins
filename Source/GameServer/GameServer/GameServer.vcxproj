@@ -184,13 +184,6 @@
     <ClInclude Include="CommandManager.h" />
     <ClInclude Include="Connection.h" />
     <ClInclude Include="CriticalSection.h" />
-    <ClInclude Include="Crywolf.h" />
-    <ClInclude Include="CrywolfAltar.h" />
-    <ClInclude Include="CrywolfObjInfo.h" />
-    <ClInclude Include="CrywolfStateTimeInfo.h" />
-    <ClInclude Include="CrywolfStatue.h" />
-    <ClInclude Include="CrywolfSync.h" />
-    <ClInclude Include="CrywolfUtil.h" />
     <ClInclude Include="CSProtocol.h" />
     <ClInclude Include="DarkSpirit.h" />
     <ClInclude Include="DefaultClassInfo.h" />
@@ -330,13 +323,6 @@
     <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="CriticalSection.cpp" />
-    <ClCompile Include="Crywolf.cpp" />
-    <ClCompile Include="CrywolfAltar.cpp" />
-    <ClCompile Include="CrywolfObjInfo.cpp" />
-    <ClCompile Include="CrywolfStateTimeInfo.cpp" />
-    <ClCompile Include="CrywolfStatue.cpp" />
-    <ClCompile Include="CrywolfSync.cpp" />
-    <ClCompile Include="CrywolfUtil.cpp" />
     <ClCompile Include="CSProtocol.cpp" />
     <ClCompile Include="DarkSpirit.cpp" />
     <ClCompile Include="DefaultClassInfo.cpp" />

@@ -832,7 +832,7 @@ int CChaosCastle::GetUserAbleLevel(LPOBJ lpObj) // OK
 {
 	int level = -1;
 
-	if (lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL || lpObj->Class == CLASS_RF)
+	if (lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL)
 	{
 		if (lpObj->ChangeUp < 2)
 		{

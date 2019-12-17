@@ -5,8 +5,6 @@
 #include "CastleSiegeSync.h"
 #include "ChaosBox.h"
 #include "CommandManager.h"
-#include "Crywolf.h"
-#include "CrywolfSync.h"
 #include "CSProtocol.h"
 #include "ESProtocol.h"
 #include "Filter.h"
@@ -85,12 +83,6 @@ void DataServerProtocolCore(BYTE head, BYTE* lpMsg, int size) // OK
 					gCommandManager.DGCommandMasterResetRecv((SDHP_COMMAND_MASTER_RESET_RECV*)lpMsg);
 					break;
 			}
-			break;
-		case 0x1E:
-			DGCrywolfSyncRecv((SDHP_CRYWOLF_SYNC_RECV*)lpMsg);
-			break;
-		case 0x1F:
-			DGCrywolfInfoRecv((SDHP_CRYWOLF_INFO_RECV*)lpMsg);
 			break;
 		case 0x20:
 			DGGlobalPostRecv((SDHP_GLOBAL_POST_RECV*)lpMsg);
@@ -864,42 +856,6 @@ void DGPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg) // OK
 				lpObj->Warehouse[lpInfo->slot].SetPetItemInfo(lpInfo->level, lpInfo->experience);
 			}
 		}
-	}
-}
-
-void DGCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg) // OK
-{
-	if (gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
-	{
-		return;
-	}
-
-	if (gCrywolfSync.GetCrywolfState() == lpMsg->CrywolfState && gCrywolfSync.GetOccupationState() == lpMsg->OccupationState)
-	{
-		return;
-	}
-
-	gCrywolfSync.SetCrywolfState(lpMsg->CrywolfState);
-
-	gCrywolfSync.SetOccupationState(lpMsg->OccupationState);
-
-	LogAdd(LOG_BLUE, "[ CRYWOLF ] SYNC Occupation: %d, State: %d", lpMsg->OccupationState, lpMsg->CrywolfState);
-}
-
-void DGCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg) // OK
-{
-	if (gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
-	{
-		return;
-	}
-
-	if (lpMsg->OccupationState == 0 || lpMsg->OccupationState == 1 || lpMsg->OccupationState == 2)
-	{
-		gCrywolf.ApplyCrywolfDBInfo(lpMsg->OccupationState);
-	}
-	else
-	{
-		LogAdd(LOG_RED, "[ Crywolf ] Incorrect DB OccupationState!!!");
 	}
 }
 

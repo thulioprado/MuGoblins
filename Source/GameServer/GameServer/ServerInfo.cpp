@@ -9,8 +9,6 @@
 #include "CastleDeep.h"
 #include "CastleSiege.h"
 #include "ChaosCastle.h"
-#include "Crywolf.h"
-#include "CrywolfSync.h"
 #include "DefaultClassInfo.h"
 #include "DevilSquare.h"
 #include "EffectManager.h"
@@ -234,10 +232,6 @@ void CServerInfo::ReadMapInfo() // OK
 
 		gMap[n].Load(gPath.GetFullPath(path), n);
 	}
-
-	gCrywolf.LoadCrywolfMapAttr(gPath.GetFullPath("Terrain\\terrain35_PEACE.att"), 0);
-	gCrywolf.LoadCrywolfMapAttr(gPath.GetFullPath("Terrain\\terrain35_OCCUPIED.att"), 1);
-	gCrywolf.LoadCrywolfMapAttr(gPath.GetFullPath("Terrain\\terrain35_WAR.att"), 2);
 }
 
 void CServerInfo::ReadMonsterInfo() // OK
@@ -338,14 +332,6 @@ void CServerInfo::ReloadMonsterInfo() // OK
 	}
 
 	gObjMonCount = 0;
-
-	gCrywolf.m_ObjCommonNPC.Reset();
-
-	gCrywolf.m_ObjSpecialNPC.Reset();
-
-	gCrywolf.m_ObjCommonMonster.Reset();
-
-	gCrywolf.m_ObjSpecialMonster.Reset();
 
 	this->ReadMonsterInfo();
 
@@ -2274,20 +2260,6 @@ void CServerInfo::ReadEventInfo(char* section, char* path) // OK
 	this->m_ChaosCastleMinUser = GetPrivateProfileInt(section, "ChaosCastleMinUser", 0, path);
 
 	this->m_ChaosCastleBlowUserRate = GetPrivateProfileInt(section, "ChaosCastleBlowUserRate", 0, path);
-
-	gCrywolfSync.SetEnableCrywolf((this->m_CrywolfEvent = GetPrivateProfileInt(section, "CrywolfEvent", 0, path)));
-
-	gCrywolfSync.SetApplyBenefit((this->m_CrywolfBenefitSwitch = GetPrivateProfileInt(section, "CrywolfBenefitSwitch", 0, path)));
-
-	gCrywolfSync.SetPlusChaosRate((this->m_CrywolfBenefitChaosRate = GetPrivateProfileInt(section, "CrywolfBenefitChaosRate", 0, path)));
-
-	gCrywolfSync.SetMonHPBenefitRate((this->m_CrywolfBenefitMonsterLife = GetPrivateProfileInt(section, "CrywolfBenefitMonsterLife", 0, path)));
-
-	gCrywolfSync.SetApplyPenalty((this->m_CrywolfPenaltySwitch = GetPrivateProfileInt(section, "CrywolfPenaltySwitch", 0, path)));
-
-	gCrywolfSync.SetGemDropPenaltiyRate((this->m_CrywolfPenaltyJewelDrop = GetPrivateProfileInt(section, "CrywolfPenaltyJewelDrop", 0, path)));
-
-	gCrywolfSync.SetGettingExpPenaltyRate((this->m_CrywolfPenaltyExperience = GetPrivateProfileInt(section, "CrywolfPenaltyExperience", 0, path)));
 
 	this->m_DevilSquareEvent = GetPrivateProfileInt(section, "DevilSquareEvent", 0, path);
 

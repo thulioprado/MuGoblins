@@ -8,8 +8,6 @@
 #include "CastleSiege.h"
 #include "ChaosCastle.h"
 #include "CriticalSection.h"
-#include "Crywolf.h"
-#include "CrywolfSync.h"
 #include "DevilSquare.h"
 #include "DSProtocol.h"
 #include "EffectManager.h"
@@ -52,17 +50,11 @@ void gObjMonsterDieGiveItem(LPOBJ lpObj, LPOBJ lpTarget) // OK
 		return;
 	}
 
-	if (lpObj->Class == 247 || lpObj->Class == 249 || lpObj->Class == 277 || lpObj->Class == 283 || lpObj->Class == 288 || lpObj->Class == 460 || lpObj->Class == 461 || lpObj->Class == 462 || lpObj->Class == 524 || lpObj->Class == 525 || lpObj->Class == 527 || lpObj->Class == 528 || lpObj->Class == 605 || lpObj->Class == 606 || lpObj->Class == 607)
+	if (lpObj->Class == 247 || lpObj->Class == 249 || lpObj->Class == 277 || lpObj->Class == 283 || lpObj->Class == 288)
 	{
 		return;
 	}
-
-	if (lpObj->Class == 476) // Cursed Santa
-	{
-		gEffectManager.AddEffect(lpTarget, 0, EFFECT_CHRISTMAS1, 1800, (45 + (lpObj->Level / 3)), (50 + (lpObj->Level / 5)), 0, 0);
-		return;
-	}
-
+	
 	if (gItemBagManager.DropItemByMonsterClass(lpObj->Class, lpTarget, lpObj->Map, lpObj->X, lpObj->Y) != 0)
 	{
 		return;
@@ -224,7 +216,7 @@ bool gObjSetMonster(int aIndex, int MonsterClass) // OK
 			break;
 	}
 
-	if ((MonsterClass >= 204 && MonsterClass <= 259) || (MonsterClass >= 367 && MonsterClass <= 371) || (MonsterClass >= 375 && MonsterClass <= 385) || MonsterClass == 406 || MonsterClass == 407 || MonsterClass == 408 || MonsterClass == 415 || MonsterClass == 416 || MonsterClass == 417 || (MonsterClass >= 450 && MonsterClass <= 453) || MonsterClass == 464 || MonsterClass == 465 || (MonsterClass >= 467 && MonsterClass <= 475) || MonsterClass == 478 || MonsterClass == 479 || MonsterClass == 492 || MonsterClass == 522 || (MonsterClass >= 540 && MonsterClass <= 547) || (MonsterClass >= 566 && MonsterClass <= 568) || (MonsterClass >= 577 && MonsterClass <= 584) || MonsterClass == 604 || MonsterClass == 643 || MonsterClass == 651)
+	if ((MonsterClass >= 204 && MonsterClass <= 259))
 	{
 		lpObj->Type = OBJECT_NPC;
 		lpObj->ShopNumber = (short)gShopManager.GetShopNumber(MonsterClass);
@@ -302,7 +294,7 @@ bool gObjSetMonster(int aIndex, int MonsterClass) // OK
 			gSkillManager.AddSkill(lpObj, SKILL_LIGHTNING, 0);
 		}
 
-		if (MonsterClass == 89 || MonsterClass == 95 || MonsterClass == 112 || MonsterClass == 118 || MonsterClass == 124 || MonsterClass == 130 || MonsterClass == 143 || MonsterClass == 433) // Spirit Sorcerer
+		if (MonsterClass == 89 || MonsterClass == 95 || MonsterClass == 112 || MonsterClass == 118 || MonsterClass == 124 || MonsterClass == 130 || MonsterClass == 143) // Spirit Sorcerer
 		{
 			gSkillManager.AddSkill(lpObj, SKILL_LIGHTNING, 0);
 		}
@@ -353,40 +345,9 @@ bool gObjSetMonster(int aIndex, int MonsterClass) // OK
 			gSkillManager.AddSkill(lpObj, SKILL_PHYSI_DAMAGE_IMMUNITY, 0);
 		}
 
-		if (MonsterClass == 163 || MonsterClass == 165 || MonsterClass == 167 || MonsterClass == 169 || MonsterClass == 171 || MonsterClass == 173 || MonsterClass == 427) // Chaos Castle Wizard
+		if (MonsterClass == 163 || MonsterClass == 165 || MonsterClass == 167 || MonsterClass == 169 || MonsterClass == 171 || MonsterClass == 173) // Chaos Castle Wizard
 		{
 			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-		}
-
-		if (MonsterClass == 529 || MonsterClass == 530)
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_MONSTER_AREA_ATTACK, 0);
-		}
-
-		if (MonsterClass == 535)
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_TWISTING_SLASH, 0);
-		}
-
-		if (MonsterClass == 536)
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_ICE_STORM, 0);
-		}
-
-		if (MonsterClass == 537)
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_POWER_SLASH, 0);
-		}
-
-		if (MonsterClass == 538)
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_EARTHQUAKE, 0);
-		}
-
-		if (MonsterClass == 561)
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_EVIL_SPIRIT, 0);
-			gSkillManager.AddSkill(lpObj, SKILL_DECAY, 0);
 		}
 	}
 
@@ -460,15 +421,6 @@ bool gObjMonsterRegen(LPOBJ lpObj) // OK
 	lpObj->PathStartEnd = 0;
 
 	gObjMonsterInitHitDamage(lpObj);
-
-	if (lpObj->Map != MAP_CRYWOLF || (gCrywolfSync.GetCrywolfState() != CRYWOLF_STATE_NOTIFY2 && gCrywolfSync.GetCrywolfState() != CRYWOLF_STATE_READY && gCrywolfSync.GetCrywolfState() != CRYWOLF_STATE_START && gCrywolfSync.GetCrywolfState() != CRYWOLF_STATE_END))
-	{
-		if (gCrywolfSync.CheckApplyBenefit() != 0 && gCrywolfSync.GetOccupationState() == 0)
-		{
-			lpObj->Life = (lpObj->ScriptMaxLife * gCrywolfSync.GetMonHPBenefitRate()) / 100;
-			lpObj->MaxLife = (lpObj->ScriptMaxLife * gCrywolfSync.GetMonHPBenefitRate()) / 100;
-		}
-	}
 
 	return 1;
 }
@@ -935,7 +887,7 @@ void gObjMonsterAttack(LPOBJ lpObj, LPOBJ lpTarget) // OK
 
 		gSkillManager.CGSkillAttackRecv(&pMsg, lpObj->Index);
 	}
-	else if (lpObj->Class == 89 || lpObj->Class == 95 || lpObj->Class == 112 || lpObj->Class == 118 || lpObj->Class == 124 || lpObj->Class == 130 || lpObj->Class == 143 || lpObj->Class == 433)
+	else if (lpObj->Class == 89 || lpObj->Class == 95 || lpObj->Class == 112 || lpObj->Class == 118 || lpObj->Class == 124 || lpObj->Class == 130 || lpObj->Class == 143)
 	{
 		PMSG_SKILL_ATTACK_RECV pMsg;
 
@@ -1599,7 +1551,7 @@ void gObjMonsterProcess(LPOBJ lpObj)
 	}
 #endif
 
-	if ((lpObj->Class >= 100 && lpObj->Class <= 110) || lpObj->Class == 523)
+	if ((lpObj->Class >= 100 && lpObj->Class <= 110))
 	{
 		gObjMonsterTrapAct(lpObj);
 	}
@@ -1673,11 +1625,6 @@ void gObjMonsterProcess(LPOBJ lpObj)
 
 	if (lpObj->ActionState.Attack == 1)
 	{
-		if (lpObj->Connected == OBJECT_ONLINE && lpObj->Type == OBJECT_MONSTER && lpObj->Class == 459)
-		{
-			return;
-		}
-
 		if (CMonsterSkillManager::CheckMonsterSkill(lpObj->Class, 0))
 		{
 			BOOL bEnableAttack = TRUE;

@@ -14,9 +14,6 @@
 #include "ChaosBox.h"
 #include "ChaosCastle.h"
 #include "CommandManager.h"
-#include "Crywolf.h"
-#include "CrywolfAltar.h"
-#include "CrywolfSync.h"
 #include "DarkSpirit.h"
 #include "DefaultClassInfo.h"
 #include "DevilSquare.h"
@@ -2804,37 +2801,13 @@ BOOL gObjBackSpring(LPOBJ lpObj,LPOBJ lpTarget) // OK
 	{
 		return FALSE;
 	}
-	if(lpObj->Class == 348)
-	{
-		return FALSE;
-	}
 #endif
 
 	if(lpObj->Class == 275)
 	{
 		return FALSE;
 	}
-
-	if(lpObj->Class == 459 ||
-		lpObj->Class == 460 ||
-		lpObj->Class == 461 ||
-		lpObj->Class == 462)
-	{
-		return FALSE;
-	}
-
-	if(lpObj->Class == 524 || lpObj->Class == 525 || lpObj->Class == 527 || lpObj->Class == 528)
-	{
-		return FALSE;
-	}
-	//GAMBI FIX
-	/*
-	if(gEffectManager.CheckEffect(lpObj,EFFECT_ICE_ARROW) != 0 || gEffectManager.CheckEffect(lpObj,EFFECT_STERN) != 0 || gEffectManager.CheckEffect(lpObj,EFFECT_SLEEP) != 0)
-	{
-		return FALSE;
-	}
-	*/
-	
+		
 	if ( (GetLargeRand()%3) == 0 )
 	{
 		if ( lpTargetObj->Dir < 4 )
@@ -3020,37 +2993,12 @@ BOOL gObjBackSpring2(LPOBJ lpObj, LPOBJ lpTargetObj, int count)
 	{
 		return FALSE;
 	}
-	if(lpObj->Class == 348)
-	{
-		return FALSE;
-	}
 #endif
 	
 	if(lpObj->Class == 275)
 	{
 		return FALSE;
 	}
-
-	if(lpObj->Class == 459 ||
-		lpObj->Class == 460 ||
-		lpObj->Class == 461 ||
-		lpObj->Class == 462)
-	{
-		return FALSE;
-	}
-
-	if(lpObj->Class == 524 || lpObj->Class == 525 || lpObj->Class == 527 || lpObj->Class == 528)
-	{
-		return FALSE;
-	}
-
-	////GAMBI FIX
-	/*
-	if(gEffectManager.CheckEffect(lpObj,EFFECT_ICE_ARROW) != 0 || gEffectManager.CheckEffect(lpObj,EFFECT_STERN) != 0 || gEffectManager.CheckEffect(lpObj,EFFECT_SLEEP) != 0)
-	{
-		return FALSE;
-	}
-	*/
 
 #if(GAMESERVER_TYPE==1)
 	tdir = GetPathPacketDirPos(lpObj->X - lpTargetObj->X, lpObj->Y - lpTargetObj->Y) * 2;

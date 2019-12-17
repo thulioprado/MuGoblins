@@ -270,27 +270,6 @@
     <ClInclude Include="CastleSiegeCrownSwitch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Crywolf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CrywolfAltar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CrywolfObjInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CrywolfStateTimeInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CrywolfStatue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CrywolfSync.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CrywolfUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="User.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -699,27 +678,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CastleSiegeCrownSwitch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Crywolf.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CrywolfAltar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CrywolfObjInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CrywolfStateTimeInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CrywolfStatue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CrywolfSync.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CrywolfUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="User.cpp">

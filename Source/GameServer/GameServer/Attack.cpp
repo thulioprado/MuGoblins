@@ -7,7 +7,6 @@
 #include "BattleSoccerManager.h"
 #include "CastleSiege.h"
 #include "ChaosCastle.h"
-#include "Crywolf.h"
 #include "DarkSpirit.h"
 #include "Duel.h"
 #include "EffectManager.h"
@@ -120,7 +119,7 @@ bool CAttack::Attack(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,bool send,BYTE f
 			return 0;
 		}
 
-		if((lpTarget->Class >= 100 && lpTarget->Class <= 110) || lpTarget->Class == 523) // Trap
+		if((lpTarget->Class >= 100 && lpTarget->Class <= 110)) // Trap
 		{
 			return 0;
 		}
@@ -958,7 +957,7 @@ void CAttack::WingSprite(LPOBJ lpObj,LPOBJ lpTarget,int* damage) // OK
 
 		if(lpItem->IsItem() != 0 && lpItem->m_Durability > 0)
 		{
-			if(lpObj->Class == CLASS_DW || lpObj->Class == CLASS_FE || lpObj->Class == CLASS_SU)
+			if(lpObj->Class == CLASS_DW || lpObj->Class == CLASS_FE)
 			{
 				lpObj->Life -= 1;
 			}
@@ -1782,7 +1781,7 @@ int CAttack::GetTargetElementalDefense(LPOBJ lpObj,LPOBJ lpTarget,WORD* effect) 
 		{
 			defense += lpTarget->PentagramJewelOption.AddElementalDefensePvP;
 
-			if(lpObj->Class == CLASS_DW || lpObj->Class == CLASS_FE || lpObj->Class == CLASS_MG || lpObj->Class == CLASS_SU)
+			if(lpObj->Class == CLASS_DW || lpObj->Class == CLASS_FE || lpObj->Class == CLASS_MG)
 			{
 				defense += lpTarget->PentagramJewelOption.AddElementalDefenseRange;
 			}
@@ -1847,7 +1846,7 @@ int CAttack::GetAttackDamage(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WORD* ef
 	}
 	else
 	{
-		if(lpObj->Class == CLASS_DK || lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL || lpObj->Class == CLASS_RF)
+		if(lpObj->Class == CLASS_DK || lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL)
 		{
 			if(Right->m_Index >= GET_ITEM(0,0) && Right->m_Index < GET_ITEM(4,0) && Left->m_Index >= GET_ITEM(0,0) && Left->m_Index < GET_ITEM(4,0))
 			{
@@ -2166,14 +2165,6 @@ int CAttack::GetAttackDamageFenrir(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill,WO
 	{
 		BaseDamage = (lpObj->Strength/gServerInfo.m_DLPlasmaStormDamageConstA)+(lpObj->Dexterity/gServerInfo.m_DLPlasmaStormDamageConstB)+(lpObj->Vitality/gServerInfo.m_DLPlasmaStormDamageConstC)+(lpObj->Energy/gServerInfo.m_DLPlasmaStormDamageConstD)+(lpObj->Leadership/gServerInfo.m_DLPlasmaStormDamageConstE);
 	}
-	else if(lpObj->Class == CLASS_SU)
-	{
-		BaseDamage = (lpObj->Strength/gServerInfo.m_SUPlasmaStormDamageConstA)+(lpObj->Dexterity/gServerInfo.m_SUPlasmaStormDamageConstB)+(lpObj->Vitality/gServerInfo.m_SUPlasmaStormDamageConstC)+(lpObj->Energy/gServerInfo.m_SUPlasmaStormDamageConstD);
-	}
-	else if(lpObj->Class == CLASS_RF)
-	{
-		BaseDamage = (lpObj->Strength/gServerInfo.m_RFPlasmaStormDamageConstA)+(lpObj->Dexterity/gServerInfo.m_RFPlasmaStormDamageConstB)+(lpObj->Vitality/gServerInfo.m_RFPlasmaStormDamageConstC)+(lpObj->Energy/gServerInfo.m_RFPlasmaStormDamageConstD);
-	}
 
 	int range = (lpSkill->m_DamageMax-lpSkill->m_DamageMin);
 
@@ -2234,7 +2225,7 @@ int CAttack::GetAttackDamageElemental(LPOBJ lpObj,LPOBJ lpTarget,CSkill* lpSkill
 			DamageMin += lpObj->PentagramJewelOption.AddElementalDamagePvP;
 			DamageMax += lpObj->PentagramJewelOption.AddElementalDamagePvP;
 
-			if(lpTarget->Class == CLASS_DW || lpTarget->Class == CLASS_FE || lpTarget->Class == CLASS_MG || lpTarget->Class == CLASS_SU)
+			if(lpTarget->Class == CLASS_DW || lpTarget->Class == CLASS_FE || lpTarget->Class == CLASS_MG)
 			{
 				DamageMin += lpObj->PentagramJewelOption.AddElementalDamageRange;
 				DamageMax += lpObj->PentagramJewelOption.AddElementalDamageRange;
@@ -2312,7 +2303,7 @@ void CAttack::GetPreviewPhysiDamage(LPOBJ lpObj,DWORD* DamageMin,DWORD* DamageMa
 
 	bool DualHandWeapon = 0;
 
-	if(lpObj->Class == CLASS_DK || lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL || lpObj->Class == CLASS_RF)
+	if(lpObj->Class == CLASS_DK || lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL)
 	{
 		if(Right->m_Index >= GET_ITEM(0,0) && Right->m_Index < GET_ITEM(4,0) && Left->m_Index >= GET_ITEM(0,0) && Left->m_Index < GET_ITEM(4,0))
 		{
@@ -2452,18 +2443,6 @@ void CAttack::GetPreviewDamageMultiplier(LPOBJ lpObj,DWORD* DamageMultiplier,DWO
 			(*RFDamageMultiplierA) = 100;
 			(*RFDamageMultiplierB) = 100;
 			(*RFDamageMultiplierC) = 100;
-			break;
-		case CLASS_SU:
-			(*DamageMultiplier) = 200;
-			(*RFDamageMultiplierA) = 100;
-			(*RFDamageMultiplierB) = 100;
-			(*RFDamageMultiplierC) = 100;
-			break;
-		case CLASS_RF:
-			(*DamageMultiplier) = 200;
-			(*RFDamageMultiplierA) = lpObj->RFDamageMultiplierRate[0];
-			(*RFDamageMultiplierB) = lpObj->RFDamageMultiplierRate[1];
-			(*RFDamageMultiplierC) = lpObj->RFDamageMultiplierRate[2];
 			break;
 	}
 }

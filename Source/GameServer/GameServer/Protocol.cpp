@@ -8,7 +8,6 @@
 #include "ChaosBox.h"
 #include "ChaosCastle.h"
 #include "CommandManager.h"
-#include "Crywolf.h"
 #include "CSProtocol.h"
 #include "DarkSpirit.h"
 #include "DefaultClassInfo.h"
@@ -349,20 +348,6 @@ void ProtocolCore(BYTE head, BYTE* lpMsg, int size, int aIndex, int encrypt, int
 					break;
 				case 0x01:
 					gJewelMix.CGJewelUnMixRecv((PMSG_JEWEL_UNMIX_RECV*)lpMsg, aIndex);
-					break;
-			}
-			break;
-		case 0xBD:
-			switch (lpMsg[3])
-			{
-				case 0x00:
-					gCrywolf.CGCrywolfInfoRecv(aIndex);
-					break;
-				case 0x03:
-					gCrywolf.CGCrywolfAltarContractRecv((PMSG_CRYWOLF_ALTAR_CONTRACT_RECV*)lpMsg, aIndex);
-					break;
-				case 0x09:
-					gCrywolf.CGCrywolfChaosRateRecv(aIndex);
 					break;
 			}
 			break;
@@ -1306,18 +1291,12 @@ void CGCharacterCreateRecv(PMSG_CHARACTER_CREATE_RECV* lpMsg, int aIndex) // OK
 		return;
 	}
 
-	if (lpMsg->Class != DB_CLASS_DW && lpMsg->Class != DB_CLASS_DK && lpMsg->Class != DB_CLASS_FE && lpMsg->Class != DB_CLASS_MG && lpMsg->Class != DB_CLASS_DL && lpMsg->Class != DB_CLASS_SU && lpMsg->Class != DB_CLASS_RF)
+	if (lpMsg->Class != DB_CLASS_DW && lpMsg->Class != DB_CLASS_DK && lpMsg->Class != DB_CLASS_FE && lpMsg->Class != DB_CLASS_MG && lpMsg->Class != DB_CLASS_DL)
 	{
 		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 		return;
 	}
-
-	if (lpMsg->Class == DB_CLASS_SU && (lpObj->ClassCode & 1) == 0)
-	{
-		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
-		return;
-	}
-
+	
 	if (lpMsg->Class == DB_CLASS_MG && (lpObj->ClassCode & 4) == 0)
 	{
 		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
@@ -1325,12 +1304,6 @@ void CGCharacterCreateRecv(PMSG_CHARACTER_CREATE_RECV* lpMsg, int aIndex) // OK
 	}
 
 	if (lpMsg->Class == DB_CLASS_DL && (lpObj->ClassCode & 2) == 0)
-	{
-		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
-		return;
-	}
-
-	if (lpMsg->Class == DB_CLASS_RF && (lpObj->ClassCode & 8) == 0)
 	{
 		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 		return;

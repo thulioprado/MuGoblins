@@ -94,7 +94,7 @@ bool CViewport::AddViewportObject1(int aIndex, int bIndex, int type) // OK
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
-	if (this->CheckViewportObject1(aIndex, bIndex, type) == 0 || (type == OBJECT_MONSTER && gObj[bIndex].Class == 523))
+	if (this->CheckViewportObject1(aIndex, bIndex, type) == 0)
 	{
 		return 0;
 	}

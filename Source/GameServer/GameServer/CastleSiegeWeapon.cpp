@@ -196,7 +196,7 @@ bool CCastleSiegeWeapon::Attack(LPOBJ lpObj,LPOBJ lpTarget) // OK
 			return 0;
 		}
 
-		if((lpTarget->Class >= 100 && lpTarget->Class <= 110) || lpTarget->Class == 523) // Trap
+		if((lpTarget->Class >= 100 && lpTarget->Class <= 110)) // Trap
 		{
 			return 0;
 		}

@@ -415,7 +415,7 @@ bool CSkillManager::CheckSkillTarget(LPOBJ lpObj, int aIndex, int bIndex, int ty
 
 	if (type == OBJECT_MONSTER)
 	{
-		if ((gObj[aIndex].Class >= 100 && gObj[aIndex].Class <= 110) || gObj[aIndex].Class == 523) // Trap
+		if ((gObj[aIndex].Class >= 100 && gObj[aIndex].Class <= 110)) // Trap
 		{
 			return 0;
 		}

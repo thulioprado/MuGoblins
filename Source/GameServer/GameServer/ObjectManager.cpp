@@ -14,8 +14,6 @@
 #include "ChaosBox.h"
 #include "ChaosCastle.h"
 #include "CommandManager.h"
-#include "Crywolf.h"
-#include "CrywolfSync.h"
 #include "DarkSpirit.h"
 #include "DevilSquare.h"
 #include "DSProtocol.h"
@@ -273,24 +271,6 @@ void CObjectManager::ObjectSetStateProc() // OK
 			}
 
 		#endif
-
-			if (lpObj->Class >= 647 && lpObj->Class <= 650)
-			{
-				gObjDel(lpObj->Index);
-				continue;
-			}
-
-			if (lpObj->Class >= 652 && lpObj->Class <= 657)
-			{
-				gObjDel(lpObj->Index);
-				continue;
-			}
-
-			if (lpObj->Class >= 674 && lpObj->Class <= 677)
-			{
-				gObjDel(lpObj->Index);
-				continue;
-			}
 
 			lpObj->Live = 1;
 			lpObj->ViewState = 0;
@@ -988,14 +968,6 @@ void CObjectManager::CharacterCalcExperienceAlone(LPOBJ lpObj, LPOBJ lpMonster, 
 	experience = (experience * gBonusManager.GetBonusValue(lpObj, BONUS_INDEX_EXPERIENCE_RATE, 100, -1, -1, lpMonster->Class, lpMonster->Level)) / 100;
 	experience = (experience * gExperienceTable.GetExperienceRate(lpObj)) / 100;
 	
-	if (gCrywolfSync.CheckApplyPenalty() != 0)
-	{
-		if (gCrywolfSync.GetOccupationState() == 1)
-		{
-			experience = (experience * gCrywolfSync.GetGettingExpPenaltyRate()) / 100;
-		}
-	}
-
 	lpMonster->Money = (DWORD)(experience);
 
 	this->CharacterPetLevelUp(lpObj, (DWORD)experience);
@@ -1109,14 +1081,6 @@ void CObjectManager::CharacterCalcExperienceParty(LPOBJ lpObj, LPOBJ lpMonster, 
 		experience = (experience * gBonusManager.GetBonusValue(lpTarget, BONUS_INDEX_EXPERIENCE_RATE, 100, -1, -1, lpMonster->Class, lpMonster->Level)) / 100;
 		experience = (experience * gExperienceTable.GetExperienceRate(lpTarget)) / 100;
 		
-		if (gCrywolfSync.CheckApplyPenalty() != 0)
-		{
-			if (gCrywolfSync.GetOccupationState() == 1)
-			{
-				experience = (experience * gCrywolfSync.GetGettingExpPenaltyRate()) / 100;
-			}
-		}
-
 		lpMonster->Money += (DWORD)(experience) / PartyCount;
 
 		this->CharacterPetLevelUp(lpTarget, (DWORD)experience);
@@ -2604,34 +2568,6 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 		lpObj->DLDamageMultiplierRate = 200 + (Energy / gServerInfo.m_DLDamageMultiplierConstA);
 		lpObj->DLDamageMultiplierRate = ((lpObj->DLDamageMultiplierRate > gServerInfo.m_DLDamageMultiplierMaxRate) ? gServerInfo.m_DLDamageMultiplierMaxRate : lpObj->DLDamageMultiplierRate);
 	}
-	else if (lpObj->Class == CLASS_SU)
-	{
-		lpObj->PhysiDamageMinRight = (Strength + Dexterity) / gServerInfo.m_SUPhysiDamageMinConstA;
-		lpObj->PhysiDamageMaxRight = (Strength + Dexterity) / gServerInfo.m_SUPhysiDamageMaxConstA;
-		lpObj->PhysiDamageMinLeft = (Strength + Dexterity) / gServerInfo.m_SUPhysiDamageMinConstA;
-		lpObj->PhysiDamageMaxLeft = (Strength + Dexterity) / gServerInfo.m_SUPhysiDamageMaxConstA;
-		lpObj->MagicDamageMin = Energy / gServerInfo.m_SUMagicDamageMinConstA;
-		lpObj->MagicDamageMax = Energy / gServerInfo.m_SUMagicDamageMaxConstA;
-		lpObj->CurseDamageMin = Energy / gServerInfo.m_SUMagicDamageMinConstA;
-		lpObj->CurseDamageMax = Energy / gServerInfo.m_SUMagicDamageMaxConstA;
-	}
-	else if (lpObj->Class == CLASS_RF)
-	{
-		lpObj->PhysiDamageMinRight = (Strength / gServerInfo.m_RFPhysiDamageMinConstA) + (Vitality / gServerInfo.m_RFPhysiDamageMinConstB);
-		lpObj->PhysiDamageMaxRight = (Strength / gServerInfo.m_RFPhysiDamageMaxConstA) + (Vitality / gServerInfo.m_RFPhysiDamageMaxConstB);
-		lpObj->PhysiDamageMinLeft = (Strength / gServerInfo.m_RFPhysiDamageMinConstA) + (Vitality / gServerInfo.m_RFPhysiDamageMinConstB);
-		lpObj->PhysiDamageMaxLeft = (Strength / gServerInfo.m_RFPhysiDamageMaxConstA) + (Vitality / gServerInfo.m_RFPhysiDamageMaxConstB);
-		lpObj->MagicDamageMin = Energy / gServerInfo.m_RFMagicDamageMinConstA;
-		lpObj->MagicDamageMax = Energy / gServerInfo.m_RFMagicDamageMaxConstA;
-		lpObj->CurseDamageMin = Energy / gServerInfo.m_RFMagicDamageMinConstA;
-		lpObj->CurseDamageMax = Energy / gServerInfo.m_RFMagicDamageMaxConstA;
-		lpObj->RFDamageMultiplierRate[0] = 50 + (Vitality / gServerInfo.m_RFDamageMultiplierConstB);
-		lpObj->RFDamageMultiplierRate[0] = ((lpObj->RFDamageMultiplierRate[0] > gServerInfo.m_RFDamageMultiplierMaxRate) ? gServerInfo.m_RFDamageMultiplierMaxRate : lpObj->RFDamageMultiplierRate[0]);
-		lpObj->RFDamageMultiplierRate[1] = 50 + (Energy / gServerInfo.m_RFDamageMultiplierConstC);
-		lpObj->RFDamageMultiplierRate[1] = ((lpObj->RFDamageMultiplierRate[1] > gServerInfo.m_RFDamageMultiplierMaxRate) ? gServerInfo.m_RFDamageMultiplierMaxRate : lpObj->RFDamageMultiplierRate[1]);
-		lpObj->RFDamageMultiplierRate[2] = 100 + (Dexterity / gServerInfo.m_RFDamageMultiplierConstA) + (Energy / gServerInfo.m_RFDamageMultiplierConstC);
-		lpObj->RFDamageMultiplierRate[2] = ((lpObj->RFDamageMultiplierRate[2] > gServerInfo.m_RFDamageMultiplierMaxRate) ? gServerInfo.m_RFDamageMultiplierMaxRate : lpObj->RFDamageMultiplierRate[2]);
-	}
 
 	if (Right->IsItem() != 0)
 	{
@@ -2685,14 +2621,6 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	{
 		lpObj->AttackSuccessRate = (lpObj->Level * gServerInfo.m_DLAttackSuccessRateConstA) + ((Dexterity * gServerInfo.m_DLAttackSuccessRateConstB) / gServerInfo.m_DLAttackSuccessRateConstC) + (Strength / gServerInfo.m_DLAttackSuccessRateConstD) + (Leadership / gServerInfo.m_DLAttackSuccessRateConstE);
 	}
-	else if (lpObj->Class == CLASS_SU)
-	{
-		lpObj->AttackSuccessRate = (lpObj->Level * gServerInfo.m_SUAttackSuccessRateConstA) + ((Dexterity * gServerInfo.m_SUAttackSuccessRateConstB) / gServerInfo.m_SUAttackSuccessRateConstC) + (Strength / gServerInfo.m_SUAttackSuccessRateConstD);
-	}
-	else if (lpObj->Class == CLASS_RF)
-	{
-		lpObj->AttackSuccessRate = (lpObj->Level * gServerInfo.m_RFAttackSuccessRateConstA) + ((Dexterity * gServerInfo.m_RFAttackSuccessRateConstB) / gServerInfo.m_RFAttackSuccessRateConstC) + (Strength / gServerInfo.m_RFAttackSuccessRateConstD);
-	}
 
 	if (lpObj->Class == CLASS_DW)
 	{
@@ -2713,14 +2641,6 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	else if (lpObj->Class == CLASS_DL)
 	{
 		lpObj->AttackSuccessRatePvP = ((lpObj->Level * gServerInfo.m_DLAttackSuccessRatePvPConstA) / gServerInfo.m_DLAttackSuccessRatePvPConstB) + ((Dexterity * gServerInfo.m_DLAttackSuccessRatePvPConstC) / gServerInfo.m_DLAttackSuccessRatePvPConstD);
-	}
-	else if (lpObj->Class == CLASS_SU)
-	{
-		lpObj->AttackSuccessRatePvP = ((lpObj->Level * gServerInfo.m_SUAttackSuccessRatePvPConstA) / gServerInfo.m_SUAttackSuccessRatePvPConstB) + ((Dexterity * gServerInfo.m_SUAttackSuccessRatePvPConstC) / gServerInfo.m_SUAttackSuccessRatePvPConstD);
-	}
-	else if (lpObj->Class == CLASS_RF)
-	{
-		lpObj->AttackSuccessRatePvP = ((lpObj->Level * gServerInfo.m_RFAttackSuccessRatePvPConstA) / gServerInfo.m_RFAttackSuccessRatePvPConstB) + ((Dexterity * gServerInfo.m_RFAttackSuccessRatePvPConstC) / gServerInfo.m_RFAttackSuccessRatePvPConstD);
 	}
 
 	if (lpObj->Class == CLASS_DW)
@@ -2747,16 +2667,6 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	{
 		lpObj->PhysiSpeed = Dexterity / gServerInfo.m_DLPhysiSpeedConstA;
 		lpObj->MagicSpeed = Dexterity / gServerInfo.m_DLMagicSpeedConstA;
-	}
-	else if (lpObj->Class == CLASS_SU)
-	{
-		lpObj->PhysiSpeed = Dexterity / gServerInfo.m_SUPhysiSpeedConstA;
-		lpObj->MagicSpeed = Dexterity / gServerInfo.m_SUMagicSpeedConstA;
-	}
-	else if (lpObj->Class == CLASS_RF)
-	{
-		lpObj->PhysiSpeed = Dexterity / gServerInfo.m_RFPhysiSpeedConstA;
-		lpObj->MagicSpeed = Dexterity / gServerInfo.m_RFMagicSpeedConstA;
 	}
 
 	lpObj->PhysiSpeed += lpObj->DrinkSpeed;
@@ -2845,14 +2755,6 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	{
 		lpObj->DefenseSuccessRate = Dexterity / gServerInfo.m_DLDefenseSuccessRateConstA;
 	}
-	else if (lpObj->Class == CLASS_SU)
-	{
-		lpObj->DefenseSuccessRate = Dexterity / gServerInfo.m_SUDefenseSuccessRateConstA;
-	}
-	else if (lpObj->Class == CLASS_RF)
-	{
-		lpObj->DefenseSuccessRate = Dexterity / gServerInfo.m_RFDefenseSuccessRateConstA;
-	}
 
 	lpObj->DefenseSuccessRate += lpObj->Inventory[1].GetDefenseSuccessRate();
 
@@ -2906,11 +2808,6 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 			continue;
 		}
 
-		if (n == 5 && lpObj->Class == CLASS_RF)
-		{
-			continue;
-		}
-
 		if (lpObj->Inventory[n].IsItem() == 0 || lpObj->Inventory[n].m_IsValidItem == 0 || (LastItemIndex != -1 && (lpObj->Inventory[n].m_Index % MAX_ITEM_TYPE) != LastItemIndex))
 		{
 			lpObj->ArmorSetBonus = 0;
@@ -2939,13 +2836,7 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 				Level15Count++;
 				continue;
 			}
-
-			if (n == 5 && lpObj->Class == CLASS_RF)
-			{
-				Level15Count++;
-				continue;
-			}
-
+			
 			if (lpObj->Inventory[n].m_Level == 10)
 			{
 				Level10Count++;
@@ -2994,14 +2885,6 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	else if (lpObj->Class == CLASS_DL)
 	{
 		lpObj->Defense = Dexterity / gServerInfo.m_DLDefenseConstA;
-	}
-	else if (lpObj->Class == CLASS_SU)
-	{
-		lpObj->Defense = Dexterity / gServerInfo.m_SUDefenseConstA;
-	}
-	else if (lpObj->Class == CLASS_RF)
-	{
-		lpObj->Defense = Dexterity / gServerInfo.m_RFDefenseConstA;
 	}
 
 	lpObj->Defense += lpObj->Inventory[1].GetDefense();
@@ -3205,26 +3088,16 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 		}
 	}
 
-	if (lpObj->Class == CLASS_DK || lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL || lpObj->Class == CLASS_RF)
+	if (lpObj->Class == CLASS_DK || lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL)
 	{
 		if (Right->IsItem() != 0 && Left->IsItem() != 0)
 		{
 			if (Right->m_Index >= GET_ITEM(0, 0) && Right->m_Index < GET_ITEM(4, 0) && Left->m_Index >= GET_ITEM(0, 0) && Left->m_Index < GET_ITEM(4, 0))
 			{
-				if (lpObj->Class == CLASS_RF)
-				{
-					lpObj->PhysiDamageMinRight = (lpObj->PhysiDamageMinRight * 60) / 100;
-					lpObj->PhysiDamageMaxRight = (lpObj->PhysiDamageMaxRight * 65) / 100;
-					lpObj->PhysiDamageMinLeft = (lpObj->PhysiDamageMinLeft * 60) / 100;
-					lpObj->PhysiDamageMaxLeft = (lpObj->PhysiDamageMaxLeft * 65) / 100;
-				}
-				else
-				{
-					lpObj->PhysiDamageMinRight = (lpObj->PhysiDamageMinRight * 55) / 100;
-					lpObj->PhysiDamageMaxRight = (lpObj->PhysiDamageMaxRight * 55) / 100;
-					lpObj->PhysiDamageMinLeft = (lpObj->PhysiDamageMinLeft * 55) / 100;
-					lpObj->PhysiDamageMaxLeft = (lpObj->PhysiDamageMaxLeft * 55) / 100;
-				}
+				lpObj->PhysiDamageMinRight = (lpObj->PhysiDamageMinRight * 55) / 100;
+				lpObj->PhysiDamageMaxRight = (lpObj->PhysiDamageMaxRight * 55) / 100;
+				lpObj->PhysiDamageMinLeft = (lpObj->PhysiDamageMinLeft * 55) / 100;
+				lpObj->PhysiDamageMaxLeft = (lpObj->PhysiDamageMaxLeft * 55) / 100;
 			}
 		}
 	}
@@ -3284,7 +3157,7 @@ bool CObjectManager::CharacterInfoSet(BYTE* aRecv, int aIndex) // OK
 		return 0;
 	}
 
-	if (lpMsg->Class != DB_CLASS_DW && lpMsg->Class != DB_CLASS_SM && lpMsg->Class != DB_CLASS_GM && lpMsg->Class != DB_CLASS_DK && lpMsg->Class != DB_CLASS_BK && lpMsg->Class != DB_CLASS_BM && lpMsg->Class != DB_CLASS_FE && lpMsg->Class != DB_CLASS_ME && lpMsg->Class != DB_CLASS_HE && lpMsg->Class != DB_CLASS_MG && lpMsg->Class != DB_CLASS_DM && lpMsg->Class != DB_CLASS_DL && lpMsg->Class != DB_CLASS_LE && lpMsg->Class != DB_CLASS_SU && lpMsg->Class != DB_CLASS_BS && lpMsg->Class != DB_CLASS_DS && lpMsg->Class != DB_CLASS_RF && lpMsg->Class != DB_CLASS_FM)
+	if (lpMsg->Class != DB_CLASS_DW && lpMsg->Class != DB_CLASS_SM && lpMsg->Class != DB_CLASS_DK && lpMsg->Class != DB_CLASS_BK && lpMsg->Class != DB_CLASS_FE && lpMsg->Class != DB_CLASS_ME && lpMsg->Class != DB_CLASS_MG && lpMsg->Class != DB_CLASS_DL)
 	{
 		return 0;
 	}
@@ -3728,7 +3601,7 @@ void CObjectManager::CharacterLifeCheck(LPOBJ lpObj, LPOBJ lpTarget, int damage,
 				return;
 			}
 
-			if (lpTarget->Class == 275 || lpTarget->Class == 277 || lpTarget->Class == 283 || lpTarget->Class == 286 || lpTarget->Class == 287 || lpTarget->Class == 288 || lpTarget->Class == 295 || lpTarget->Class == 340 || lpTarget->Class == 348 || lpTarget->Class == 349 || lpTarget->Class == 361 || lpTarget->Class == 362 || lpTarget->Class == 363 || lpTarget->Class == 524 || lpTarget->Class == 525 || lpTarget->Class == 527 || lpTarget->Class == 528 || lpTarget->Class == 605 || lpTarget->Class == 606 || lpTarget->Class == 607)
+			if (lpTarget->Class == 275 || lpTarget->Class == 277 || lpTarget->Class == 283 || lpTarget->Class == 286 || lpTarget->Class == 287 || lpTarget->Class == 288 || lpTarget->Class == 295)
 			{
 				return;
 			}

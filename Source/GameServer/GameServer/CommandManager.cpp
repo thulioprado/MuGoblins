@@ -594,7 +594,7 @@ void CCommandManager::CommandChange(LPOBJ lpObj,char* arg) // OK
 
 	int ChangeUp = lpObj->ChangeUp;
 
-	if(lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL || lpObj->Class == CLASS_RF)
+	if(lpObj->Class == CLASS_MG || lpObj->Class == CLASS_DL)
 	{
 		ChangeUp++;
 	}
