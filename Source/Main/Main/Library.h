@@ -7,6 +7,9 @@
 #include <shellapi.h>
 #include <vector>
 #include <functional>
+#include <memory>
+#include <chrono>
+#include <thread>
 #include <gl/GL.h>
 
 typedef unsigned __int64 QWORD;

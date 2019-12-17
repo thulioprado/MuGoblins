@@ -76,8 +76,6 @@ void JoinServerTotalProc() // OK
 	{
 		gSocketManager.DataSend(i, (LPBYTE)&pMsg, sizeof(pMsg));
 	}
-
-	gSocketManagerUdp.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
 bool CheckTextSyntax(char* text,int size) // OK

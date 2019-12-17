@@ -94,9 +94,7 @@ public:
 	static void DrawLevelUpPoints();
 	static void DrawResets();
 	static void DrawExperience(char* Buffer, char* Format, DWORD Experience, DWORD NextExperience);
-	static void SetExperience1();
-	static void SetExperience2();
-	static void SetExperienceBarPercent();
+	static void DrawExperienceBar(float X, float Y, float Width, float Height);
 	static void GetX();
 	static void GetY();
 
@@ -115,7 +113,7 @@ public:
 	QWORD Experience;
 	QWORD NextExperience;
 	QWORD PreviousNextExperience;
-	float PercentExperience;
+	DWORD PercentExperience;
 	DWORD Resets;
 
 public:

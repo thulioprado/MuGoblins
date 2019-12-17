@@ -98,10 +98,8 @@ void CPlayer::Load()
 	// Experiência
 	//
 	Memory::Call(0x59B897, this->DrawExperience);
-	Memory::Jump(0x4C8E5E, this->SetExperience1);
-	Memory::Jump(0x4C9940, this->SetExperience2);
-	Memory::Jump(0x59B7D0, this->SetExperienceBarPercent);
-	Memory::Nop<34>(0x59B806);						// Remove a numeração da barra de experiência
+	Memory::Call(0x59B7E3, this->DrawExperienceBar);
+	Memory::Nop<5>(0x59B820);						// Remove a numeração da barra de experiência
 
 	//
 	// Coordenadas
@@ -488,62 +486,11 @@ void CPlayer::DrawExperience(char* Buffer, char* Format, DWORD Experience, DWORD
 	sprintf_s(Buffer, 80, Format, Player.Experience, Player.NextExperience);
 }
 
-void __declspec(naked) CPlayer::SetExperience1()
+void CPlayer::DrawExperienceBar(float X, float Y, float Width, float Height)
 {
-	static DWORD Back = 0x4C8E66;
-	static DWORD Experience = 0;
-
-	__asm
-	{
-		PUSHAD;
-	}
-
-	Experience = (DWORD)(Player.PercentExperience / 2.f);
-
-	__asm
-	{
-		POPAD;
-		MOV ESI, Experience;
-		MOV ECX, 0x57500B0;
-		MOV DWORD PTR DS : [EAX + 0x10] , ESI;
-		MOV DWORD PTR DS : [EAX + 0x14] , 100;
-		JMP Back;
-	}
-}
-
-void __declspec(naked) CPlayer::SetExperience2()
-{
-	static DWORD Back = 0x4C9948;
-	static DWORD Experience = 0;
-
-	__asm
-	{
-		PUSHAD;
-	}
-
-	Experience = (DWORD)(Player.PercentExperience / 2.f);
-
-	__asm
-	{
-		POPAD;
-		MOV ESI, Experience;
-		MOV ECX, 0x57500B0;
-		MOV DWORD PTR DS : [EAX + 0x10] , ESI;
-		MOV DWORD PTR DS : [EAX + 0x14] , 100;
-		JMP Back;
-	}
-}
-
-void __declspec(naked) CPlayer::SetExperienceBarPercent()
-{
-	static DWORD Back = 0x59B7D6;
-
-	__asm
-	{
-		PUSH 0x40800000;
-		PUSH Player.PercentExperience;
-		JMP Back;
-	}
+	pEnableAlpha(1);
+	glColor4f(0.92f, 0.80f, 0.34f, 1.f);
+	pDrawForm(X, Y, (float)(Player.PercentExperience * 2), Height);
 }
 
 void __declspec(naked) CPlayer::GetX()

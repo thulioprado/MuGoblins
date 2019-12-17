@@ -1,5 +1,6 @@
 #include "Library.h"
 #include "Resolution.h"
+#include "Window.h"
 
 CResolution::CResolution() : Info{}
 {
@@ -10,16 +11,13 @@ CResolution::~CResolution()
 }
 
 void CResolution::Load()
-{
-	// Webzenlogo
-	// 0060F064     6A 0C          PUSH 0C
-	
+{	
 	//
 	// Resoluções
 	//				width, height, font size, move list sizes
-	auto resolution = Registry::Read<DWORD>("Resolution");
+	auto Resolution = Registry::Read<DWORD>("Resolution");
 
-	switch (resolution)
+	switch (Resolution)
 	{
 		case 1:
 		{
@@ -74,6 +72,7 @@ void CResolution::Load()
 	Memory::Jump(0x4B4D5F, this->FontSize);
 	Memory::Jump(0x443B70, this->MoveListSize);
 	Memory::Jump(0x44315B, this->MoveListClick);
+	Memory::Call(0x60F066, this->DrawLogo);
 }
 
 void __declspec(naked) CResolution::WindowSize()
@@ -146,6 +145,24 @@ void __declspec(naked) CResolution::MoveListClick()
 		MOVZX EBX, Resolution.Info.Move[0];
 		JMP Back;
 	}
+}
+
+void CResolution::DrawLogo(int Index, float X, float Y, float Width, float Height, float Unk1, float Unk2, float ScaleX, float ScaleY, char Unk3, float Unk4)
+{
+	RECT Rect;
+
+	if (GetWindowRect(Window.GetHandle(), &Rect))
+	{
+		X = ((Rect.right - Rect.left) / 2) - (Width / 2);
+		Y = ((Rect.bottom - Rect.top) / 2) - (Height / 2);
+	}
+	else
+	{
+		X = (Resolution.Info.Width / 2) - (Width / 2);
+		Y = (Resolution.Info.Height / 2) - (Height / 2);
+	}
+
+	pDrawImage(Index, X, Y, Width, Height, Unk1, Unk2, ScaleX, ScaleY, Unk3, Unk4);
 }
 
 CResolution Resolution;

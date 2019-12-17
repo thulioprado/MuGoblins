@@ -151,6 +151,7 @@
     <ClCompile Include="creatwth.cpp" />
     <ClCompile Include="detours.cpp" />
     <ClCompile Include="disasm.cpp" />
+    <ClCompile Include="Discord.cpp" />
     <ClCompile Include="Library.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -167,6 +168,7 @@
     <ClInclude Include="Defines.h" />
     <ClInclude Include="detours.h" />
     <ClInclude Include="detver.h" />
+    <ClInclude Include="Discord.h" />
     <ClInclude Include="Library.h" />
     <ClInclude Include="Memory.h" />
     <ClInclude Include="Packets.h" />

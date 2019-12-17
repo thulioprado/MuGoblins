@@ -111,7 +111,7 @@ ElfBufferDefenseConstB = 3
 ;==================================================
 ; Experience Settings
 ;==================================================
-ExperienceRate = 10
+ExperienceRate = 100000
 AddExperienceRate_AL0 = 1
 AddExperienceRate_AL1 = 1
 AddExperienceRate_AL2 = 1
@@ -142,7 +142,7 @@ ItemDropRate_AL3 = 100
 ; Money Drop Settings
 ;==================================================
 MoneyDropTime = 30
-MoneyAmountDropRate = 10
+MoneyAmountDropRate = 100
 MoneyAmountDropRate_AL0 = 50
 MoneyAmountDropRate_AL1 = 50
 MoneyAmountDropRate_AL2 = 50

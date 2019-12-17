@@ -40,6 +40,9 @@
     <Filter Include="Source\Player">
       <UniqueIdentifier>{9b7d69fa-d17f-4996-9441-a6c29c0956e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Discord">
+      <UniqueIdentifier>{9a44330d-f872-4f79-9db3-e7b4cd743d33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Discord.cpp">
+      <Filter>Source\Discord</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Source\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Discord.h">
+      <Filter>Source\Discord</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

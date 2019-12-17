@@ -1,7 +1,15 @@
 #
 # Client
 #
-Client/
+Client/ScreenShots
+Client/*.iobj
+Client/*.exp
+Client/*.ipdb
+Client/*.pdb
+Client/*.map
+Client/*.ilk
+Client/*.log
+Client/*.idb
 
 #
 # Server

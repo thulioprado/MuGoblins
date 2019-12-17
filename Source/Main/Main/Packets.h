@@ -359,3 +359,9 @@ struct PMSG_MONSTER_DAMAGE_RECV2
 	PSBMSG_HEAD header;
 	BYTE damage[2];
 };
+
+struct PMSG_DISCORD_UPDATE_RECV
+{
+	PSBMSG_HEAD header;
+	int total;
+};

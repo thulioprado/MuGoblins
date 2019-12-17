@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Protocol.h"
 #include "Player.h"
+#include "Discord.h"
 
 HMODULE wzAudio = nullptr;
 
@@ -22,6 +23,7 @@ BOOL APIENTRY DllMain(HINSTANCE Instance, DWORD Reason, LPVOID Reserved)
 			Window.Attach(Instance);
 			Protocol.Load();
 			Player.Load();
+			Discord.Start();
 
 			break;
 		}

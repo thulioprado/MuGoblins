@@ -89,7 +89,7 @@ bool Patch()
 	//
 	CreateDirectory(".\\ScreenShots", null);
 
-	static const char* screen_path = "ScreenShots\\[%02d-%02d][%02d-%02d][%04d].jpg";
+	static char screen_path[] = "ScreenShots\\[%02d-%02d][%02d-%02d][%04d].jpg";
 	Memory::Change<DWORD>(0x628B89, DWORD(&screen_path));
 
 	//

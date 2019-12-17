@@ -11,6 +11,7 @@ public:
 public:
 	void Attach(HINSTANCE Instance);
 	void Detach();
+	HWND GetHandle() const;
 
 private:
 	static HWND WINAPI		CreateWindowEx(DWORD ExStyle, LPCSTR ClassName, LPCSTR WindowName, DWORD Style, int X, int Y, int Width, int Height, HWND Parent, HMENU Menu, HINSTANCE Instance, LPVOID Parameter);

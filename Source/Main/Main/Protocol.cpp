@@ -1,6 +1,7 @@
 #include "Library.h"
 #include "Protocol.h"
 #include "Player.h"
+#include "Discord.h"
 
 CProtocol::CProtocol()
 {
@@ -78,6 +79,10 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 				case 0x07:
 				{
 					return ::Protocol.MonsterSetDamage(Index, (PMSG_MONSTER_DAMAGE_RECV*)(Data));
+				}
+				case 0xFF:
+				{
+					return ::Protocol.DiscordUpdate((PMSG_DISCORD_UPDATE_RECV*)(Data));
 				}
 			}
 		}
@@ -184,14 +189,12 @@ int CProtocol::ObtainedExperience(int Index, PMSG_REWARD_EXPERIENCE_RECV* Data)
 
 	auto Current = double(Player.Experience) - double(Player.PreviousNextExperience);
 	auto Total = double(Player.NextExperience) - double(Player.PreviousNextExperience);
-	auto PercentExperience = (DWORD)((Current / Total) * 100);
+	Player.PercentExperience = (DWORD)((Current / Total) * 100);
 
-	if (PercentExperience > 100)
+	if (Player.PercentExperience > 100)
 	{
-		PercentExperience = 100;
+		Player.PercentExperience = 100;
 	}
-
-	Player.PercentExperience = (float)(PercentExperience * 2);
 
 	PMSG_REWARD_EXPERIENCE_RECV2 pMsg;
 
@@ -269,14 +272,12 @@ int CProtocol::CharacterInfo(int Index, PMSG_CHARACTER_INFO_RECV* Data)
 
 	auto Current = double(Player.Experience) - double(Player.PreviousNextExperience);
 	auto Total = double(Player.NextExperience) - double(Player.PreviousNextExperience);
-	auto PercentExperience = (DWORD)((Current / Total) * 100);
+	Player.PercentExperience = (DWORD)((Current / Total) * 100);
 
-	if (PercentExperience > 100)
+	if (Player.PercentExperience > 100)
 	{
-		PercentExperience = 100;
+		Player.PercentExperience = 100;
 	}
-
-	Player.PercentExperience = (float)(PercentExperience * 2);
 
 	PMSG_CHARACTER_INFO_RECV2 pMsg;
 
@@ -344,14 +345,12 @@ int CProtocol::LevelUp(int Index, PMSG_LEVEL_UP_RECV* Data)
 
 	auto Current = double(Player.Experience) - double(Player.PreviousNextExperience);
 	auto Total = double(Player.NextExperience) - double(Player.PreviousNextExperience);
-	auto PercentExperience = (DWORD)((Current / Total) * 100);
+	Player.PercentExperience = (DWORD)((Current / Total) * 100);
 
-	if (PercentExperience > 100)
+	if (Player.PercentExperience > 100)
 	{
-		PercentExperience = 100;
+		Player.PercentExperience = 100;
 	}
-
-	Player.PercentExperience = (float)(PercentExperience * 2);
 
 	PMSG_LEVEL_UP_RECV2 pMsg;
 
@@ -428,6 +427,15 @@ int CProtocol::MonsterSetDamage(int Index, PMSG_MONSTER_DAMAGE_RECV* Data)
 	pMsg.damage[1] = SET_NUMBERLB(GET_MAX_WORD_VALUE(Data->damage));
 
 	return pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::DiscordUpdate(PMSG_DISCORD_UPDATE_RECV* Data)
+{
+	char text[50];
+	wsprintf(text, "Total online: %d", Data->total);
+	Discord.SetActivity(text);
+
+	return 1;
 }
 
 CProtocol Protocol;

@@ -63,6 +63,11 @@ void CWindow::Detach()
 	}
 }
 
+HWND CWindow::GetHandle() const
+{
+	return this->Window;
+}
+
 HWND WINAPI CWindow::CreateWindowEx(DWORD ExStyle, LPCSTR ClassName, LPCSTR WindowName, DWORD Style, int X, int Y, int Width, int Height, HWND Parent, HMENU Menu, HINSTANCE Instance, LPVOID Parameter)
 {
 	if (IS_INTRESOURCE(ClassName))

@@ -1,0 +1,11 @@
+Screenshots/*
+*.log
+*.dmp
+*.exp
+*.ilk
+*.lib
+*.pdb
+*.jpg
+*.iobj
+*.idb
+*.ipdb
