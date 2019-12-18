@@ -135,6 +135,22 @@ struct PMSG_VIEWPORT_STATE
 	BYTE effect;
 };
 
+#pragma pack(push, 1)
+
+struct PMSG_MONSTER_HEALTH_SEND
+{
+	PSWMSG_HEAD header;
+	BYTE count;
+};
+
+struct PMSG_MONSTER_HEALTH
+{
+	WORD index;
+	BYTE percent;
+};
+
+#pragma pack(pop)
+
 //**********************************************//
 //**********************************************//
 //**********************************************//
@@ -178,6 +194,7 @@ public:
 	void GCViewportSimpleChangeSend(LPOBJ lpObj);
 	void GCViewportSimpleGuildSend(LPOBJ lpObj);
 	void GCViewportSimpleUnionSend(LPOBJ lpObj);
+	void GCViewportHealthBar(int aIndex);
 };
 
 extern CViewport gViewport;

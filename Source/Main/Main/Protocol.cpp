@@ -1,6 +1,7 @@
 #include "Library.h"
 #include "Protocol.h"
 #include "Player.h"
+#include "Monster.h"
 #include "Discord.h"
 
 CProtocol::CProtocol()
@@ -79,6 +80,14 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 				case 0x07:
 				{
 					return ::Protocol.MonsterSetDamage(Index, (PMSG_MONSTER_DAMAGE_RECV*)(Data));
+				}
+				case 0xFD:
+				{
+					return ::Protocol.LockMain((PMSG_LOCK_RECV*)(Data));
+				}
+				case 0xFE:
+				{
+					return ::Protocol.MonsterHealth((PMSG_MONSTER_HEALTH_RECV*)(Data));
 				}
 				case 0xFF:
 				{
@@ -252,6 +261,8 @@ int CProtocol::SetDamage(int Index, PMSG_DAMAGE_RECV* Data)
 
 int CProtocol::ClientConnect(int Index, PMSG_CONNECT_CLIENT_RECV* Data)
 {
+	pLockMain = FALSE;
+
 	Player.Index = MAKE_NUMBERW(Data->index[0], Data->index[1]);
 
 	return pProtocolCore(0xF1, (LPBYTE)(Data), Data->header.size, Index);
@@ -259,6 +270,8 @@ int CProtocol::ClientConnect(int Index, PMSG_CONNECT_CLIENT_RECV* Data)
 
 int CProtocol::CharacterInfo(int Index, PMSG_CHARACTER_INFO_RECV* Data)
 {
+	pLockMain = FALSE;
+
 	Player.Experience = Data->Experience;
 	Player.NextExperience = Data->NextExperience;
 	Player.PreviousNextExperience = Data->PreviousNextExperience;
@@ -427,6 +440,24 @@ int CProtocol::MonsterSetDamage(int Index, PMSG_MONSTER_DAMAGE_RECV* Data)
 	pMsg.damage[1] = SET_NUMBERLB(GET_MAX_WORD_VALUE(Data->damage));
 
 	return pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::LockMain(PMSG_LOCK_RECV* Data)
+{
+	pLockMain = Data->lock;
+	return 1;
+}
+
+int CProtocol::MonsterHealth(PMSG_MONSTER_HEALTH_RECV* Data)
+{
+	Monster.Reset(Data->count);
+
+	for (BYTE i = 0; i < Data->count; ++i)
+	{
+		Monster.Add(Data->health[i].index, Data->health[i].percent);
+	}
+
+	return 1;
 }
 
 int CProtocol::DiscordUpdate(PMSG_DISCORD_UPDATE_RECV* Data)

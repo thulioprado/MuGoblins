@@ -27,6 +27,8 @@ private:
 	int LevelUp(int Index, PMSG_LEVEL_UP_RECV* Data);
 	int UpdatePoints(int index, PMSG_LEVEL_UP_POINT_RECV* Data);
 	int MonsterSetDamage(int Index, PMSG_MONSTER_DAMAGE_RECV* Data);
+	int LockMain(PMSG_LOCK_RECV* Data);
+	int MonsterHealth(PMSG_MONSTER_HEALTH_RECV* Data);
 	int DiscordUpdate(PMSG_DISCORD_UPDATE_RECV* Data);
 };
 

@@ -360,6 +360,29 @@ struct PMSG_MONSTER_DAMAGE_RECV2
 	BYTE damage[2];
 };
 
+struct PMSG_LOCK_RECV
+{
+	PSBMSG_HEAD header;
+	BYTE lock;
+};
+
+#pragma pack(push, 1)
+
+struct PMSG_MONSTER_HEALTH
+{
+	WORD index;
+	BYTE percent;
+};
+
+struct PMSG_MONSTER_HEALTH_RECV
+{
+	PSWMSG_HEAD header;
+	BYTE count;
+	PMSG_MONSTER_HEALTH health[75];
+};
+
+#pragma pack(pop)
+
 struct PMSG_DISCORD_UPDATE_RECV
 {
 	PSBMSG_HEAD header;

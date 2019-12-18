@@ -13,12 +13,12 @@
 void CComboSkill::Init() // OK
 {
 	this->m_time = 0;
-	this->m_skill[0] = 0xFFFF;
-	this->m_skill[1] = 0xFFFF;
+	this->m_skill[0] = 0xFF;
+	this->m_skill[1] = 0xFF;
 	this->m_index = -1;
 }
 
-int CComboSkill::GetSkillType(WORD skill) // OK
+int CComboSkill::GetSkillType(BYTE skill) // OK
 {
 	if(skill == SKILL_FALLING_SLASH || skill == SKILL_LUNGE || skill == SKILL_UPPERCUT || skill == SKILL_CYCLONE || skill == SKILL_SLASH)
 	{
@@ -34,7 +34,7 @@ int CComboSkill::GetSkillType(WORD skill) // OK
 	}
 }
 
-bool CComboSkill::CheckCombo(WORD skill) // OK
+bool CComboSkill::CheckCombo(BYTE skill) // OK
 {
 	int type = this->GetSkillType(skill);
 
@@ -60,7 +60,7 @@ bool CComboSkill::CheckCombo(WORD skill) // OK
 			return 0;
 		}
 
-		if(this->m_skill[0] == 0xFFFF)
+		if(this->m_skill[0] == 0xFF)
 		{
 			this->Init();
 			return 0;

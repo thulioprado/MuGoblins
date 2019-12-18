@@ -1843,17 +1843,14 @@ void GCGuildMasterQuestionSend(int aIndex) // OK
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.size);
 }
 
-void GCMonsterSkillSend(LPOBJ lpObj, LPOBJ lpTarget, int skill) // OK
+void GCMonsterSkillSend(LPOBJ lpObj, LPOBJ lpTarget, BYTE skill) // OK
 {
 	PMSG_MONSTER_SKILL_SEND pMsg;
 
 	pMsg.header.set(0x69, sizeof(pMsg));
 
-	pMsg.skill[0] = SET_NUMBERHB(skill);
-	pMsg.skill[1] = SET_NUMBERLB(skill);
-
+	pMsg.skill = skill;
 	pMsg.index = lpObj->Index;
-
 	pMsg.target = lpTarget->Index;
 
 	if (lpObj->Index == OBJECT_USER)
@@ -1866,18 +1863,20 @@ void GCMonsterSkillSend(LPOBJ lpObj, LPOBJ lpTarget, int skill) // OK
 
 void GCMonsterDieSend(int aIndex, int bIndex, QWORD experience, int damage, BYTE flag) // OK
 {
-	char exp[100];
-	sprintf_s(exp, "Real XP: %llu", experience);
-	gNotice.GCNoticeSend(aIndex, 1, 0, 0, 0, 0, 0, exp);
-	
 	PMSG_REWARD_EXPERIENCE_SEND pMsg;
 
 	pMsg.header.setE(0x9C, sizeof(pMsg));
 
-	pMsg.index[0] = SET_NUMBERHB(bIndex) | (flag * 0x80);
+	pMsg.index[0] = SET_NUMBERHB(bIndex);
 	pMsg.index[1] = SET_NUMBERLB(bIndex);
 	pMsg.experience = experience;
 	pMsg.damage = damage;
+
+	if (flag)
+	{
+		pMsg.index[0] &= 0x7F;
+		pMsg.index[0] |= 0x80;
+	}
 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
@@ -1903,7 +1902,6 @@ void GCEventEnterCountSend(int aIndex, BYTE EventType, BYTE EnterCount) // OK
 	pMsg.header.setE(0x9F, sizeof(pMsg));
 
 	pMsg.EventType = EventType;
-
 	pMsg.EnterCount = EnterCount;
 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
@@ -3747,4 +3745,12 @@ void CGReqCastleHuntZoneEntrance(PMSG_REQ_MOVE_TO_CASTLE_HUNTZONE* aRecv, int iI
 
 	DataSend(iIndex, (LPBYTE)&pMsg, sizeof(pMsg));
 #endif
+}
+
+void GCLockSend(int aIndex, BYTE lock)
+{
+	PMSG_LOCK_SEND pMsg;
+	pMsg.header.set(0xF3, 0xFD, sizeof(pMsg));
+	pMsg.lock = lock;
+	DataSend(aIndex, (LPBYTE)&pMsg, sizeof(pMsg));
 }

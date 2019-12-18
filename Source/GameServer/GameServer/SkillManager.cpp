@@ -1049,7 +1049,8 @@ bool CSkillManager::SkillChangeUse(int aIndex) // OK
 	}
 	else
 	{
-		lpObj->Change = change; return 1;
+		lpObj->Change = change; 
+		return 1;
 	}
 }
 
@@ -3455,7 +3456,7 @@ void CSkillManager::GCSkillListSend(LPOBJ lpObj, BYTE type) // OK
 
 			info.slot = n;
 			info.skill = lpObj->Skill[n].m_skill;
-			info.level = (lpObj->Skill[n].m_level << 3) | ((lpObj->Skill[n].m_skill / 255) & 7);
+			info.level = (lpObj->Skill[n].m_level << 3) | (lpObj->Skill[n].m_skill & 7);
 
 			memcpy(&send[size], &info, sizeof(info));
 			size += sizeof(info);

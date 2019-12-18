@@ -690,15 +690,14 @@ void CViewport::GCViewportMonsterSend(int aIndex) // OK
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
-	BYTE send[8192];
+	BYTE send[8192], healthSend[1024];
 
 	PMSG_VIEWPORT_SEND pMsg;
 
 	pMsg.header.set(0x13, 0);
+	pMsg.count = 0;
 
 	int size = sizeof(pMsg);
-
-	pMsg.count = 0;
 
 	PMSG_VIEWPORT_MONSTER info;
 
@@ -728,7 +727,7 @@ void CViewport::GCViewportMonsterSend(int aIndex) // OK
 
 		info.index[0] = SET_NUMBERHB(lpTarget->Index);
 		info.index[1] = SET_NUMBERLB(lpTarget->Index);
-
+		
 		if (lpTarget->State == OBJECT_CREATE)
 		{
 			info.index[0] |= 0x80;
@@ -1802,5 +1801,51 @@ void CViewport::GCViewportSimpleUnionSend(LPOBJ lpObj) // OK
 				DataSend(lpObj->VpPlayer2[n].index, send, size);
 			}
 		}
+	}
+}
+
+void CViewport::GCViewportHealthBar(int aIndex)
+{
+	LPOBJ lpObj = &gObj[aIndex];
+
+	BYTE send[1024];
+	PMSG_MONSTER_HEALTH_SEND pMsg;
+
+	pMsg.header.set(0xF3, 0xFE, 0);
+	pMsg.count = 0;
+
+	int size = sizeof(pMsg);
+
+	PMSG_MONSTER_HEALTH info;
+
+	for (int i = 0; i < MAX_VIEWPORT; ++i)
+	{
+		if (!OBJECT_RANGE(lpObj->VpPlayer[i].index))
+		{
+			continue;
+		}
+
+		LPOBJ lpTarget = &gObj[lpObj->VpPlayer[i].index];
+
+		if (lpTarget->Type == OBJECT_MONSTER)
+		{
+			info.index = lpTarget->Index;
+			info.percent = (BYTE)((lpTarget->Life / (lpTarget->MaxLife + lpTarget->AddLife)) * 100);
+
+			memcpy(&send[size], &info, sizeof(info));
+			size += sizeof(info);
+
+			++pMsg.count;
+		}
+	}
+
+	if (pMsg.count > 0)
+	{
+		pMsg.header.size[0] = SET_NUMBERHB(size);
+		pMsg.header.size[1] = SET_NUMBERLB(size);
+
+		memcpy(send, &pMsg, sizeof(pMsg));
+
+		DataSend(aIndex, send, size);
 	}
 }

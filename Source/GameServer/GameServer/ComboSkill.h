@@ -8,10 +8,10 @@ class CComboSkill
 {
 public:
 	void Init();
-	int GetSkillType(WORD skill);
-	bool CheckCombo(WORD skill);
+	int GetSkillType(BYTE skill);
+	bool CheckCombo(BYTE skill);
 public:
 	DWORD m_time;
-	WORD m_skill[2];
+	BYTE m_skill[2];
 	int m_index;
 };

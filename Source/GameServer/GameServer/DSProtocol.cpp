@@ -623,22 +623,19 @@ void DGCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg) // OK
 	GDPetItemInfoSend(lpObj->Index, 0);
 	
 	gReconnect.GetReconnectInfo(lpObj);
-
-	gQuest.GDQuestKillCountSend(lpObj->Index);
-	gQuest.GCQuestInfoSend(lpObj->Index);
-
+	
 	gItemManager.GCItemListSend(lpObj->Index);
 
 	gSkillManager.GCSkillListSend(lpObj, 0);
 	gSkillManager.SkillChangeUse(lpObj->Index);
 
+	gQuest.GDQuestKillCountSend(lpObj->Index);
+	gQuest.GCQuestInfoSend(lpObj->Index);
+
 	gObjViewportListProtocolCreate(lpObj);
 
 	gObjectManager.CharacterUpdateMapEffect(lpObj);
 
-	gNotice.GCNoticeSend(lpObj->Index, 0, 0, 0, 0, 0, 0, gMessage.GetMessage(256), lpObj->Name);
-	gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage((248 + lpObj->AccountLevel)), lpObj->AccountExpireDate);
-	
 	lpObj->MapServerMoveRequest = 0;
 
 	LogAdd(LOG_BLACK, "[ObjectManager][%d] AddCharacterInfo (%s)", lpObj->Index, lpObj->Name);

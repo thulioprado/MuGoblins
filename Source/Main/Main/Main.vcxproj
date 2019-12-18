@@ -158,10 +158,12 @@
     </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modules.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Patch.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Protocol.cpp" />
     <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="Viewport.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +173,7 @@
     <ClInclude Include="Discord.h" />
     <ClInclude Include="Library.h" />
     <ClInclude Include="Memory.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="Packets.h" />
     <ClInclude Include="Patch.h" />
     <ClInclude Include="Player.h" />
@@ -178,6 +181,7 @@
     <ClInclude Include="Registry.h" />
     <ClInclude Include="Resolution.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Viewport.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

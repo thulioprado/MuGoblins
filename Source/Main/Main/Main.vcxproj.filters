@@ -43,6 +43,12 @@
     <Filter Include="Source\Discord">
       <UniqueIdentifier>{9a44330d-f872-4f79-9db3-e7b4cd743d33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Monster">
+      <UniqueIdentifier>{c1e4fac6-8567-466e-a830-273773a94f4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Viewport">
+      <UniqueIdentifier>{ae6050d6-8d40-4f6d-8386-e0aee5f29cd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -80,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="Discord.cpp">
       <Filter>Source\Discord</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster.cpp">
+      <Filter>Source\Monster</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewport.cpp">
+      <Filter>Source\Viewport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +136,12 @@
     </ClInclude>
     <ClInclude Include="Discord.h">
       <Filter>Source\Discord</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster.h">
+      <Filter>Source\Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewport.h">
+      <Filter>Source\Viewport</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

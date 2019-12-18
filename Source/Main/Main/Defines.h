@@ -2,16 +2,84 @@
 
 #define PLAYER_OBJECT_BASE					*(DWORD*)(0x7666A78)
 
-#define pResolution							*(DWORD*)(0x5750320)
-#define pFontSize							*(DWORD*)(0x773D130)
+#define VIEWPORT_BASE						*(DWORD*)(0x7424644)
+#define VIEWPORT_MAX						400
+#define VIEWPORT_USER						1
+#define VIEWPORT_MONSTER					2
+
+#define GUILD_RELATIONSHIP_UNION			1
+#define GUILD_RELATIONSHIP_RIVAL			2
+#define GUILD_RELATIONSHIP_UNIONMASTER		4
+#define GUILD_RELATIONSHIP_RIVALMASTER		8
+
+#define STATE_SELECT_SERVER					2 
+#define STATE_SELECT_CHARACTER				4
+#define STATE_PLAYING						5
+
+#define pHDC								*(HDC*)(0x57504DC)
+#define pDefaultFont						*(HFONT*)(0x575053C)
+#define pMediumFont 						*(HFONT*)(0x5750540)
+#define pBigFont							*(HFONT*)(0x5750544)
+#define pSocket								*(SOCKET*)(*(DWORD*)(0x6B7264) + 12)
+#define pSerialPacket		 				*(BYTE*)(0x57548F3)
 #define pScreenDivisorX 					*(float*)(0x574FE90)
 #define pScreenDivisorY 					*(float*)(0x574FE94)
 #define pScreenWidth						*(DWORD*)(0x6C4158)
 #define pScreenHeight 						*(DWORD*)(0x6C415C)
 #define pScreenWidthBase 					640
 #define pScreenHeightBase					480
+#define pResolution							*(DWORD*)(0x5750320)
+#define pFontSize							*(DWORD*)(0x773D130)
 #define pClipPrecisionX						*(float*)(0x6A967C)
 #define pClipPrecisionY		 				*(float*)(0x5E9D4E)
+#define pState								*(DWORD*)(0x6C41C0)
+#define pMessageBackgroundColor				*(DWORD*)(0x6B7DF8)
+#define pMessageForegroundColor				*(DWORD*)(0x6B7DF0)
+#define pItemDescriptionCount			 	*(DWORD*)(0x788C850)
+#define pMapNumber							(BYTE)(*(DWORD*)(0x6B8D48))
+#define pMyViewport							*(DWORD*)(0x742464C)
+#define pCameraZoom							*(float*)(0x626681)
+#define pCameraRotY							*(float*)(0x6A9798)
+#define pCameraRotZ							*(float*)(0x7D171A0)
+#define pCameraPosZ							*(float*)(0x6A7770)
+#define pCameraClipX 						*(float*)(0x6A967C)
+#define pCameraClipX2 						*(float*)(0x6A9688)
+#define pCameraClipY 						*(float*)(0x5E9D4E)
+#define pCameraClipY2						*(float*)(0x5E9CFE)
+#define pCameraClipB 						*(float*)(0x6A9680)
+#define pCameraClipGL 						*(float*)(0x62696E)
+#define pCameraClipUnk1						*(float*)(0x6A9684)
+#define pCameraClipUnk2						*(float*)(0x6A8FBC)
+#define pConnectServerPort					*(WORD*)(0x6C41BC)
+#define pConnectServerIpAddress				(char*)(0x6B6694)
+#define pClientVersion						(char*)(0x6B7248)
+#define pClientSerial						(char*)(0x6B7250)
+#define pClientScreenshot					(char*)(0x6C4958)
+#define pReconnectAccount					(char*)(0x777D7C0)
+#define pReconnectPassword					(char*)(0x777D8C0)
+#define pPlayerState						*(DWORD*)(0x57548F8)
+#define pReconnectClear1					*(int*)(0x77D86D8)
+#define pReconnectClear2					*(int*)(0x6B7D60)
+#define pReconnectClear3					*(int*)(0x710C30)
+#define pReconnectClear4					*(int*)(0x788C82C)
+#define pReconnectClear5					*(int*)(0x788C830)
+#define pReconnectClear6					*(int*)(0x6B7DBC)
+#define pReconnectClear7					*(int*)(0x6B7DC0)
+#define pReconnectClear8					*(int*)(0x6B7DC4)
+#define pReconnectClear9					*(int*)(0x6B7DC8)
+#define pReconnectClear10					*(int*)(0x6B7DCC)
+#define pReconnectClear11					*(BYTE*)(0x6B7DE1)
+#define pCharacterOpen						*(DWORD*)(0x77D83A8)
+#define pCommandOpen						*(DWORD*)(0x77D83AC)
+#define pInventoryOpen						*(DWORD*)(0x77D83F4)
+#define pPartyOpen							*(DWORD*)(0x77D83DC)
+#define pGuildOpen							*(DWORD*)(0x77D83B8)
+#define pFriendOpen							*(DWORD*)(0x77D83B4)
+#define pQuestOpen							*(DWORD*)(0x77D83EC)
+#define pMoveOpen							*(DWORD*)(0x77D83D0)
+#define pImageDivisor						0.03125f
+#define pMaxTexture							*(DWORD*)(0x7D16FE8)
+#define pLockMain							*(BYTE*)(0x575491C)
 
 #define pWndProc							(WNDPROC)(0x4A9BD0)
 #define pProtocolCore						((int(*)(DWORD, LPBYTE, int, int))(0x4DB720))
@@ -19,7 +87,6 @@
 #define pUnkFormatPoint						((void(*)(int, float, float, float, float, float, float, float, float, char, int))(0x60DCF0))
 #define pDrawMonsterHP						((void(*)())(0x598350))
 #define pGetPositionFromAngle				((void(*)(LPVOID, int*, int*))(0x60C740))
-
 #define pSetBlend							((void(__cdecl*)(BYTE)) 0x60CB90)
 #define pEnableAlpha						((void(*)(char))(0x60CB90))
 #define pDisableAlpha						((void(*)())(0x60CC20))
@@ -61,5 +128,6 @@
 #define pMakePreviewCharacter				((void(*)(int, BYTE*, int, int))(0x50A590))
 
 #define pGetAllianceName(i)					((char*)(2 * (11 * i) + 0x785B794))
+#define pGetItemModel(group, index)			(group * 512) + index + 515
 
 #define GET_MAX_WORD_VALUE(x)				((x > 65000) ? 65000 : (WORD)(x))

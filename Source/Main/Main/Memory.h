@@ -47,4 +47,9 @@ public:
 		Change<BYTE>(Offset, 0xE9);
 		Change<DWORD>(Offset + 1, DWORD(Function) - (Offset + 5));
 	}
+
+	static inline void Hook(DWORD Offset, void* Function)
+	{
+		Change<DWORD>(Offset + 1, DWORD(Function) - (Offset + 5));
+	}
 };

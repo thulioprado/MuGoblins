@@ -130,15 +130,9 @@ void gObjViewportProc() // OK
 	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
 	{
 		gPersonalShop.GCPShopViewportSend(n);
-	}
 
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
-	{
 		gObj[n].PShopItemChange = 0;
-	}
 
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
-	{
 		gObjUnionUpdateProc(n);
 	}
 
@@ -1580,6 +1574,7 @@ void gObjViewportListProtocol(int aIndex) // OK
 	if(lpObj->Type == OBJECT_USER)
 	{
 		gViewport.GCViewportPlayerSend(aIndex);
+		gViewport.GCViewportHealthBar(aIndex);
 		gViewport.GCViewportMonsterSend(aIndex);
 		gViewport.GCViewportSummonSend(aIndex);
 		gViewport.GCViewportItemSend(aIndex);
@@ -1598,13 +1593,9 @@ void gObjViewportListDestroy(int aIndex) // OK
 	}
 
 	gViewport.DestroyViewportPlayer1(aIndex);
-
 	gViewport.DestroyViewportPlayer2(aIndex);
-
 	gViewport.DestroyViewportMonster1(aIndex);
-
 	gViewport.DestroyViewportMonster2(aIndex);
-
 	gViewport.DestroyViewportItem(aIndex);
 }
 
@@ -1621,9 +1612,7 @@ void gObjViewportListCreate(int aIndex) // OK
 	}
 
 	gViewport.CreateViewportPlayer(aIndex);
-
 	gViewport.CreateViewportMonster(aIndex);
-
 	gViewport.CreateViewportItem(aIndex);
 }
 //**************************************************************************//

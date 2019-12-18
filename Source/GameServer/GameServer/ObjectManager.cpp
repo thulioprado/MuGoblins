@@ -753,6 +753,8 @@ void CObjectManager::CharacterGameCloseSet(int aIndex, int type) // OK
 		}
 	}
 
+	GCLockSend(aIndex, TRUE);
+
 	lpObj->CloseCount = 6;
 	lpObj->CloseType = type;
 	lpObj->EnableDelCharacter = 1;

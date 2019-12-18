@@ -472,7 +472,7 @@ struct PMSG_EFFECT_INFO_SEND
 struct PMSG_MONSTER_SKILL_SEND
 {
 	PBMSG_HEAD header; // C1:69
-	BYTE skill[2];
+	BYTE skill;
 	WORD index;
 	WORD target;
 };
@@ -878,7 +878,7 @@ void GCMapAttrSend(int aIndex, BYTE type, BYTE attr, BYTE flag, BYTE count, PMSG
 void GCPartyItemInfoSend(int aIndex, CItem* lpItem);
 void GCEffectInfoSend(int aIndex, BYTE effect);
 void GCGuildMasterQuestionSend(int aIndex);
-void GCMonsterSkillSend(LPOBJ lpObj, LPOBJ lpTarget, int skill);
+void GCMonsterSkillSend(LPOBJ lpObj, LPOBJ lpTarget, BYTE skill);
 void GCMonsterDieSend(int aIndex, int bIndex, QWORD experience, int damage, BYTE flag);
 void GCRewardExperienceSend(int aIndex, QWORD experience);
 void GCEventEnterCountSend(int aIndex, BYTE EventType, BYTE EnterCount);
@@ -1465,3 +1465,11 @@ void CGReqCsRegGuildList(PMSG_REQ_CSREGGUILDLIST* lpMsg, int iIndex);
 void CGReqCsAttkGuildList(PMSG_REQ_CSATTKGUILDLIST* lpMsg, int iIndex);
 void CGReqGuildMarkOfCastleOwner(PMSG_REQ_GUILDMARK_OF_CASTLEOWNER* aRecv, int iIndex);
 void CGReqCastleHuntZoneEntrance(PMSG_REQ_MOVE_TO_CASTLE_HUNTZONE* aRecv, int iIndex);
+
+struct PMSG_LOCK_SEND
+{
+	PSBMSG_HEAD header;
+	BYTE lock;
+};
+
+void GCLockSend(int aIndex, BYTE lock);
