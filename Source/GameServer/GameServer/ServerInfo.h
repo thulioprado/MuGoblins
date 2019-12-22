@@ -169,12 +169,7 @@ public:
 	int m_EliteLifePotionRate;
 	int m_EliteManaPotionRate;
 	int m_EliteShieldPotionRate;
-	int m_TransformationRing1;
-	int m_TransformationRing2;
-	int m_TransformationRing3;
-	int m_TransformationRing4;
-	int m_TransformationRing5;
-	int m_TransformationRing6;
+	WORD m_TransformationRing[8][16];
 	int m_SoulSuccessRate[MAX_ACCOUNT_LEVEL];
 	int m_LifeSuccessRate[MAX_ACCOUNT_LEVEL];
 	int m_HarmonySuccessRate[MAX_ACCOUNT_LEVEL];

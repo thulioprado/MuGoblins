@@ -96,6 +96,7 @@ void JGConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg) // OK
 	memcpy(gObj[lpMsg->index].AccountExpireDate,lpMsg->AccountExpireDate,sizeof(gObj[lpMsg->index].AccountExpireDate));
 
 	GCConnectAccountSend(lpMsg->index,1);
+	GCCustomSettings(lpMsg->index);
 
 	LogAdd(LOG_BLACK,"[ObjectManager][%d] AddAccountInfo (%s)",lpMsg->index,gObj[lpMsg->index].Account);
 }
@@ -422,9 +423,18 @@ void GJServerUserInfoSend() // OK
 	gJoinServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
 }
 
+void GCCustomSettings(int aIndex)
+{
+	PMSG_CUSTOM_SETTINGS_SEND pMsg;
+	pMsg.header.set(0xF3, 0xFC, sizeof(pMsg));
+	memcpy(pMsg.TransformationRings, gServerInfo.m_TransformationRing, sizeof(pMsg.TransformationRings));
+
+	DataSend(aIndex, (LPBYTE)(&pMsg), sizeof(pMsg));
+}
+
 void JGTotalUpdate(SDHP_JOIN_SERVER_TOTAL_RECV* lpMsg)
 {
-	PMSG_DISCORD_UPDATE pMsg;
+	PMSG_DISCORD_UPDATE_SEND pMsg;
 	pMsg.header.set(0xF3, 0xFF, sizeof(pMsg));
 	pMsg.total = lpMsg->total;
 

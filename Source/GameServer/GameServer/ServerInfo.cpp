@@ -2110,17 +2110,17 @@ void CServerInfo::ReadCommonInfo(char* section, char* path) // OK
 
 	this->m_EliteShieldPotionRate = GetPrivateProfileInt(section, "EliteShieldPotionRate", 0, path);
 
-	this->m_TransformationRing1 = GetPrivateProfileInt(section, "TransformationRing1", 0, path);
+	char field[100];
+	int count = 0;
 
-	this->m_TransformationRing2 = GetPrivateProfileInt(section, "TransformationRing2", 0, path);
-
-	this->m_TransformationRing3 = GetPrivateProfileInt(section, "TransformationRing3", 0, path);
-
-	this->m_TransformationRing4 = GetPrivateProfileInt(section, "TransformationRing4", 0, path);
-
-	this->m_TransformationRing5 = GetPrivateProfileInt(section, "TransformationRing5", 0, path);
-
-	this->m_TransformationRing6 = GetPrivateProfileInt(section, "TransformationRing6", 0, path);
+	for (BYTE i = 0; i < 8; ++i)
+	{
+		for (BYTE x = 0; x < 16; ++x)
+		{
+			wsprintf(field, "TransformationRing%02d", ++count);
+			this->m_TransformationRing[i][x] = GetPrivateProfileInt(section, field, 0, path);
+		}
+	}
 
 	this->m_SoulSuccessRate[0] = GetPrivateProfileInt(section, "SoulSuccessRate_AL0", 0, path);
 

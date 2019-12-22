@@ -307,7 +307,7 @@ void CItem::Convert(int index, BYTE Option1, BYTE Option2, BYTE Option3, BYTE Ne
 		}
 	}
 
-	if (this->m_Index == GET_ITEM(13, 10)) // Transformation Ring
+	if (this->m_Index == GET_ITEM(13, 10) || (this->m_Index >= GET_ITEM(13, 32) && this->m_Index <= GET_ITEM(13, 38))) // Transformation Ring
 	{
 		if (ItemLevel <= 2)
 		{

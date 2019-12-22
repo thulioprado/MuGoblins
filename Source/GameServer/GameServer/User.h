@@ -728,7 +728,6 @@ struct OBJECTSTRUCT
 	int AttackCustomOfflineMoneyDelay;
 	int CommandManagerTransaction[1];
 	DWORD AutoAttackTime;
-	DWORD TradeOkTime;
 	DWORD PotionTime;
 	DWORD ComboTime;
 	DWORD HPAutoRecuperationTime;

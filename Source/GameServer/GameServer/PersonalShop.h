@@ -22,11 +22,6 @@ struct PMSG_PSHOP_SET_ITEM_PRICE_RECV
 	PSBMSG_HEAD header; // C1:3F:01
 	BYTE slot;
 	BYTE price[4];
-	#if(GAMESERVER_UPDATE>=802)
-	BYTE JoBPrice[2];
-	BYTE JoSPrice[2];
-	BYTE JoCPrice[2];
-	#endif
 };
 
 struct PMSG_PSHOP_OPEN_RECV
@@ -48,16 +43,6 @@ struct PMSG_PSHOP_BUY_ITEM_RECV
 	BYTE index[2];
 	char name[10];
 	BYTE slot;
-	#if(GAMESERVER_UPDATE>=802)
-	#pragma pack(1)
-	BYTE type;
-	DWORD ItemIndex;
-	DWORD value;
-	WORD JoBValue;
-	WORD JoSValue;
-	WORD JoCValue;
-	#pragma pack()
-	#endif
 };
 
 struct PMSG_PSHOP_LEAVE_RECV
@@ -65,20 +50,6 @@ struct PMSG_PSHOP_LEAVE_RECV
 	PSBMSG_HEAD header; // C1:3F:07
 	BYTE index[2];
 	char name[10];
-};
-
-struct PMSG_PSHOP_SEARCH_RECV
-{
-	PSBMSG_HEAD header; // C1:EC:31
-	DWORD count;
-	WORD ItemIndex;
-};
-
-struct PMSG_PSHOP_SEARCH_LOG_RECV
-{
-	PSBMSG_HEAD header; // C3:EC:33
-	DWORD index;
-	BYTE type;
 };
 
 //**********************************************//
@@ -132,11 +103,6 @@ struct PMSG_PSHOP_ITEM_LIST
 	BYTE slot;
 	BYTE ItemInfo[MAX_ITEM_INFO];
 	DWORD value;
-	#if(GAMESERVER_UPDATE>=802)
-	WORD JoBValue;
-	WORD JoSValue;
-	WORD JoCValue;
-	#endif
 };
 
 struct PMSG_PSHOP_BUY_ITEM_SEND
@@ -167,22 +133,6 @@ struct PMSG_PSHOP_LEAVE_SEND
 {
 	PSBMSG_HEAD header; // C1:3F:12
 	BYTE index[2];
-};
-
-struct PMSG_PSHOP_SEARCH_SEND
-{
-	#pragma pack(1)
-	PSWMSG_HEAD header; // C2:EC:31
-	DWORD count;
-	BYTE flag;
-	#pragma pack()
-};
-
-struct PMSG_PSHOP_SEARCH
-{
-	BYTE index[2];
-	char name[11];
-	char text[37];
 };
 
 struct PMSG_PSHOP_ITEM_VALUE_SEND
@@ -305,8 +255,6 @@ public:
 	void CGPShopItemListRecv(PMSG_PSHOP_ITEM_LIST_RECV* lpMsg,int aIndex);
 	void CGPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg,int aIndex);
 	void CGPShopLeaveRecv(PMSG_PSHOP_LEAVE_RECV* lpMsg,int aIndex);
-	void CGPShopSearchRecv(PMSG_PSHOP_SEARCH_RECV* lpMsg,int aIndex);
-	void CGPShopSearchLogRecv(PMSG_PSHOP_SEARCH_LOG_RECV* lpMsg,int aIndex);
 	void GCPShopViewportSend(int aIndex);
 	void GCPShopSetItemPriceSend(int aIndex,BYTE result,BYTE slot);
 	void GCPShopOpenSend(int aIndex,BYTE result);
@@ -316,12 +264,6 @@ public:
 	void GCPShopSellItemSend(int aIndex,int bIndex,int slot);
 	void GCPShopTextChangeSend(int aIndex);
 	void GCPShopLeaveSend(int aIndex,int bIndex);
-	void GCPShopItemValueSend(int aIndex);
-	void DGPShopItemValueRecv(SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg);
-	void GDPShopItemValueSend(int aIndex);
-	void GDPShopItemValueSaveSend(int aIndex);
-	void GDPShopItemValueInsertSaveSend(int aIndex,int slot,CItem* lpItem);
-	void GDPShopItemValueDeleteSaveSend(int aIndex,int slot);
 };
 
 extern CPersonalShop gPersonalShop;

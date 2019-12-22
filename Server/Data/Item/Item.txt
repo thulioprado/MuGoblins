@@ -388,6 +388,14 @@ end
 29       *      0       2       2        1            0            0          "Armor of Guardsman"                 0       0            0             0             0             0             0             0             0             0      1       1       1       1       1
 30       7      0       2       3        1            0            0          "Cape of Lord"                       180     200          0             0             0             0             0             0             0             0      0       0       0       0       1
 31       *      0       1       1        1            0            0          "Spirit"                             0       0            0             0             0             0             0             0             0             0      0       0       0       0       1
+32       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
+33       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
+34       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
+35       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
+36       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
+37       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
+38       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
+39       10     0       1       1        1            1            1          "Prism Ring"                         50      50           0             0             0             0             0             0             0             0      1       1       1       1       1
 end
 
 14
@@ -422,6 +430,12 @@ end
 28       *      0       1       1        1            0            0          "Lost Map"                           0       0
 29       *      0       1       1        1            0            0          "Symbol of Kundun"                   0       0
 31       *      0       1       1        1            0            0          "Jewel of Guardian"                  75      0
+32       *      0       1       1        1            0            0          "Red Ink"                            0       0
+33       *      0       1       1        1            0            0          "Green Ink"                          0       0
+34       *      0       1       1        1            0            0          "Blue Ink"                           0       0
+35       *      0       1       1        1            0            0          "Red Neutralizer"                    0       0
+36       *      0       1       1        1            0            0          "Green Neutralizer"                  0       0
+37       *      0       1       1        1            0            0          "Blue Neutralizer"                   0       0
 end
 
 15

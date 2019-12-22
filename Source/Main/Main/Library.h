@@ -11,6 +11,7 @@
 #include <chrono>
 #include <thread>
 #include <combaseapi.h>
+#include <unordered_map>
 #include <gl/GL.h>
 
 typedef unsigned __int64 QWORD;

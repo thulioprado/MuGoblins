@@ -112,6 +112,72 @@ struct PMSG_USER_DIE_RECV
 	BYTE killer[2];
 };
 
+struct PMSG_VIEWPORT_ITEM
+{
+	BYTE index[2];
+	BYTE x;
+	BYTE y;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_VIEWPORT_ITEM2
+{
+	BYTE index[2];
+	BYTE x;
+	BYTE y;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_VIEWPORT_RECV
+{
+	PWMSG_HEAD header;
+	BYTE count;
+};
+
+struct PMSG_ITEM_GET_RECV
+{
+	PBMSG_HEAD header;
+	BYTE result;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_ITEM_GET_RECV2
+{
+	PBMSG_HEAD header;
+	BYTE result;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_ITEM_MOVE_RECV
+{
+	PBMSG_HEAD header;
+	BYTE result;
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_ITEM_MOVE_RECV2
+{
+	PBMSG_HEAD header;
+	BYTE result;
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_ITEM_CHANGE_RECV
+{
+	PBMSG_HEAD header;
+	BYTE index[2];
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_ITEM_CHANGE_RECV2
+{
+	PBMSG_HEAD header;
+	BYTE index[2];
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
 struct PMSG_LIFE_RECV
 {
 	PBMSG_HEAD header;
@@ -142,6 +208,109 @@ struct PMSG_MANA_RECV2
 	BYTE type;
 	BYTE mana[2];
 	BYTE bp[2];
+};
+
+struct PMSG_SHOP_ITEM_LIST
+{
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_SHOP_ITEM_LIST2
+{
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_SHOP_ITEM_LIST_RECV
+{
+	PWMSG_HEAD header;
+	BYTE type;
+	BYTE count;
+};
+
+struct PMSG_ITEM_BUY_RECV
+{
+	PBMSG_HEAD header;
+	BYTE result;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_ITEM_BUY_RECV2
+{
+	PBMSG_HEAD header;
+	BYTE result;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_TRADE_ITEM_ADD_RECV
+{
+	PBMSG_HEAD header;
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_TRADE_ITEM_ADD_RECV2
+{
+	PBMSG_HEAD header;
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_PSHOP_ITEM_LIST
+{
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+	DWORD value;
+};
+
+struct PMSG_PSHOP_ITEM_LIST2
+{
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+	DWORD value;
+};
+
+struct PMSG_PSHOP_ITEM_LIST_RECV
+{
+	PSWMSG_HEAD header;
+	BYTE result;
+	BYTE index[2];
+	char name[10];
+	char text[36];
+	BYTE count;
+};
+
+struct PMSG_PSHOP_ITEM_BUY_RECV
+{
+	PSBMSG_HEAD header;
+	BYTE result;
+	BYTE index[2];
+	BYTE ItemInfo[MAX_ITEM_INFO];
+	BYTE slot;
+};
+
+struct PMSG_PSHOP_ITEM_BUY_RECV2
+{
+	PSBMSG_HEAD header;
+	BYTE result;
+	BYTE index[2];
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+	BYTE slot;
+};
+
+struct PMSG_CHAOS_MIX_RECV
+{
+	PBMSG_HEAD header;
+	BYTE result;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_CHAOS_MIX_RECV2
+{
+	PBMSG_HEAD header;
+	BYTE result;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
 };
 
 struct PMSG_REWARD_EXPERIENCE_RECV
@@ -360,13 +529,49 @@ struct PMSG_MONSTER_DAMAGE_RECV2
 	BYTE damage[2];
 };
 
+struct PMSG_ITEM_LIST
+{
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_ITEM_LIST2
+{
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_ITEM_LIST_RECV
+{
+	PSWMSG_HEAD header;
+	BYTE count;
+};
+
+struct PMSG_ITEM_MODIFY_RECV
+{
+	PSBMSG_HEAD header;
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO];
+};
+
+struct PMSG_ITEM_MODIFY_RECV2
+{
+	PSBMSG_HEAD header;
+	BYTE slot;
+	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_CUSTOM_SETTINGS_RECV
+{
+	PSWMSG_HEAD header;
+	WORD TransformationRings[8][16];
+};
+
 struct PMSG_LOCK_RECV
 {
 	PSBMSG_HEAD header;
 	BYTE lock;
 };
-
-#pragma pack(push, 1)
 
 struct PMSG_MONSTER_HEALTH
 {
@@ -378,10 +583,7 @@ struct PMSG_MONSTER_HEALTH_RECV
 {
 	PSWMSG_HEAD header;
 	BYTE count;
-	PMSG_MONSTER_HEALTH health[75];
 };
-
-#pragma pack(pop)
 
 struct PMSG_DISCORD_UPDATE_RECV
 {

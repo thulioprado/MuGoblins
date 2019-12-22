@@ -1004,6 +1004,7 @@ bool CSkillManager::SkillChangeUse(int aIndex) // OK
 		return 0;
 	}
 
+	BYTE ring = 0;
 	int change = -1;
 
 	for (int n = 0; n < 2; n++)
@@ -1015,32 +1016,21 @@ bool CSkillManager::SkillChangeUse(int aIndex) // OK
 			continue;
 		}
 
-		if (Ring->m_Index == GET_ITEM(13, 10)) // Transformation Ring
+		if (Ring->m_Index == GET_ITEM(13, 10))
 		{
+			ring = 0;
+			change = Ring->m_Level;
+		}
+		else if (Ring->m_Index >= GET_ITEM(13, 32) && Ring->m_Index <= GET_ITEM(13, 38))
+		{
+			ring = (Ring->m_Index - GET_ITEM(13, 32)) + 1;
 			change = Ring->m_Level;
 		}
 	}
 
-	switch (change)
+	if (change != -1)
 	{
-		case 0:
-			change = gServerInfo.m_TransformationRing1;
-			break;
-		case 1:
-			change = gServerInfo.m_TransformationRing2;
-			break;
-		case 2:
-			change = gServerInfo.m_TransformationRing3;
-			break;
-		case 3:
-			change = gServerInfo.m_TransformationRing4;
-			break;
-		case 4:
-			change = gServerInfo.m_TransformationRing5;
-			break;
-		case 5:
-			change = gServerInfo.m_TransformationRing6;
-			break;
+		change = gServerInfo.m_TransformationRing[ring][change];
 	}
 
 	if (lpObj->Change == change)

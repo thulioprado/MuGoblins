@@ -1,9 +1,9 @@
 #pragma once
 
-struct MonsterInfo
+struct MonsterName
 {
-	WORD Index;
-	BYTE Percent;
+	short Index;
+	char Name[52];
 };
 
 class CMonster
@@ -14,17 +14,16 @@ public:
 
 public:
 	void Load();
-	void Reset(BYTE Count);
+	void Reset();
 	void Add(WORD Index, BYTE Percent);
-	MonsterInfo* Search(WORD Index);
+	char* GetName(WORD Index) const;
+	BYTE GetPercent(WORD Index) const;
 
 public:
 	static void DrawHealth();
 
 private:
-	MonsterInfo Monsters[75];
-	BYTE Count;
-	BYTE Current;
+	std::unordered_map<WORD, BYTE> Monsters;
 };
 
 extern CMonster Monster;

@@ -352,7 +352,9 @@ void CPersonalShop::CGPShopCloseRecv(int aIndex) // OK
 	}
 
 	lpObj->PShopOpen = 0;
+
 	memset(lpObj->PShopText, 0, sizeof(lpObj->PShopText));
+
 	this->GCPShopCloseSend(aIndex, 1);
 }
 
@@ -392,7 +394,9 @@ void CPersonalShop::CGPShopItemListRecv(PMSG_PSHOP_ITEM_LIST_RECV* lpMsg, int aI
 
 	lpObj->PShopWantDeal = 1;
 	lpObj->PShopDealerIndex = bIndex;
+
 	memcpy(lpObj->PShopDealerName, lpMsg->name, sizeof(lpObj->PShopDealerName));
+
 	this->GCPShopItemListSend(aIndex, bIndex, 1, 0);
 }
 
@@ -456,23 +460,11 @@ void CPersonalShop::CGPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg, int aInd
 		return;
 	}
 
-#if(GAMESERVER_UPDATE>=802)
-
-	if (lpTarget->Inventory[lpMsg->slot].m_PShopValue <= 0 && lpTarget->Inventory[lpMsg->slot].m_PShopJoBValue <= 0 && lpTarget->Inventory[lpMsg->slot].m_PShopJoSValue <= 0 && lpTarget->Inventory[lpMsg->slot].m_PShopJoCValue <= 0)
-	{
-		this->GCPShopBuyItemSend(aIndex, bIndex, 0, 6);
-		return;
-	}
-
-#else
-
 	if (lpTarget->Inventory[lpMsg->slot].m_PShopValue <= 0)
 	{
 		this->GCPShopBuyItemSend(aIndex, bIndex, 0, 6);
 		return;
 	}
-
-#endif
 
 	if (lpObj->Money < ((DWORD)lpTarget->Inventory[lpMsg->slot].m_PShopValue))
 	{
@@ -524,7 +516,9 @@ void CPersonalShop::CGPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg, int aInd
 	else
 	{
 		lpTarget->PShopOpen = 0;
+
 		memset(lpTarget->PShopText, 0, sizeof(lpTarget->PShopText));
+
 		this->GCPShopCloseSend(bIndex, 1);
 	}
 
@@ -541,108 +535,9 @@ void CPersonalShop::CGPShopLeaveRecv(PMSG_PSHOP_LEAVE_RECV* lpMsg, int aIndex) /
 	}
 
 	lpObj->PShopWantDeal = 0;
-
 	lpObj->PShopDealerIndex = -1;
 
 	memset(lpObj->PShopDealerName, 0, sizeof(lpObj->PShopDealerName));
-}
-
-void CPersonalShop::CGPShopSearchRecv(PMSG_PSHOP_SEARCH_RECV* lpMsg, int aIndex) // OK
-{
-#if(GAMESERVER_UPDATE>=802)
-
-	LPOBJ lpObj = &gObj[aIndex];
-
-	if (gObjIsConnectedGP(aIndex) == 0)
-	{
-		return;
-	}
-
-	BYTE send[4096];
-
-	PMSG_PSHOP_SEARCH_SEND pMsg;
-
-	pMsg.header.set(0xEC, 0x31, 0);
-
-	int size = sizeof(pMsg);
-
-	pMsg.count = 0;
-
-	pMsg.flag = 0;
-
-	PMSG_PSHOP_SEARCH info;
-
-	for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
-	{
-		if (gObjIsConnectedGP(n) == 0)
-		{
-			continue;
-		}
-
-		LPOBJ lpTarget = &gObj[n];
-
-		if (lpTarget->PShopOpen == 0)
-		{
-			continue;
-		}
-
-		if (lpMsg->ItemIndex != 0xFFFF && this->CheckPersonalShopSearchItem(lpTarget->Index, lpMsg->ItemIndex) == 0)
-		{
-			continue;
-		}
-
-		if ((pMsg.count++) >= lpMsg->count)
-		{
-			info.index[0] = SET_NUMBERHB(lpTarget->Index);
-
-			info.index[1] = SET_NUMBERLB(lpTarget->Index);
-
-			memcpy(info.name, lpTarget->Name, sizeof(lpTarget->Name));
-
-			memcpy(info.text, lpTarget->PShopText, sizeof(lpTarget->PShopText));
-
-			memcpy(&send[size], &info, sizeof(info));
-			size += sizeof(info);
-
-			if ((pMsg.count - lpMsg->count) >= 50)
-			{
-				pMsg.flag = 1;
-				break;
-			}
-		}
-	}
-
-	pMsg.count = ((pMsg.count == 0) ? 0xFFFFFFFF : pMsg.count);
-
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
-
-	memcpy(send, &pMsg, sizeof(pMsg));
-
-	DataSend(aIndex, send, size);
-
-#endif
-}
-
-void CPersonalShop::CGPShopSearchLogRecv(PMSG_PSHOP_SEARCH_LOG_RECV* lpMsg, int aIndex) // OK
-{
-#if(GAMESERVER_UPDATE>=802)
-
-	LPOBJ lpObj = &gObj[aIndex];
-
-	if (gObjIsConnectedGP(aIndex) == 0)
-	{
-		return;
-	}
-
-	if (gObjIsConnectedGP(lpMsg->index) == 0)
-	{
-		return;
-	}
-
-	gLog.Output(LOG_TRADE, "[ContactPesonalShopOwner][%s][%s] - (Account: %s, Name: %s, Type: %d)", lpObj->Account, lpObj->Name, gObj[lpMsg->index].Account, gObj[lpMsg->index].Name, lpMsg->type);
-
-#endif
 }
 
 void CPersonalShop::GCPShopViewportSend(int aIndex) // OK
@@ -769,7 +664,9 @@ void CPersonalShop::GCPShopViewportSend(int aIndex) // OK
 		{
 			lpObj->PShopWantDeal = 0;
 			lpObj->PShopDealerIndex = -1;
+
 			memset(lpObj->PShopDealerName, 0, sizeof(lpObj->PShopDealerName));
+
 			this->GCPShopLeaveSend(aIndex, lpObj->PShopDealerIndex);
 		}
 		else if (gObj[lpObj->PShopDealerIndex].PShopItemChange != 0)
@@ -786,7 +683,6 @@ void CPersonalShop::GCPShopSetItemPriceSend(int aIndex, BYTE result, BYTE slot) 
 	pMsg.header.set(0x3F, 0x01, sizeof(pMsg));
 
 	pMsg.result = result;
-
 	pMsg.slot = slot;
 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
@@ -810,9 +706,7 @@ void CPersonalShop::GCPShopCloseSend(int aIndex, BYTE result) // OK
 	pMsg.header.set(0x3F, 0x03, sizeof(pMsg));
 
 	pMsg.result = result;
-
 	pMsg.index[0] = SET_NUMBERHB(aIndex);
-
 	pMsg.index[1] = SET_NUMBERLB(aIndex);
 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
@@ -836,12 +730,10 @@ void CPersonalShop::GCPShopItemListSend(int aIndex, int bIndex, BYTE result, BYT
 	int size = sizeof(pMsg);
 
 	pMsg.result = result;
-
 	pMsg.index[0] = SET_NUMBERHB(bIndex);
 	pMsg.index[1] = SET_NUMBERLB(bIndex);
 
 	memset(pMsg.name, 0, sizeof(pMsg.name));
-
 	memset(pMsg.text, 0, sizeof(pMsg.text));
 
 	pMsg.count = 0;
@@ -849,7 +741,6 @@ void CPersonalShop::GCPShopItemListSend(int aIndex, int bIndex, BYTE result, BYT
 	if (result == 1)
 	{
 		memcpy(pMsg.name, lpObj->Name, sizeof(pMsg.name));
-
 		memcpy(pMsg.text, lpObj->PShopText, sizeof(pMsg.text));
 
 		PMSG_PSHOP_ITEM_LIST info;
@@ -867,16 +758,6 @@ void CPersonalShop::GCPShopItemListSend(int aIndex, int bIndex, BYTE result, BYT
 
 			info.value = lpObj->Inventory[n].m_PShopValue;
 
-		#if(GAMESERVER_UPDATE>=802)
-
-			info.JoBValue = lpObj->Inventory[n].m_PShopJoBValue;
-
-			info.JoSValue = lpObj->Inventory[n].m_PShopJoSValue;
-
-			info.JoCValue = lpObj->Inventory[n].m_PShopJoCValue;
-
-		#endif
-
 			memcpy(&send[size], &info, sizeof(info));
 			size += sizeof(info);
 
@@ -890,15 +771,6 @@ void CPersonalShop::GCPShopItemListSend(int aIndex, int bIndex, BYTE result, BYT
 	memcpy(send, &pMsg, sizeof(pMsg));
 
 	DataSend(aIndex, send, size);
-
-#if(GAMESERVER_UPDATE>=701)
-
-	if (result == 1)
-	{
-		gPentagramSystem.GCPentagramJewelPShopInfoSend(aIndex, bIndex);
-	}
-
-#endif
 }
 
 void CPersonalShop::GCPShopBuyItemSend(int aIndex, int bIndex, int slot, BYTE result) // OK
@@ -908,9 +780,7 @@ void CPersonalShop::GCPShopBuyItemSend(int aIndex, int bIndex, int slot, BYTE re
 	pMsg.header.set(0x3F, 0x06, sizeof(pMsg));
 
 	pMsg.result = result;
-
 	pMsg.index[0] = SET_NUMBERHB(bIndex);
-
 	pMsg.index[1] = SET_NUMBERLB(bIndex);
 
 	gItemManager.ItemByteConvert(pMsg.ItemInfo, gObj[aIndex].Inventory[slot]);
@@ -940,11 +810,9 @@ void CPersonalShop::GCPShopTextChangeSend(int aIndex) // OK
 	pMsg.header.set(0x3F, 0x10, sizeof(pMsg));
 
 	pMsg.index[0] = SET_NUMBERHB(aIndex);
-
 	pMsg.index[1] = SET_NUMBERLB(aIndex);
 
 	memcpy(pMsg.text, gObj[aIndex].PShopText, sizeof(pMsg.text));
-
 	memcpy(pMsg.name, gObj[aIndex].Name, sizeof(pMsg.name));
 
 	MsgSendV2(&gObj[aIndex], (BYTE*)&pMsg, pMsg.header.size);
@@ -957,247 +825,7 @@ void CPersonalShop::GCPShopLeaveSend(int aIndex, int bIndex) // OK
 	pMsg.header.set(0x3F, 0x12, sizeof(pMsg));
 
 	pMsg.index[0] = SET_NUMBERHB(bIndex);
-
 	pMsg.index[1] = SET_NUMBERLB(bIndex);
 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
-}
-
-void CPersonalShop::GCPShopItemValueSend(int aIndex) // OK
-{
-#if(GAMESERVER_UPDATE>=802)
-
-	LPOBJ lpObj = &gObj[aIndex];
-
-	BYTE send[1024];
-
-	PMSG_PSHOP_ITEM_VALUE_SEND pMsg;
-
-	pMsg.header.set(0xEC, 0x32, 0);
-
-	int size = sizeof(pMsg);
-
-	pMsg.MoneyCommisionRate = gServerInfo.m_PersonalShopMoneyCommisionRate;
-
-	pMsg.JewelCommisionRate = gServerInfo.m_PersonalShopJewelCommisionRate;
-
-	pMsg.count = 0;
-
-	PMSG_PSHOP_ITEM_VALUE info;
-
-	for (int n = INVENTORY_EXT4_SIZE; n < INVENTORY_FULL_SIZE; n++)
-	{
-		if (lpObj->Inventory[n].IsItem() == 0)
-		{
-			continue;
-		}
-
-		info.slot = n;
-
-		info.serial = lpObj->Inventory[n].m_Serial;
-
-		info.value = lpObj->Inventory[n].m_PShopValue;
-
-		info.JoBValue = lpObj->Inventory[n].m_PShopJoBValue;
-
-		info.JoSValue = lpObj->Inventory[n].m_PShopJoSValue;
-
-		info.JoCValue = lpObj->Inventory[n].m_PShopJoCValue;
-
-		memcpy(&send[size], &info, sizeof(info));
-		size += sizeof(info);
-
-		pMsg.count++;
-	}
-
-	pMsg.header.size[0] = SET_NUMBERHB(size);
-	pMsg.header.size[1] = SET_NUMBERLB(size);
-
-	memcpy(send, &pMsg, sizeof(pMsg));
-
-	DataSend(aIndex, send, size);
-
-#endif
-}
-
-void CPersonalShop::DGPShopItemValueRecv(SDHP_PSHOP_ITEM_VALUE_RECV* lpMsg) // OK
-{
-#if(GAMESERVER_UPDATE>=802)
-
-	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
-	{
-		LogAdd(LOG_RED, "[DGPShopItemValueRecv] Invalid Account [%d](%s)", lpMsg->index, lpMsg->account);
-		CloseClient(lpMsg->index);
-		return;
-	}
-
-	LPOBJ lpObj = &gObj[lpMsg->index];
-
-	for (int n = 0; n < lpMsg->count; n++)
-	{
-		SDHP_PSHOP_ITEM_VALUE* lpInfo = (SDHP_PSHOP_ITEM_VALUE*)(((BYTE*)lpMsg) + sizeof(SDHP_PSHOP_ITEM_VALUE_RECV) + (sizeof(SDHP_PSHOP_ITEM_VALUE) * n));
-
-		if (INVENTORY_SHOP_RANGE(lpInfo->slot) == 0)
-		{
-			continue;
-		}
-
-		if (lpObj->Inventory[lpInfo->slot].IsItem() == 0)
-		{
-			continue;
-		}
-
-		if (lpObj->Inventory[lpInfo->slot].m_Serial != lpInfo->serial)
-		{
-			continue;
-		}
-
-		lpObj->Inventory[lpInfo->slot].m_PShopValue = lpInfo->value;
-
-		lpObj->Inventory[lpInfo->slot].m_PShopJoBValue = lpInfo->JoBValue;
-
-		lpObj->Inventory[lpInfo->slot].m_PShopJoSValue = lpInfo->JoSValue;
-
-		lpObj->Inventory[lpInfo->slot].m_PShopJoCValue = lpInfo->JoCValue;
-	}
-
-	gPersonalShop.GCPShopItemValueSend(lpObj->Index);
-
-#endif
-}
-
-void CPersonalShop::GDPShopItemValueSend(int aIndex) // OK
-{
-#if(GAMESERVER_UPDATE>=802)
-
-	if (gObjIsAccountValid(aIndex, gObj[aIndex].Account) == 0)
-	{
-		return;
-	}
-
-	SDHP_PSHOP_ITEM_VALUE_SEND pMsg;
-
-	pMsg.header.set(0x25, 0x00, sizeof(pMsg));
-
-	pMsg.index = aIndex;
-
-	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
-
-	memcpy(pMsg.name, gObj[aIndex].Name, sizeof(pMsg.name));
-
-	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
-
-#endif
-}
-
-void CPersonalShop::GDPShopItemValueSaveSend(int aIndex) // OK
-{
-#if(GAMESERVER_UPDATE>=802)
-
-	LPOBJ lpObj = &gObj[aIndex];
-
-	BYTE send[1024];
-
-	SDHP_PSHOP_ITEM_VALUE_SAVE_SEND pMsg;
-
-	pMsg.header.set(0x25, 0x30, 0);
-
-	int size = sizeof(pMsg);
-
-	pMsg.index = aIndex;
-
-	memcpy(pMsg.account, lpObj->Account, sizeof(pMsg.account));
-
-	memcpy(pMsg.name, lpObj->Name, sizeof(pMsg.name));
-
-	pMsg.count = 0;
-
-	SDHP_PSHOP_ITEM_VALUE_SAVE info;
-
-	for (int n = INVENTORY_EXT4_SIZE; n < INVENTORY_FULL_SIZE; n++)
-	{
-		if (lpObj->Inventory[n].IsItem() != 0)
-		{
-			info.slot = n;
-
-			info.serial = lpObj->Inventory[n].m_Serial;
-
-			info.value = lpObj->Inventory[n].m_PShopValue;
-
-			info.JoBValue = lpObj->Inventory[n].m_PShopJoBValue;
-
-			info.JoSValue = lpObj->Inventory[n].m_PShopJoSValue;
-
-			info.JoCValue = lpObj->Inventory[n].m_PShopJoCValue;
-
-			memcpy(&send[size], &info, sizeof(info));
-			size += sizeof(info);
-
-			pMsg.count++;
-		}
-	}
-
-	if (pMsg.count > 0)
-	{
-		pMsg.header.size[0] = SET_NUMBERHB(size);
-		pMsg.header.size[1] = SET_NUMBERLB(size);
-
-		memcpy(send, &pMsg, sizeof(pMsg));
-
-		gDataServerConnection.DataSend(send, size);
-	}
-
-#endif
-}
-
-void CPersonalShop::GDPShopItemValueInsertSaveSend(int aIndex, int slot, CItem* lpItem) // OK
-{
-#if(GAMESERVER_UPDATE>=802)
-
-	SDHP_PSHOP_ITEM_VALUE_INSERT_SAVE_SEND pMsg;
-
-	pMsg.header.set(0x25, 0x31, sizeof(pMsg));
-
-	pMsg.index = aIndex;
-
-	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
-
-	memcpy(pMsg.name, gObj[aIndex].Name, sizeof(pMsg.account));
-
-	pMsg.slot = slot;
-
-	pMsg.serial = lpItem->m_Serial;
-
-	pMsg.value = lpItem->m_PShopValue;
-
-	pMsg.JoBValue = lpItem->m_PShopJoBValue;
-
-	pMsg.JoSValue = lpItem->m_PShopJoSValue;
-
-	pMsg.JoCValue = lpItem->m_PShopJoCValue;
-
-	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
-
-#endif
-}
-
-void CPersonalShop::GDPShopItemValueDeleteSaveSend(int aIndex, int slot) // OK
-{
-#if(GAMESERVER_UPDATE>=802)
-
-	SDHP_PSHOP_ITEM_VALUE_DELETE_SAVE_SEND pMsg;
-
-	pMsg.header.set(0x25, 0x32, sizeof(pMsg));
-
-	pMsg.index = aIndex;
-
-	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
-
-	memcpy(pMsg.name, gObj[aIndex].Name, sizeof(pMsg.account));
-
-	pMsg.slot = slot;
-
-	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
-
-#endif
 }

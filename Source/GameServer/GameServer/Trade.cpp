@@ -69,7 +69,6 @@ void CTrade::ResetTrade(int aIndex) // OK
 	lpObj->Interface.state = 0;
 	lpObj->TargetNumber = -1;
 	lpObj->TradeOk = 0;
-	lpObj->TradeOkTime = 0;
 	lpObj->TradeMoney = 0;
 }
 
@@ -233,7 +232,6 @@ void CTrade::CGTradeResponseRecv(PMSG_TRADE_RESPONSE_RECV* lpMsg,int aIndex) // 
 	lpObj->Interface.type = INTERFACE_TRADE;
 	lpObj->Interface.state = 1;
 	lpObj->TradeOk = 0;
-	lpObj->TradeOkTime = 0;
 	lpObj->TradeMoney = 0;
 
 	this->GCTradeResponseSend(aIndex,1,lpTarget->Name,lpTarget->Level,lpTarget->GuildNumber);
@@ -244,7 +242,6 @@ void CTrade::CGTradeResponseRecv(PMSG_TRADE_RESPONSE_RECV* lpMsg,int aIndex) // 
 	lpTarget->Interface.type = INTERFACE_TRADE;
 	lpTarget->Interface.state = 1;
 	lpTarget->TradeOk = 0;
-	lpTarget->TradeOkTime = 0;
 	lpTarget->TradeMoney = 0;
 
 	this->GCTradeResponseSend(bIndex,1,lpObj->Name,lpObj->Level,lpObj->GuildNumber);
@@ -316,11 +313,9 @@ void CTrade::CGTradeMoneyRecv(PMSG_TRADE_MONEY_RECV* lpMsg,int aIndex) // OK
 	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
 
 	lpObj->TradeOk = 0;
-	lpObj->TradeOkTime = GetTickCount();
 	this->GCTradeOkButtonSend(aIndex,0);
 
 	lpTarget->TradeOk = 0;
-	lpTarget->TradeOkTime = GetTickCount();
 	this->GCTradeOkButtonSend(bIndex,2);
 
 	lpObj->TradeMoney = lpMsg->money;
@@ -355,11 +350,6 @@ void CTrade::CGTradeOkButtonRecv(PMSG_TRADE_OK_BUTTON_RECV* lpMsg,int aIndex) //
 		return;
 	}
 
-	if((GetTickCount()-lpObj->TradeOkTime) < 6000)
-	{
-		return;
-	}
-
 	if(lpMsg->flag == 0 && lpObj->TradeOk != 0)
 	{
 		lpObj->TradeOk = 0;
@@ -376,19 +366,6 @@ void CTrade::CGTradeOkButtonRecv(PMSG_TRADE_OK_BUTTON_RECV* lpMsg,int aIndex) //
 	{
 		return;
 	}
-
-	#if(GAMESERVER_UPDATE>=701)
-
-	if(gPentagramSystem.CheckExchangePentagramItem(lpObj) == 0 || gPentagramSystem.CheckExchangePentagramItem(lpTarget) == 0)
-	{
-		this->ResetTrade(aIndex);
-		this->GCTradeResultSend(aIndex,6);
-		this->ResetTrade(bIndex);
-		this->GCTradeResultSend(bIndex,6);
-		return;
-	}
-
-	#endif
 
 	if(gObjCheckMaxMoney(aIndex,lpTarget->TradeMoney) == 0 || gObjCheckMaxMoney(bIndex,lpObj->TradeMoney) == 0)
 	{
@@ -408,28 +385,13 @@ void CTrade::CGTradeOkButtonRecv(PMSG_TRADE_OK_BUTTON_RECV* lpMsg,int aIndex) //
 		return;
 	}
 
-	#if(GAMESERVER_UPDATE>=701)
-
-	gPentagramSystem.ExchangePentagramItem(lpObj,lpTarget);
-
-	gPentagramSystem.ExchangePentagramItem(lpTarget,lpObj);
-
-	#endif
-
 	gObjInventoryCommit(aIndex);
 
 	gItemManager.GCItemListSend(aIndex);
 
-	#if(GAMESERVER_UPDATE>=802)
-
-	gEventInventory.GCEventItemListSend(aIndex);
-
-	#endif
-
 	gObjectManager.CharacterMakePreviewCharSet(aIndex);
 
 	lpObj->Money -= lpObj->TradeMoney;
-
 	lpObj->Money += lpTarget->TradeMoney;
 
 	GCMoneySend(aIndex,lpObj->Money);
@@ -443,17 +405,10 @@ void CTrade::CGTradeOkButtonRecv(PMSG_TRADE_OK_BUTTON_RECV* lpMsg,int aIndex) //
 	gObjInventoryCommit(bIndex);
 
 	gItemManager.GCItemListSend(bIndex);
-
-	#if(GAMESERVER_UPDATE>=802)
-
-	gEventInventory.GCEventItemListSend(bIndex);
-
-	#endif
-
+	
 	gObjectManager.CharacterMakePreviewCharSet(bIndex);
 
 	lpTarget->Money -= lpTarget->TradeMoney;
-
 	lpTarget->Money += lpObj->TradeMoney;
 
 	GCMoneySend(bIndex,lpTarget->Money);
@@ -469,7 +424,6 @@ void CTrade::CGTradeOkButtonRecv(PMSG_TRADE_OK_BUTTON_RECV* lpMsg,int aIndex) //
 	lpObj->Interface.state = 0;
 	lpObj->TargetNumber = -1;
 	lpObj->TradeOk = 0;
-	lpObj->TradeOkTime = 0;
 	lpObj->TradeMoney = 0;
 
 	this->GCTradeResultSend(aIndex,1);
@@ -479,7 +433,6 @@ void CTrade::CGTradeOkButtonRecv(PMSG_TRADE_OK_BUTTON_RECV* lpMsg,int aIndex) //
 	lpTarget->Interface.state = 0;
 	lpTarget->TargetNumber = -1;
 	lpTarget->TradeOk = 0;
-	lpTarget->TradeOkTime = 0;
 	lpTarget->TradeMoney = 0;
 
 	this->GCTradeResultSend(bIndex,1);

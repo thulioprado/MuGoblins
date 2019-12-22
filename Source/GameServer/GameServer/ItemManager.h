@@ -11,7 +11,7 @@
 #define MAX_ITEM_SECTION 16
 #define MAX_ITEM_TYPE 512
 #define MAX_ITEM (MAX_ITEM_SECTION*MAX_ITEM_TYPE)
-#define MAX_ITEM_INFO 7
+#define MAX_ITEM_INFO 16
 
 #define GET_ITEM(x,y) (((x)*MAX_ITEM_TYPE)+(y))
 #define CHECK_ITEM(x) (((x)<0)?-1:((x)>=MAX_ITEM)?-1:x)
@@ -54,7 +54,7 @@ struct PMSG_ITEM_MOVE_RECV
 	PBMSG_HEAD header; // C1:24
 	BYTE SourceFlag;
 	BYTE SourceSlot;
-	BYTE ItemInfo[MAX_ITEM_INFO];
+	BYTE ItemInfo[7];
 	BYTE TargetFlag;
 	BYTE TargetSlot;
 };
@@ -282,12 +282,15 @@ public:
 	BYTE MoveItemToInventoryFromTrade(LPOBJ lpObj,BYTE SourceSlot,BYTE TargetSlot,BYTE TargetFlag);
 	BYTE MoveItemToInventoryFromWarehouse(LPOBJ lpObj,BYTE SourceSlot,BYTE TargetSlot,BYTE TargetFlag);
 	BYTE MoveItemToInventoryFromChaosBox(LPOBJ lpObj,BYTE SourceSlot,BYTE TargetSlot,BYTE TargetFlag);
+	BYTE MoveItemToInventoryFromPersonalShop(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag);
 	BYTE MoveItemToTradeFromInventory(LPOBJ lpObj,BYTE SourceSlot,BYTE TargetSlot,BYTE TargetFlag);
 	BYTE MoveItemToTradeFromTrade(LPOBJ lpObj,BYTE SourceSlot,BYTE TargetSlot,BYTE TargetFlag);
 	BYTE MoveItemToWarehouseFromInventory(LPOBJ lpObj,BYTE SourceSlot,BYTE TargetSlot,BYTE TargetFlag);
 	BYTE MoveItemToWarehouseFromWarehouse(LPOBJ lpObj,BYTE SourceSlot,BYTE TargetSlot,BYTE TargetFlag);
 	BYTE MoveItemToChaosBoxFromInventory(LPOBJ lpObj,BYTE SourceSlot,BYTE TargetSlot,BYTE TargetFlag);
 	BYTE MoveItemToChaosBoxFromChaosBox(LPOBJ lpObj,BYTE SourceSlot,BYTE TargetSlot,BYTE TargetFlag);
+	BYTE MoveItemToPersonalShopFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag);
+	BYTE MoveItemToPersonalShopFromPersonalShop(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag);
 	void CGItemGetRecv(PMSG_ITEM_GET_RECV* lpMsg,int aIndex);
 	void CGItemDropRecv(PMSG_ITEM_DROP_RECV* lpMsg,int aIndex);
 	void CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg,int aIndex);

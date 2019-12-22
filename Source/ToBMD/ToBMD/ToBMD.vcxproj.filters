@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MemScript">
+      <UniqueIdentifier>{51470369-cf35-4dcc-b29d-207f1d2e72a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{4bf7fdfe-6b6b-4fa5-9ead-c8c75824ae70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Item">
+      <UniqueIdentifier>{d78ce101-7fd5-4006-b517-717e8c1996d6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MemScript.cpp">
+      <Filter>MemScript</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Library.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Item</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MemScript.h">
+      <Filter>MemScript</Filter>
+    </ClInclude>
+    <ClInclude Include="Library.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Item</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

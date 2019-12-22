@@ -16,8 +16,18 @@ private:
 
 private:
 	int UserDie(int Index, PMSG_USER_DIE_RECV* Data);
+	int ViewportItems(int Index, LPBYTE Data);
+	int ItemGet(int Index, PMSG_ITEM_GET_RECV* Data);
+	int ItemMove(int Index, PMSG_ITEM_MOVE_RECV* Data);
+	int ItemChange(int Index, PMSG_ITEM_CHANGE_RECV* Data);
 	int UpdateHP(int Index, PMSG_LIFE_RECV* Data);
 	int UpdateMP(int Index, PMSG_MANA_RECV* Data);
+	int ShopItemList(int Index, LPBYTE Data);
+	int ItemBuy(int Index, PMSG_ITEM_BUY_RECV* Data);
+	int TradeItemAdd(int Index, PMSG_TRADE_ITEM_ADD_RECV* Data);
+	int PersonalShopItemList(int Index, LPBYTE Data);
+	int PersonalShopItemBuy(int Index, PMSG_PSHOP_ITEM_BUY_RECV* Data);
+	int ChaosMix(int Index, PMSG_CHAOS_MIX_RECV* Data);
 	int ObtainedExperience(int Index, PMSG_REWARD_EXPERIENCE_RECV* Data);
 	int QuestReward(int Index, PMSG_QUEST_REWARD_RECV* Data);
 	int SetDamage(int Index, PMSG_DAMAGE_RECV* Data);
@@ -27,8 +37,11 @@ private:
 	int LevelUp(int Index, PMSG_LEVEL_UP_RECV* Data);
 	int UpdatePoints(int index, PMSG_LEVEL_UP_POINT_RECV* Data);
 	int MonsterSetDamage(int Index, PMSG_MONSTER_DAMAGE_RECV* Data);
+	int ItemList(int Index, LPBYTE Data);
+	int ItemModify(int Index, PMSG_ITEM_MODIFY_RECV* Data);
+	int CustomSettings(PMSG_CUSTOM_SETTINGS_RECV* Data);
 	int LockMain(PMSG_LOCK_RECV* Data);
-	int MonsterHealth(PMSG_MONSTER_HEALTH_RECV* Data);
+	int MonsterHealth(LPBYTE Data);
 	int DiscordUpdate(PMSG_DISCORD_UPDATE_RECV* Data);
 };
 

@@ -2,7 +2,7 @@
 #include "Monster.h"
 #include "Viewport.h"
 
-CMonster::CMonster() : Monsters(), Count(0), Current(0)
+CMonster::CMonster() : Monsters()
 {
 }
 
@@ -18,31 +18,39 @@ void CMonster::Load()
 	Memory::Call(0x596CEA, this->DrawHealth);
 }
 
-void CMonster::Reset(BYTE Count)
+void CMonster::Reset()
 {
-	this->Count = Count;
-	this->Current = 0;
+	this->Monsters.clear();
 }
 
 void CMonster::Add(WORD Index, BYTE Percent)
 {
-	this->Monsters[this->Current].Index = Index;
-	this->Monsters[this->Current].Percent = Percent;
-	
-	++this->Current;
+	this->Monsters[Index] = Percent;
 }
 
-MonsterInfo* CMonster::Search(WORD Index)
+char* CMonster::GetName(WORD Index) const
 {
-	for (BYTE i = 0; i < this->Count; ++i)
+	static MonsterName* Monster = (MonsterName*)(MONSTER_NAME_BASE);
+
+	for (short i = 0; i < 512; ++i)
 	{
-		if (this->Monsters[i].Index == Index)
+		if (Monster[i].Index == Index)
 		{
-			return &this->Monsters[i];
+			return Monster[i].Name;
 		}
 	}
 
-	return null;
+	return (char*)("");
+}
+
+BYTE CMonster::GetPercent(WORD Index) const
+{
+	if (this->Monsters.count(Index) > 0)
+	{
+		return this->Monsters.at(Index);
+	}
+
+	return (BYTE)(-1);
 }
 
 void CMonster::DrawHealth()
@@ -53,7 +61,7 @@ void CMonster::DrawHealth()
 	Angle Angle;
 	SIZE Size;
 	ViewportInfo* Viewport;
-	MonsterInfo* Info;
+	BYTE Percent;
 
 	for (int i = 0; i < VIEWPORT_MAX; ++i)
 	{
@@ -66,9 +74,9 @@ void CMonster::DrawHealth()
 
 		if (Viewport->Type == VIEWPORT_MONSTER)
 		{
-			Info = Monster.Search(Viewport->Index);
+			Percent = Monster.GetPercent(Viewport->Index);
 
-			if (!Info || Info->Percent == (BYTE)(-1))
+			if (Percent == (BYTE)(-1))
 			{
 				continue;
 			}
@@ -89,7 +97,7 @@ void CMonster::DrawHealth()
 			pDrawForm((float)(X), 1.f + Y, (float)(Width), 3.f);
 
 			glColor3f(0.9f, 0.f, 0.f);
-			pDrawForm((float)(X), 1.f + Y, (float)((Info->Percent * Width) / 100.f), 3.f);
+			pDrawForm((float)(X), 1.f + Y, (float)((Percent * Width) / 100.f), 3.f);
 			pDisableAlpha();
 
 			GetTextExtentPoint(pHDC, Viewport->Name, strlen(Viewport->Name), &Size);

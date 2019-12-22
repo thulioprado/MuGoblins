@@ -198,10 +198,17 @@ void GJMapServerMoveCancelSend(int aIndex);
 void GJAccountLevelSaveSend(int aIndex,int AccountLevel,int AccountExpireTime);
 void GJServerUserInfoSend();
 
-struct PMSG_DISCORD_UPDATE
+struct PMSG_CUSTOM_SETTINGS_SEND
+{
+	PSWMSG_HEAD header; // C1:F3:FC
+	WORD TransformationRings[8][16];
+};
+
+struct PMSG_DISCORD_UPDATE_SEND
 {
 	PSBMSG_HEAD header; // C1:F3:FF
 	int total;
 };
 
+void GCCustomSettings(int aIndex);
 void JGTotalUpdate(SDHP_JOIN_SERVER_TOTAL_RECV* lpMsg);

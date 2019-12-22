@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Monster.h"
 #include "Discord.h"
+#include "Item.h"
 
 CProtocol::CProtocol()
 {
@@ -25,6 +26,22 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 		{
 			return ::Protocol.UserDie(Index, (PMSG_USER_DIE_RECV*)(Data));
 		}
+		case 0x20:
+		{
+			return ::Protocol.ViewportItems(Index, Data);
+		}
+		case 0x22:
+		{
+			return ::Protocol.ItemGet(Index, (PMSG_ITEM_GET_RECV*)(Data));
+		}
+		case 0x24:
+		{
+			return ::Protocol.ItemMove(Index, (PMSG_ITEM_MOVE_RECV*)(Data));
+		}
+		case 0x25:
+		{
+			return ::Protocol.ItemChange(Index, (PMSG_ITEM_CHANGE_RECV*)(Data));
+		}
 		case 0x26:
 		{
 			return ::Protocol.UpdateHP(Index, (PMSG_LIFE_RECV*)(Data));
@@ -32,6 +49,39 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 		case 0x27:
 		{
 			return ::Protocol.UpdateMP(Index, (PMSG_MANA_RECV*)(Data));
+		}
+		case 0x31:
+		{
+			return ::Protocol.ShopItemList(Index, Data);
+		}
+		case 0x32:
+		{
+			return ::Protocol.ItemBuy(Index, (PMSG_ITEM_BUY_RECV*)(Data));
+		}
+		case 0x39:
+		{
+			return ::Protocol.TradeItemAdd(Index, (PMSG_TRADE_ITEM_ADD_RECV*)(Data));
+		}
+		case 0x3F:
+		{
+			switch (GET_SUBHEAD(Data))
+			{
+				case 0x05:
+				case 0x13:
+				{
+					return ::Protocol.PersonalShopItemList(Index, Data);
+				}
+				case 0x06:
+				{
+					return ::Protocol.PersonalShopItemBuy(Index, (PMSG_PSHOP_ITEM_BUY_RECV*)(Data));
+				}
+			}
+
+			break;
+		}
+		case 0x86:
+		{
+			return ::Protocol.ChaosMix(Index, (PMSG_CHAOS_MIX_RECV*)(Data));
 		}
 		case 0x9C:
 		{
@@ -81,19 +131,33 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 				{
 					return ::Protocol.MonsterSetDamage(Index, (PMSG_MONSTER_DAMAGE_RECV*)(Data));
 				}
+				case 0x10:
+				{
+					return ::Protocol.ItemList(Index, Data);
+				}
+				case 0x14:
+				{
+					return ::Protocol.ItemModify(Index, (PMSG_ITEM_MODIFY_RECV*)(Data));
+				}
+				case 0xFC:
+				{
+					return ::Protocol.CustomSettings((PMSG_CUSTOM_SETTINGS_RECV*)(Data));
+				}
 				case 0xFD:
 				{
 					return ::Protocol.LockMain((PMSG_LOCK_RECV*)(Data));
 				}
 				case 0xFE:
 				{
-					return ::Protocol.MonsterHealth((PMSG_MONSTER_HEALTH_RECV*)(Data));
+					return ::Protocol.MonsterHealth(Data);
 				}
 				case 0xFF:
 				{
 					return ::Protocol.DiscordUpdate((PMSG_DISCORD_UPDATE_RECV*)(Data));
 				}
 			}
+
+			break;
 		}
 	}
 
@@ -114,6 +178,79 @@ int CProtocol::UserDie(int Index, PMSG_USER_DIE_RECV* Data)
 	}
 
 	return pProtocolCore(0x17, (LPBYTE)(Data), Data->header.size, Index);
+}
+
+int CProtocol::ViewportItems(int Index, LPBYTE Data)
+{
+	BYTE Buffer[4096];
+
+	PMSG_VIEWPORT_RECV* Info = (PMSG_VIEWPORT_RECV*)(Data);
+	PMSG_VIEWPORT_ITEM* Item;
+
+	int Size = sizeof(PMSG_VIEWPORT_RECV);
+
+	PMSG_VIEWPORT_RECV pMsg;
+	PMSG_VIEWPORT_ITEM2 pItem;
+
+	pMsg.header.set(0x20, 0);
+	pMsg.count = Info->count;
+
+	int NewSize = sizeof(pMsg);
+
+	for (BYTE i = 0; i < Info->count; ++i)
+	{
+		Item = (PMSG_VIEWPORT_ITEM*)(&Data[Size]);
+
+		pItem.index[0] = Item->index[0];
+		pItem.index[1] = Item->index[1];
+		pItem.x = Item->x;
+		pItem.y = Item->y;
+
+		memcpy(pItem.ItemInfo, Item->ItemInfo, sizeof(pItem.ItemInfo));
+		memcpy(&Buffer[NewSize], &pItem, sizeof(pItem));
+
+		Size += sizeof(PMSG_VIEWPORT_ITEM);
+		NewSize += sizeof(pItem);
+	}
+
+	pMsg.header.size[0] = SET_NUMBERHB(NewSize);
+	pMsg.header.size[1] = SET_NUMBERLB(NewSize);
+
+	memcpy(Buffer, &pMsg, sizeof(pMsg));
+
+	return pProtocolCore(0x20, Buffer, NewSize, Index);
+}
+
+int CProtocol::ItemGet(int Index, PMSG_ITEM_GET_RECV* Data)
+{
+	PMSG_ITEM_GET_RECV2 pMsg;
+	pMsg.header.setE(0x22, sizeof(pMsg));
+	pMsg.result = Data->result;
+	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	return pProtocolCore(0x22, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::ItemMove(int Index, PMSG_ITEM_MOVE_RECV* Data)
+{
+	PMSG_ITEM_MOVE_RECV2 pMsg;
+	pMsg.header.setE(0x24, sizeof(pMsg));
+	pMsg.result = Data->result;
+	pMsg.slot = Data->slot;
+	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	return pProtocolCore(0x24, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::ItemChange(int Index, PMSG_ITEM_CHANGE_RECV* Data)
+{
+	PMSG_ITEM_CHANGE_RECV2 pMsg;
+	pMsg.header.set(0x25, sizeof(pMsg));
+	pMsg.index[0] = Data->index[0];
+	pMsg.index[1] = Data->index[1];
+	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	return pProtocolCore(0x25, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
 
 int CProtocol::UpdateHP(int Index, PMSG_LIFE_RECV* Data)
@@ -189,6 +326,132 @@ int CProtocol::UpdateMP(int Index, PMSG_MANA_RECV* Data)
 	pMsg.bp[1] = SET_NUMBERLB(GET_MAX_WORD_VALUE(Data->bp));
 
 	return pProtocolCore(0x27, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::ShopItemList(int Index, LPBYTE Data)
+{
+	BYTE Buffer[4096];
+
+	PMSG_SHOP_ITEM_LIST_RECV* Info = (PMSG_SHOP_ITEM_LIST_RECV*)(Data);
+	PMSG_SHOP_ITEM_LIST* Item;
+
+	int Size = sizeof(PMSG_SHOP_ITEM_LIST_RECV);
+
+	PMSG_SHOP_ITEM_LIST_RECV pMsg;
+	PMSG_SHOP_ITEM_LIST2 pItem;
+
+	pMsg.header.set(0x31, 0);
+	pMsg.count = Info->count;
+
+	int NewSize = sizeof(pMsg);
+
+	for (BYTE i = 0; i < Info->count; ++i)
+	{
+		Item = (PMSG_SHOP_ITEM_LIST*)(&Data[Size]);
+
+		pItem.slot = Item->slot;
+
+		memcpy(pItem.ItemInfo, Item->ItemInfo, sizeof(pItem.ItemInfo));
+		memcpy(&Buffer[NewSize], &pItem, sizeof(pItem));
+
+		Size += sizeof(PMSG_SHOP_ITEM_LIST);
+		NewSize += sizeof(pItem);
+	}
+
+	pMsg.header.size[0] = SET_NUMBERHB(NewSize);
+	pMsg.header.size[1] = SET_NUMBERLB(NewSize);
+
+	memcpy(Buffer, &pMsg, sizeof(pMsg));
+
+	return pProtocolCore(0x31, Buffer, NewSize, Index);
+}
+
+int CProtocol::ItemBuy(int Index, PMSG_ITEM_BUY_RECV* Data)
+{
+	PMSG_ITEM_BUY_RECV2 pMsg;
+	pMsg.header.set(0x32, sizeof(pMsg));
+	pMsg.result = Data->result;
+	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	return pProtocolCore(0x32, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::TradeItemAdd(int Index, PMSG_TRADE_ITEM_ADD_RECV* Data)
+{
+	PMSG_TRADE_ITEM_ADD_RECV2 pMsg;
+	pMsg.header.set(0x39, sizeof(pMsg));
+	pMsg.slot = Data->slot;
+	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	return pProtocolCore(0x39, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::PersonalShopItemList(int Index, LPBYTE Data)
+{
+	BYTE Buffer[4096];
+
+	PMSG_PSHOP_ITEM_LIST_RECV* Info = (PMSG_PSHOP_ITEM_LIST_RECV*)(Data);
+	PMSG_PSHOP_ITEM_LIST* Item;
+
+	int Size = sizeof(PMSG_PSHOP_ITEM_LIST_RECV);
+
+	PMSG_PSHOP_ITEM_LIST_RECV pMsg;
+	PMSG_PSHOP_ITEM_LIST2 pItem;
+
+	pMsg.header.set(0x3F, Info->header.subh, 0);
+	pMsg.result = Info->result;
+	pMsg.index[0] = Info->index[0];
+	pMsg.index[1] = Info->index[1];
+	pMsg.count = Info->count;
+
+	memcpy(pMsg.name, Info->name, sizeof(pMsg.name));
+	memcpy(pMsg.text, Info->text, sizeof(pMsg.text));
+
+	int NewSize = sizeof(pMsg);
+
+	for (BYTE i = 0; i < Info->count; ++i)
+	{
+		Item = (PMSG_PSHOP_ITEM_LIST*)(&Data[Size]);
+
+		pItem.slot = Item->slot;
+		pItem.value = Item->value;
+
+		memcpy(pItem.ItemInfo, Item->ItemInfo, sizeof(pItem.ItemInfo));
+		memcpy(&Buffer[NewSize], &pItem, sizeof(pItem));
+
+		Size += sizeof(PMSG_PSHOP_ITEM_LIST);
+		NewSize += sizeof(pItem);
+	}
+
+	pMsg.header.size[0] = SET_NUMBERHB(NewSize);
+	pMsg.header.size[1] = SET_NUMBERLB(NewSize);
+
+	memcpy(Buffer, &pMsg, sizeof(pMsg));
+
+	return pProtocolCore(0x3F, Buffer, NewSize, Index);
+}
+
+int CProtocol::PersonalShopItemBuy(int Index, PMSG_PSHOP_ITEM_BUY_RECV* Data)
+{
+	PMSG_PSHOP_ITEM_BUY_RECV2 pMsg;
+	pMsg.header.set(0x3F, 0x06, sizeof(pMsg));
+	pMsg.result = Data->result;
+	pMsg.index[0] = Data->index[0];
+	pMsg.index[1] = Data->index[1];
+	pMsg.slot = Data->slot;
+	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	return pProtocolCore(0x3F, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::ChaosMix(int Index, PMSG_CHAOS_MIX_RECV* Data)
+{
+	PMSG_CHAOS_MIX_RECV2 pMsg;
+	pMsg.header.set(0x86, sizeof(pMsg));
+	pMsg.result = Data->result;
+	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	return pProtocolCore(0x86, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
 
 int CProtocol::ObtainedExperience(int Index, PMSG_REWARD_EXPERIENCE_RECV* Data)
@@ -442,19 +705,82 @@ int CProtocol::MonsterSetDamage(int Index, PMSG_MONSTER_DAMAGE_RECV* Data)
 	return pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
 
+int CProtocol::ItemList(int Index, LPBYTE Data)
+{
+	BYTE Buffer[4096];
+
+	PMSG_ITEM_LIST_RECV* Info = (PMSG_ITEM_LIST_RECV*)(Data);
+	PMSG_ITEM_LIST* Item;
+
+	int Size = sizeof(PMSG_ITEM_LIST_RECV);
+
+	PMSG_ITEM_LIST_RECV pMsg;
+	PMSG_ITEM_LIST2 pItem;
+
+	pMsg.header.setE(0xF3, 0x10, 0);
+	pMsg.count = Info->count;
+
+	int NewSize = sizeof(pMsg);
+
+	for (BYTE i = 0; i < Info->count; ++i)
+	{
+		Item = (PMSG_ITEM_LIST*)(&Data[Size]);
+
+		pItem.slot = Item->slot;
+
+		memcpy(pItem.ItemInfo, Item->ItemInfo, sizeof(pItem.ItemInfo));
+		memcpy(&Buffer[NewSize], &pItem, sizeof(pItem));
+		
+		Size += sizeof(PMSG_ITEM_LIST);
+		NewSize += sizeof(pItem);
+	}
+
+	pMsg.header.size[0] = SET_NUMBERHB(NewSize);
+	pMsg.header.size[1] = SET_NUMBERLB(NewSize);
+
+	memcpy(Buffer, &pMsg, sizeof(pMsg));
+
+	return pProtocolCore(0xF3, Buffer, NewSize, Index);
+}
+
+int CProtocol::ItemModify(int Index, PMSG_ITEM_MODIFY_RECV* Data)
+{
+	PMSG_ITEM_MODIFY_RECV2 pMsg;
+	pMsg.header.set(0xF3, 0x14, sizeof(pMsg));
+	pMsg.slot = Data->slot;
+	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	return pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::CustomSettings(PMSG_CUSTOM_SETTINGS_RECV* Data)
+{
+	memcpy(Item.TransformationRings, Data->TransformationRings, sizeof(Item.TransformationRings));
+	return 1;
+}
+
 int CProtocol::LockMain(PMSG_LOCK_RECV* Data)
 {
 	pLockMain = Data->lock;
 	return 1;
 }
 
-int CProtocol::MonsterHealth(PMSG_MONSTER_HEALTH_RECV* Data)
+int CProtocol::MonsterHealth(LPBYTE Data)
 {
-	Monster.Reset(Data->count);
+	PMSG_MONSTER_HEALTH_RECV* Info = (PMSG_MONSTER_HEALTH_RECV*)(Data);
+	PMSG_MONSTER_HEALTH* Health;
 
-	for (BYTE i = 0; i < Data->count; ++i)
+	int Size = sizeof(PMSG_MONSTER_HEALTH_RECV);
+
+	Monster.Reset();
+
+	for (BYTE i = 0; i < Info->count; ++i)
 	{
-		Monster.Add(Data->health[i].index, Data->health[i].percent);
+		Health = (PMSG_MONSTER_HEALTH*)(&Data[Size]);
+
+		Monster.Add(Health->index, Health->percent);
+
+		Size += sizeof(PMSG_MONSTER_HEALTH);
 	}
 
 	return 1;
@@ -464,7 +790,7 @@ int CProtocol::DiscordUpdate(PMSG_DISCORD_UPDATE_RECV* Data)
 {
 	char text[50];
 	wsprintf(text, "Total online: %d", Data->total);
-	Discord.SetActivity(text);
+	Discord.SetState(text);
 
 	return 1;
 }

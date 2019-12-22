@@ -9,14 +9,14 @@ public:
 	~CDiscord();
 
 public:
-	void Start();
-	void Update();
-	void SetActivity(const char* state);
+	void Load();
+	void Run();
+	void SetState(const char* State);
 
-private:    
-	std::unique_ptr<discord::Core> Core;
-	discord::Activity Activity;
+private:
 	std::thread Thread;
+	std::string State;
+	bool Update;
 	bool Stop;
 };
 

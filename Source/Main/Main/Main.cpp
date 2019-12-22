@@ -4,6 +4,9 @@
 #include "Protocol.h"
 #include "Player.h"
 #include "Monster.h"
+#include "Item.h"
+#include "Model.h"
+#include "Texture.h"
 #include "Discord.h"
 
 HMODULE wzAudio = nullptr;
@@ -68,7 +71,10 @@ BOOL APIENTRY DllMain(HINSTANCE Instance, DWORD Reason, LPVOID Reserved)
 			Protocol.Load();
 			Player.Load();
 			Monster.Load();
-			Discord.Start();
+			Item.Load();
+			Model.Load();
+			Texture.Load();
+			Discord.Load();
 
 			break;
 		}

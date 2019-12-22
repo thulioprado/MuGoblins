@@ -561,7 +561,6 @@ void gObjCharZeroSet(int aIndex) // OK
 	memset(lpObj->CommandManagerTransaction,0,sizeof(lpObj->CommandManagerTransaction));
 
 	lpObj->AutoAttackTime = 0;
-	lpObj->TradeOkTime = 0;
 	lpObj->PotionTime = 0;
 	lpObj->ComboTime = 0;
 	lpObj->HPAutoRecuperationTime = 0;
@@ -1124,14 +1123,15 @@ bool gObjIsChangeSkin(int aIndex) // OK
 		return 0;
 	}
 
-	if(gObj[aIndex].Change == gServerInfo.m_TransformationRing1 || gObj[aIndex].Change == gServerInfo.m_TransformationRing2 || gObj[aIndex].Change == gServerInfo.m_TransformationRing3 || gObj[aIndex].Change == gServerInfo.m_TransformationRing4 || gObj[aIndex].Change == gServerInfo.m_TransformationRing5 || gObj[aIndex].Change == gServerInfo.m_TransformationRing6)
+	for (BYTE i = 0; i < 8; ++i)
 	{
-		return ((gObj[aIndex].ChangeSkin==0)?1:0);
-	}
-
-	if(gObj[aIndex].Change == 372 || gObj[aIndex].Change == 373 || gObj[aIndex].Change == 374 || gObj[aIndex].Change == 378 || gObj[aIndex].Change == 477 || gObj[aIndex].Change == 503 || gObj[aIndex].Change == 548 || gObj[aIndex].Change == 616 || gObj[aIndex].Change == 617 || gObj[aIndex].Change == 625 || gObj[aIndex].Change == 626 || gObj[aIndex].Change == 642)
-	{
-		return ((gObj[aIndex].ChangeSkin==0)?1:0);
+		for (BYTE x = 0; x < 16; ++x)
+		{
+			if (gObj[aIndex].Change == gServerInfo.m_TransformationRing[i][x])
+			{
+				return ((gObj[aIndex].ChangeSkin == 0) ? 1 : 0);
+			}
+		}
 	}
 
 	return 1;

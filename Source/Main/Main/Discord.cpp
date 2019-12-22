@@ -1,5 +1,6 @@
 #include "Library.h"
 #include "Discord.h"
+#include <WinInet.h>
 
 #if _DEBUG
 #	pragma comment(lib, "discord/discordd.lib")
@@ -8,11 +9,12 @@
 #endif
 
 #pragma comment(lib, "discord/discord_game_sdk.dll.lib")
+#pragma comment(lib, "WinInet.lib")
 
 using namespace std::chrono_literals;
 using namespace discord;
 
-CDiscord::CDiscord() : Core(), Activity{}, Thread(), Stop(false)
+CDiscord::CDiscord() : Thread(), State(""), Update(false), Stop(false)
 {
 }
 
@@ -25,28 +27,50 @@ CDiscord::~CDiscord()
 	}
 }
 
-void CDiscord::Start()
+void CDiscord::Load()
 {
+	this->Thread = std::thread(&CDiscord::Run, this);
+}
+
+void CDiscord::Run()
+{
+	bool Connect = InternetCheckConnection("https://www.google.com", FLAG_ICC_FORCE_CONNECTION, 0);
+
+	if (!Connect)
+	{
+		return;
+	}
+
 	try
 	{
 		::Core* Core{};
 
 		if (::Core::Create(652742485365358592, DiscordCreateFlags_Default, &Core) == Result::Ok)
 		{
-			this->Core.reset(Core);
+			::Activity Activity;
 
-			if (this->Core)
+			Activity.SetType(ActivityType::Playing);
+			Activity.GetAssets().SetLargeImage("gob");
+			Activity.GetTimestamps().SetStart(time(nullptr));
+			Activity.SetState("Iniciando");
+			Activity.SetDetails("www.mugoblins.com");
+			
+			Core->ActivityManager().UpdateActivity(Activity, [](Result result) {});
+
+			do
 			{
-				this->Activity.SetType(ActivityType::Playing);
-				this->Activity.GetAssets().SetLargeImage("gob");
-				this->Activity.GetTimestamps().SetStart(time(nullptr));
-				this->Activity.SetState("Iniciando");
-				this->Activity.SetDetails("www.mugoblins.com");
+				if (this->Update)
+				{
+					Activity.SetState(this->State.c_str());
+					Core->ActivityManager().UpdateActivity(Activity, [](Result result) {});
 
-				this->Core->ActivityManager().UpdateActivity(this->Activity, [](Result result) {});
+					this->Update = false;
+				}
 
-				this->Thread = std::thread(&CDiscord::Update, this);
+				Core->RunCallbacks();
+				std::this_thread::sleep_for(250ms);
 			}
+			while (!this->Stop);
 		}
 	}
 	catch (...)
@@ -54,37 +78,10 @@ void CDiscord::Start()
 	}
 }
 
-void CDiscord::Update()
+void CDiscord::SetState(const char* State)
 {
-	do
-	{
-		try
-		{
-			this->Core->RunCallbacks();
-		}
-		catch (...)
-		{
-		}
-
-		std::this_thread::sleep_for(250ms);
-	}
-	while (!this->Stop);
-}
-
-void CDiscord::SetActivity(const char* state)
-{
-	if (this->Core)
-	{
-		try
-		{
-			this->Activity.SetState(state);
-
-			this->Core->ActivityManager().UpdateActivity(this->Activity, [](Result result) {});
-		}
-		catch (...)
-		{
-		}
-	}
+	this->State = State;
+	this->Update = true;
 }
 
 CDiscord Discord;

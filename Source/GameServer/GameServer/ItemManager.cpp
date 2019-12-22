@@ -89,19 +89,12 @@ void CItemManager::Load(char* path) // OK
 				memset(&info, 0, sizeof(info));
 
 				info.Index = SafeGetItem(GET_ITEM(section, lpMemScript->GetNumber()));
-
 				info.Slot = lpMemScript->GetAsNumber();
-
 				info.Skill = lpMemScript->GetAsNumber();
-
 				info.Width = lpMemScript->GetAsNumber();
-
 				info.Height = lpMemScript->GetAsNumber();
-
 				info.HaveSerial = lpMemScript->GetAsNumber();
-
 				info.HaveOption = lpMemScript->GetAsNumber();
-
 				info.DropItem = lpMemScript->GetAsNumber();
 
 				strcpy_s(info.Name, lpMemScript->GetAsString());
@@ -109,33 +102,19 @@ void CItemManager::Load(char* path) // OK
 				if (section >= 0 && section <= 5)
 				{
 					info.Level = lpMemScript->GetAsNumber();
-
 					info.DamageMin = lpMemScript->GetAsNumber();
-
 					info.DamageMax = lpMemScript->GetAsNumber();
-
 					info.AttackSpeed = lpMemScript->GetAsNumber();
-
 					info.Durability = lpMemScript->GetAsNumber();
-
 					info.MagicDurability = lpMemScript->GetAsNumber();
-
 					info.MagicDamageRate = lpMemScript->GetAsNumber();
-
 					info.RequireLevel = lpMemScript->GetAsNumber();
-
 					info.RequireStrength = lpMemScript->GetAsNumber();
-
 					info.RequireDexterity = lpMemScript->GetAsNumber();
-
 					info.RequireEnergy = lpMemScript->GetAsNumber();
-
 					info.RequireVitality = lpMemScript->GetAsNumber();
-
 					info.RequireLeadership = lpMemScript->GetAsNumber();
-
 					info.TwoHand = ((info.Width >= 2) ? 1 : 0);
-
 					info.Durability += info.MagicDurability;
 				}
 				else if (section >= 6 && section <= 11)
@@ -145,66 +124,47 @@ void CItemManager::Load(char* path) // OK
 					if (section == 6)
 					{
 						info.Defense = lpMemScript->GetAsNumber();
-
 						info.DefenseSuccessRate = lpMemScript->GetAsNumber();
 					}
 					else if (section >= 7 && section <= 9)
 					{
 						info.Defense = lpMemScript->GetAsNumber();
-
 						info.MagicDefense = lpMemScript->GetAsNumber();
 					}
 					else if (section == 10)
 					{
 						info.Defense = lpMemScript->GetAsNumber();
-
 						info.AttackSpeed = lpMemScript->GetAsNumber();
 					}
 					else if (section == 11)
 					{
 						info.Defense = lpMemScript->GetAsNumber();
-
 						info.WalkSpeed = lpMemScript->GetAsNumber();
 					}
 
 					info.Durability = lpMemScript->GetAsNumber();
-
 					info.RequireLevel = lpMemScript->GetAsNumber();
-
 					info.RequireStrength = lpMemScript->GetAsNumber();
-
 					info.RequireDexterity = lpMemScript->GetAsNumber();
-
 					info.RequireEnergy = lpMemScript->GetAsNumber();
-
 					info.RequireVitality = lpMemScript->GetAsNumber();
-
 					info.RequireLeadership = lpMemScript->GetAsNumber();
 				}
 				else if (section == 12)
 				{
 					info.Level = lpMemScript->GetAsNumber();
-
 					info.Defense = lpMemScript->GetAsNumber();
-
 					info.Durability = lpMemScript->GetAsNumber();
-
 					info.RequireLevel = lpMemScript->GetAsNumber();
-
 					info.RequireEnergy = lpMemScript->GetAsNumber();
-
 					info.RequireStrength = lpMemScript->GetAsNumber();
-
 					info.RequireDexterity = lpMemScript->GetAsNumber();
-
 					info.RequireLeadership = lpMemScript->GetAsNumber();
-
 					info.BuyMoney = lpMemScript->GetAsNumber();
 				}
 				else if (section == 13)
 				{
 					info.Level = lpMemScript->GetAsNumber();
-
 					info.Durability = lpMemScript->GetAsNumber();
 
 					for (int n = 0; n < MAX_RESISTANCE_TYPE; n++)
@@ -217,23 +177,16 @@ void CItemManager::Load(char* path) // OK
 				else if (section == 14)
 				{
 					info.Value = lpMemScript->GetAsNumber();
-
 					info.Level = lpMemScript->GetAsNumber();
-
 					info.Durability = 1;
 				}
 				else if (section == 15)
 				{
 					info.Level = lpMemScript->GetAsNumber();
-
 					info.RequireLevel = lpMemScript->GetAsNumber();
-
 					info.RequireEnergy = lpMemScript->GetAsNumber();
-
 					info.BuyMoney = lpMemScript->GetAsNumber();
-
 					info.DamageMin = info.Level;
-
 					info.DamageMax = info.Level + (info.Level / 2);
 				}
 
@@ -725,13 +678,13 @@ bool CItemManager::CheckItemMoveToInventory(LPOBJ lpObj, CItem* lpItem, int slot
 
 	if (CC_MAP_RANGE(lpObj->Map) != 0)
 	{
-		if (lpItem->m_Index == GET_ITEM(13, 10)) // Rings
+		if (lpItem->m_Index == GET_ITEM(13, 10) || (lpItem->m_Index >= GET_ITEM(13, 32) && lpItem->m_Index <= GET_ITEM(13, 38))) // Rings
 		{
 			return 0;
 		}
 	}
 
-	if (lpItem->m_Index == GET_ITEM(13, 10) || (lpItem->m_Index == GET_ITEM(13, 20) && lpItem->m_Level == 0)) // Rings
+	if (lpItem->m_Index == GET_ITEM(13, 10) || (lpItem->m_Index >= GET_ITEM(13, 32) && lpItem->m_Index <= GET_ITEM(13, 38)) || (lpItem->m_Index == GET_ITEM(13, 20) && lpItem->m_Level == 0)) // Rings
 	{
 		if (lpObj->Inventory[slot ^ 1].IsItem() != 0 && lpObj->Inventory[slot ^ 1].m_Index == lpItem->m_Index)
 		{
@@ -1657,27 +1610,18 @@ bool CItemManager::ConvertItemByte(CItem* lpItem, BYTE* lpMsg) // OK
 	lpItem->Clear();
 
 	lpItem->m_Index = lpMsg[0] | ((lpMsg[9] & 0xF0) * 32) | ((lpMsg[7] & 0x80) * 2);
-
 	lpItem->m_Option1 = (lpMsg[1] / 128) & 1;
-
 	lpItem->m_Option2 = (lpMsg[1] / 4) & 1;
-
 	lpItem->m_Option3 = (lpMsg[1] & 3) + ((lpMsg[7] & 64) / 16);
-
 	lpItem->m_Level = (lpMsg[1] / 8) & 15;
-
 	lpItem->m_Durability = lpMsg[2];
-
 	lpItem->m_Durability = lpItem->m_Durability;
 
 	int MaxStack = gItemStack.GetItemMaxStack(lpItem->m_Index);
 
 	lpItem->m_Durability = ((MaxStack == 0) ? lpItem->m_Durability : ((lpItem->m_Durability > MaxStack) ? MaxStack : lpItem->m_Durability));
-
 	lpItem->m_Serial = MAKE_NUMBERDW(MAKE_NUMBERW(lpMsg[3], lpMsg[4]), MAKE_NUMBERW(lpMsg[5], lpMsg[6]));
-
 	lpItem->m_NewOption = lpMsg[7] & 63;
-
 	lpItem->m_SetOption = lpMsg[8] & 15;
 
 	/*lpItem->m_ItemOptionEx = (lpMsg[9] & 8) * 16;
@@ -1857,7 +1801,7 @@ int CItemManager::RepairItem(LPOBJ lpObj, CItem* lpItem, int slot, int type) // 
 		return 0;
 	}
 
-	if (lpItem->m_Index == GET_ITEM(13, 10)) // Rings
+	if (lpItem->m_Index == GET_ITEM(13, 10) || (lpItem->m_Index >= GET_ITEM(13, 32) && lpItem->m_Index <= GET_ITEM(13, 38))) // Rings
 	{
 		return 0;
 	}
@@ -1987,11 +1931,8 @@ BYTE CItemManager::MoveItemToInventoryFromInventory(LPOBJ lpObj, BYTE SourceSlot
 	}
 
 	this->InventoryDelItem(lpObj->Index, SourceSlot);
-
 	this->InventoryItemSet(lpObj->Index, TargetSlot, 1);
-
 	this->UpdateInventoryViewport(lpObj->Index, SourceSlot);
-
 	this->UpdateInventoryViewport(lpObj->Index, TargetSlot);
 
 	return TargetFlag;
@@ -2054,10 +1995,11 @@ BYTE CItemManager::MoveItemToInventoryFromTrade(LPOBJ lpObj, BYTE SourceSlot, BY
 	if (OBJECT_RANGE(lpObj->TargetNumber) != 0)
 	{
 		lpObj->TradeOk = 0;
-		lpObj->TradeOkTime = GetTickCount();
+
 		gTrade.GCTradeOkButtonSend(lpObj->Index, 0);
+
 		gObj[lpObj->TargetNumber].TradeOk = 0;
-		gObj[lpObj->TargetNumber].TradeOkTime = GetTickCount();
+
 		gTrade.GCTradeOkButtonSend(lpObj->TargetNumber, 2);
 		gTrade.GCTradeItemDelSend(lpObj->TargetNumber, SourceSlot);
 	}
@@ -2207,6 +2149,64 @@ BYTE CItemManager::MoveItemToInventoryFromChaosBox(LPOBJ lpObj, BYTE SourceSlot,
 	return TargetFlag;
 }
 
+BYTE CItemManager::MoveItemToInventoryFromPersonalShop(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+{
+	if (INVENTORY_SHOP_RANGE(SourceSlot) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (INVENTORY_FULL_RANGE(TargetSlot) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (INVENTORY_EXT1_RANGE(TargetSlot) != 0 && lpObj->ExtInventory < 1)
+	{
+		return 0xFF;
+	}
+
+	if (INVENTORY_EXT2_RANGE(TargetSlot) != 0 && lpObj->ExtInventory < 2)
+	{
+		return 0xFF;
+	}
+
+	if (INVENTORY_EXT3_RANGE(TargetSlot) != 0 && lpObj->ExtInventory < 3)
+	{
+		return 0xFF;
+	}
+
+	if (INVENTORY_EXT4_RANGE(TargetSlot) != 0 && lpObj->ExtInventory < 4)
+	{
+		return 0xFF;
+	}
+
+	if (gObjInventorySearchSerialNumber(lpObj, lpObj->Inventory[SourceSlot].m_Serial) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (gObjWarehouseSearchSerialNumber(lpObj, lpObj->Inventory[SourceSlot].m_Serial) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (this->CheckItemMoveToInventory(lpObj, &lpObj->Inventory[SourceSlot], TargetSlot) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (this->InventoryAddItem(lpObj->Index, lpObj->Inventory[SourceSlot], TargetSlot) == 0xFF)
+	{
+		return 0xFF;
+	}
+
+	this->InventoryDelItem(lpObj->Index, SourceSlot);
+	this->UpdateInventoryViewport(lpObj->Index, TargetSlot);
+
+	return TargetFlag;
+}
+
 BYTE CItemManager::MoveItemToTradeFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
 {
 	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
@@ -2312,7 +2312,6 @@ BYTE CItemManager::MoveItemToTradeFromTrade(LPOBJ lpObj, BYTE SourceSlot, BYTE T
 	}
 
 	this->TradeDelItem(lpObj->Index, SourceSlot);
-
 	this->TradeItemSet(lpObj->Index, TargetSlot, 1);
 
 	gTrade.GCTradeItemDelSend(lpObj->TargetNumber, SourceSlot);
@@ -2384,7 +2383,6 @@ BYTE CItemManager::MoveItemToWarehouseFromInventory(LPOBJ lpObj, BYTE SourceSlot
 	}
 
 	this->InventoryDelItem(lpObj->Index, SourceSlot);
-
 	this->UpdateInventoryViewport(lpObj->Index, SourceSlot);
 
 	return 2;
@@ -2435,7 +2433,6 @@ BYTE CItemManager::MoveItemToWarehouseFromWarehouse(LPOBJ lpObj, BYTE SourceSlot
 	}
 
 	this->WarehouseDelItem(lpObj->Index, SourceSlot);
-
 	this->WarehouseItemSet(lpObj->Index, TargetSlot, 1);
 
 	return 2;
@@ -2494,7 +2491,6 @@ BYTE CItemManager::MoveItemToChaosBoxFromInventory(LPOBJ lpObj, BYTE SourceSlot,
 	}
 
 	this->InventoryDelItem(lpObj->Index, SourceSlot);
-
 	this->UpdateInventoryViewport(lpObj->Index, SourceSlot);
 
 	return TargetFlag;
@@ -2540,10 +2536,92 @@ BYTE CItemManager::MoveItemToChaosBoxFromChaosBox(LPOBJ lpObj, BYTE SourceSlot, 
 	}
 
 	this->ChaosBoxDelItem(lpObj->Index, SourceSlot);
-
 	this->ChaosBoxItemSet(lpObj->Index, TargetSlot, 1);
 
 	return TargetFlag;
+}
+
+BYTE CItemManager::MoveItemToPersonalShopFromInventory(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+{
+	if (INVENTORY_RANGE(SourceSlot) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (INVENTORY_SHOP_RANGE(TargetSlot) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (this->CheckItemMoveToTrade(lpObj, &lpObj->Inventory[SourceSlot], TargetFlag) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (gObjInventorySearchSerialNumber(lpObj, lpObj->Inventory[SourceSlot].m_Serial) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (gObjWarehouseSearchSerialNumber(lpObj, lpObj->Inventory[SourceSlot].m_Serial) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (this->InventoryAddItem(lpObj->Index, lpObj->Inventory[SourceSlot], TargetSlot) == 0xFF)
+	{
+		return 0xFF;
+	}
+
+	this->InventoryDelItem(lpObj->Index, SourceSlot);
+	this->UpdateInventoryViewport(lpObj->Index, SourceSlot);
+
+	return 0;
+}
+
+BYTE CItemManager::MoveItemToPersonalShopFromPersonalShop(LPOBJ lpObj, BYTE SourceSlot, BYTE TargetSlot, BYTE TargetFlag) // OK
+{
+	if (INVENTORY_SHOP_RANGE(SourceSlot) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (INVENTORY_SHOP_RANGE(TargetSlot) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (SourceSlot == TargetSlot)
+	{
+		return 0xFF;
+	}
+
+	if (gObjInventorySearchSerialNumber(lpObj, lpObj->Inventory[SourceSlot].m_Serial) == 0)
+	{
+		return 0xFF;
+	}
+
+	if (gObjWarehouseSearchSerialNumber(lpObj, lpObj->Inventory[SourceSlot].m_Serial) == 0)
+	{
+		return 0xFF;
+	}
+
+	BYTE map[INVENTORY_SIZE];
+
+	memcpy(map, lpObj->InventoryMap, INVENTORY_SIZE);
+
+	this->InventoryItemSet(lpObj->Index, SourceSlot, 0xFF);
+
+	if (this->InventoryAddItem(lpObj->Index, lpObj->Inventory[SourceSlot], TargetSlot) == 0xFF)
+	{
+		memcpy(lpObj->InventoryMap, map, INVENTORY_SIZE);
+		return 0xFF;
+	}
+
+	this->InventoryDelItem(lpObj->Index, SourceSlot);
+	this->InventoryItemSet(lpObj->Index, TargetSlot, 1);
+
+	return 0;
 }
 
 void CItemManager::CGItemGetRecv(PMSG_ITEM_GET_RECV* lpMsg, int aIndex) // OK
@@ -2933,6 +3011,13 @@ void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex) // OK
 			this->ItemByteConvert(pMsg.ItemInfo, lpObj->ChaosBox[lpMsg->TargetSlot]);
 		}
 	}
+	else if (lpMsg->SourceFlag == 0 && lpMsg->TargetFlag == 4) // Inventory -> Personal Shop
+	{
+		if ((pMsg.result = this->MoveItemToPersonalShopFromInventory(lpObj, lpMsg->SourceSlot, lpMsg->TargetSlot, lpMsg->TargetFlag)) != 0xFF)
+		{
+			this->ItemByteConvert(pMsg.ItemInfo, lpObj->Inventory[lpMsg->TargetSlot]);
+		}
+	}
 	else if (lpMsg->SourceFlag == 1 && lpMsg->TargetFlag == 0) // Trade -> Inventory
 	{
 		if ((pMsg.result = this->MoveItemToInventoryFromTrade(lpObj, lpMsg->SourceSlot, lpMsg->TargetSlot, lpMsg->TargetFlag)) != 0xFF)
@@ -2973,6 +3058,20 @@ void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex) // OK
 		if ((pMsg.result = this->MoveItemToChaosBoxFromChaosBox(lpObj, lpMsg->SourceSlot, lpMsg->TargetSlot, lpMsg->TargetFlag)) != 0xFF)
 		{
 			this->ItemByteConvert(pMsg.ItemInfo, lpObj->ChaosBox[lpMsg->TargetSlot]);
+		}
+	}
+	else if (lpMsg->SourceFlag == 4 && lpMsg->TargetFlag == 0) // Personal Shop -> Inventory
+	{
+		if ((pMsg.result = this->MoveItemToInventoryFromPersonalShop(lpObj, lpMsg->SourceSlot, lpMsg->TargetSlot, lpMsg->TargetFlag)) != 0xFF)
+		{
+			this->ItemByteConvert(pMsg.ItemInfo, lpObj->Inventory[lpMsg->TargetSlot]);
+		}
+	}
+	else if (lpMsg->SourceFlag == 4 && lpMsg->TargetFlag == 4) // Personal Shop -> Personal Shop
+	{
+		if ((pMsg.result = this->MoveItemToPersonalShopFromPersonalShop(lpObj, lpMsg->SourceSlot, lpMsg->TargetSlot, lpMsg->TargetFlag)) != 0xFF)
+		{
+			this->ItemByteConvert(pMsg.ItemInfo, lpObj->Inventory[lpMsg->TargetSlot]);
 		}
 	}
 
@@ -3411,7 +3510,6 @@ void CItemManager::GCItemMoveSend(int aIndex, BYTE result, BYTE slot, BYTE* Item
 	pMsg.header.setE(0x24, sizeof(pMsg));
 
 	pMsg.result = result;
-
 	pMsg.slot = slot;
 
 	memcpy(pMsg.ItemInfo, ItemInfo, MAX_ITEM_INFO);

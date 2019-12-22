@@ -49,6 +49,15 @@
     <Filter Include="Source\Viewport">
       <UniqueIdentifier>{ae6050d6-8d40-4f6d-8386-e0aee5f29cd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Item">
+      <UniqueIdentifier>{a3a67c66-4119-4cb4-a19f-8af33af5de0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Model">
+      <UniqueIdentifier>{3405a4f2-1720-4297-822e-4aee7927fc89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Texture">
+      <UniqueIdentifier>{c49d916b-d885-4a3c-86eb-6c424214e5e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -92,6 +101,15 @@
     </ClCompile>
     <ClCompile Include="Viewport.cpp">
       <Filter>Source\Viewport</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +160,15 @@
     </ClInclude>
     <ClInclude Include="Viewport.h">
       <Filter>Source\Viewport</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Source\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Source\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Source\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

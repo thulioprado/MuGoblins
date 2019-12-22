@@ -1,21 +1,51 @@
 #pragma once
 
+//
+// Brilho/Cores
+//
+struct GlowColor
+{
+	float Red;
+	float Green;
+	float Blue;
+};
+
+//
+// Jogador
+//
 #define PLAYER_OBJECT_BASE					*(DWORD*)(0x7666A78)
 
+//
+// Viewport
+//
 #define VIEWPORT_BASE						*(DWORD*)(0x7424644)
 #define VIEWPORT_MAX						400
 #define VIEWPORT_USER						1
 #define VIEWPORT_MONSTER					2
 
+//
+// Guild
+//
 #define GUILD_RELATIONSHIP_UNION			1
 #define GUILD_RELATIONSHIP_RIVAL			2
 #define GUILD_RELATIONSHIP_UNIONMASTER		4
 #define GUILD_RELATIONSHIP_RIVALMASTER		8
 
+//
+// Estado
+//
 #define STATE_SELECT_SERVER					2 
 #define STATE_SELECT_CHARACTER				4
 #define STATE_PLAYING						5
 
+//
+// Monstros
+//
+#define MONSTER_NAME_BASE					0x7666A80
+
+//
+// Variáveis
+//
 #define pHDC								*(HDC*)(0x57504DC)
 #define pDefaultFont						*(HFONT*)(0x575053C)
 #define pMediumFont 						*(HFONT*)(0x5750540)
@@ -81,6 +111,9 @@
 #define pMaxTexture							*(DWORD*)(0x7D16FE8)
 #define pLockMain							*(BYTE*)(0x575491C)
 
+//
+// Funções
+//
 #define pWndProc							(WNDPROC)(0x4A9BD0)
 #define pProtocolCore						((int(*)(DWORD, LPBYTE, int, int))(0x4DB720))
 #define pDrawDamage							((void(*)(int, int, int, int, char))(0x53DA80))
@@ -99,7 +132,7 @@
 #define pSerialPacketDecrypt()				((BYTE(__thiscall*)(void*, const char*))(0x409340))((void*)(0x57500B0), (const char*)(0x57548F3))
 #define pSimpleModulusEncrypt(a, b, c)		((int(__thiscall*)(void*, void*, void*, int))(0x674DC0))((void*)(0x5754800), a, b, c)
 #define pSimpleModulusDecrypt(a, b, c)		((int(__thiscall*)(void*, void*, void*, int))(0x674E30))((void*)(0x5754848), a, b, c)
-#define pSetGlow							((void(*)(int, float, DWORD, struct GlowColor*, DWORD))(0x5F6220))
+#define pSetGlow							((void(*)(int, float, DWORD, GlowColor*, DWORD))(0x5F6220))
 #define pShowMessage						((char(*)(const char*, const char*, int))(0x549630))
 #define pRenderizeMonster					((ViewportInfo*(*)(int, DWORD, int, int))(0x434E60))
 #define pRenderizeModel						((ViewportInfo*(*)(int, int, DWORD, int, int))(0x509410))
@@ -127,7 +160,16 @@
 #define pShowEffect2						((int(*)(int, DWORD, DWORD, float*, DWORD, float, DWORD))(0x5353B0))
 #define pMakePreviewCharacter				((void(*)(int, BYTE*, int, int))(0x50A590))
 
-#define pGetAllianceName(i)					((char*)(2 * (11 * i) + 0x785B794))
-#define pGetItemModel(group, index)			(group * 512) + index + 515
-
+//
+// Macros
+//
+#define GET_ALLIANCE_NAME(i)				((char*)(2 * (11 * i) + 0x785B794))
 #define GET_MAX_WORD_VALUE(x)				((x > 65000) ? 65000 : (WORD)(x))
+
+//
+// Itens
+//
+#define	MAX_ITEM_INFO						16
+#define MAX_ITEM_INFO_MAIN					7
+#define GET_ITEM(group, index)				(group * 512) + index
+#define GET_ITEM_MODEL(group, index)		GET_ITEM(group, index) + 515

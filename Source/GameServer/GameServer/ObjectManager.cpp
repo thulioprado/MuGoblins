@@ -2077,6 +2077,27 @@ void CObjectManager::CharacterItemDurationDown(LPOBJ lpObj) // OK
 				case GET_ITEM(13, 20):
 					result = lpObj->Inventory[n].RingDurabilityDown(lpObj->Index, ((gMap[lpObj->Map].CheckAttr(lpObj->X, lpObj->Y, 1) == 0) ? 70 : 0));
 					break;
+				case GET_ITEM(13, 32):
+					result = lpObj->Inventory[n].RingDurabilityDown(lpObj->Index, 113);
+					break;
+				case GET_ITEM(13, 33):
+					result = lpObj->Inventory[n].RingDurabilityDown(lpObj->Index, 113);
+					break;
+				case GET_ITEM(13, 34):
+					result = lpObj->Inventory[n].RingDurabilityDown(lpObj->Index, 113);
+					break;
+				case GET_ITEM(13, 35):
+					result = lpObj->Inventory[n].RingDurabilityDown(lpObj->Index, 113);
+					break;
+				case GET_ITEM(13, 36):
+					result = lpObj->Inventory[n].RingDurabilityDown(lpObj->Index, 113);
+					break;
+				case GET_ITEM(13, 37):
+					result = lpObj->Inventory[n].RingDurabilityDown(lpObj->Index, 113);
+					break;
+				case GET_ITEM(13, 38):
+					result = lpObj->Inventory[n].RingDurabilityDown(lpObj->Index, 113);
+					break;
 				default:
 					result = lpObj->Inventory[n].RingDurabilityDown(lpObj->Index, ((gMap[lpObj->Map].CheckAttr(lpObj->X, lpObj->Y, 1) == 0) ? 1 : 0));
 					break;

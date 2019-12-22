@@ -135,8 +135,6 @@ struct PMSG_VIEWPORT_STATE
 	BYTE effect;
 };
 
-#pragma pack(push, 1)
-
 struct PMSG_MONSTER_HEALTH_SEND
 {
 	PSWMSG_HEAD header;
@@ -148,8 +146,6 @@ struct PMSG_MONSTER_HEALTH
 	WORD index;
 	BYTE percent;
 };
-
-#pragma pack(pop)
 
 //**********************************************//
 //**********************************************//
