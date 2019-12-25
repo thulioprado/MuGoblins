@@ -4,6 +4,7 @@
 #include "Monster.h"
 #include "Discord.h"
 #include "Item.h"
+#include "Viewport.h"
 
 CProtocol::CProtocol()
 {
@@ -22,6 +23,10 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 {
 	switch (Protocol)
 	{
+		case 0x12:
+		{
+			return ::Protocol.ViewportPlayers(Index, Data);
+		}
 		case 0x17:
 		{
 			return ::Protocol.UserDie(Index, (PMSG_USER_DIE_RECV*)(Data));
@@ -79,6 +84,14 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 
 			break;
 		}
+		case 0x45:
+		{
+			return ::Protocol.ViewportChange(Index, Data);
+		}
+		case 0x68:
+		{
+			return ::Protocol.ViewportCastleSiegeWeapon(Index, Data);
+		}
 		case 0x86:
 		{
 			return ::Protocol.ChaosMix(Index, (PMSG_CHAOS_MIX_RECV*)(Data));
@@ -111,6 +124,10 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 		{
 			switch (GET_SUBHEAD(Data))
 			{
+				case 0x00:
+				{
+					return ::Protocol.CharacterList(Index, Data);
+				}
 				case 0x03:
 				{
 					return ::Protocol.CharacterInfo(Index, (PMSG_CHARACTER_INFO_RECV*)(Data));
@@ -134,6 +151,10 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 				case 0x10:
 				{
 					return ::Protocol.ItemList(Index, Data);
+				}
+				case 0x13:
+				{
+					return ::Protocol.ItemEquipment(Index, (PMSG_ITEM_EQUIPMENT_RECV*)(Data));
 				}
 				case 0x14:
 				{
@@ -162,6 +183,56 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 	}
 
 	return pProtocolCore(Protocol, Data, Size, Index);
+}
+
+int CProtocol::ViewportPlayers(int Index, LPBYTE Data)
+{
+	BYTE Buffer[5120];
+
+	PMSG_VIEWPORT_RECV* Info = (PMSG_VIEWPORT_RECV*)(Data);
+	PMSG_VIEWPORT_PLAYER* Player;
+
+	int Size = sizeof(PMSG_VIEWPORT_RECV);
+
+	PMSG_VIEWPORT_RECV pMsg;
+	PMSG_VIEWPORT_PLAYER2 pPlayer;
+
+	pMsg.header.set(0x12, 0);
+	pMsg.count = Info->count;
+
+	int NewSize = sizeof(pMsg);
+	WORD PlayerIndex;
+
+	for (BYTE i = 0; i < Info->count; ++i)
+	{
+		Player = (PMSG_VIEWPORT_PLAYER*)(&Data[Size]);
+
+		pPlayer.index[0] = Player->index[0];
+		pPlayer.index[1] = Player->index[1];
+		pPlayer.x = Player->x;
+		pPlayer.y = Player->y;
+		pPlayer.ViewSkillState = Player->ViewSkillState;
+		pPlayer.tx = Player->tx;
+		pPlayer.ty = Player->ty;
+		pPlayer.DirAndPkLevel = Player->DirAndPkLevel;
+
+		memcpy(pPlayer.name, Player->name, sizeof(pPlayer.name));
+		memcpy(pPlayer.CharSet, Player->CharSet, sizeof(pPlayer.CharSet));
+		memcpy(&Buffer[NewSize], &pPlayer, sizeof(pPlayer));
+
+		Size += sizeof(PMSG_VIEWPORT_PLAYER);
+		NewSize += sizeof(pPlayer);
+
+		PlayerIndex = MAKE_NUMBERW((Player->index[0] & ~0x80), Player->index[1]);
+		Viewport.AddCustom(PlayerIndex, Player->CharSet);
+	}
+
+	pMsg.header.size[0] = SET_NUMBERHB(NewSize);
+	pMsg.header.size[1] = SET_NUMBERLB(NewSize);
+
+	memcpy(Buffer, &pMsg, sizeof(pMsg));
+
+	return pProtocolCore(0x12, Buffer, NewSize, Index);
 }
 
 int CProtocol::UserDie(int Index, PMSG_USER_DIE_RECV* Data)
@@ -233,10 +304,48 @@ int CProtocol::ItemGet(int Index, PMSG_ITEM_GET_RECV* Data)
 
 int CProtocol::ItemMove(int Index, PMSG_ITEM_MOVE_RECV* Data)
 {
+	if (Data->SourceSlot == 10 || Data->SourceSlot == 11)	// Movendo do slot de anel
+	{
+		int ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
+
+		switch (ItemIndex)
+		{
+			case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+			{
+				Item.ApplyPrismValue(Player.PrismArmor, 0, 0, 0);
+				break;
+			}
+			case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+			{
+				Item.ApplyPrismValue(Player.PrismWeapon, 0, 0, 0);
+				break;
+			}
+		}
+	}
+
+	if (Data->TargetSlot == 10 || Data->TargetSlot == 11)	// Movendo para slot de anel
+	{
+		int ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
+
+		switch (ItemIndex)
+		{
+			case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+			{
+				Item.ApplyPrismValue(Player.PrismArmor, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
+				break;
+			}
+			case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+			{
+				Item.ApplyPrismValue(Player.PrismWeapon, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
+				break;
+			}
+		}
+	}
+
 	PMSG_ITEM_MOVE_RECV2 pMsg;
 	pMsg.header.setE(0x24, sizeof(pMsg));
 	pMsg.result = Data->result;
-	pMsg.slot = Data->slot;
+	pMsg.slot = Data->TargetSlot;
 	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
 
 	return pProtocolCore(0x24, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
@@ -249,6 +358,9 @@ int CProtocol::ItemChange(int Index, PMSG_ITEM_CHANGE_RECV* Data)
 	pMsg.index[0] = Data->index[0];
 	pMsg.index[1] = Data->index[1];
 	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	WORD PlayerIndex = MAKE_NUMBERW(Data->index[0], Data->index[1]);
+	Viewport.AddCustom(PlayerIndex, Data->CharSet);
 
 	return pProtocolCore(0x25, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
@@ -444,6 +556,103 @@ int CProtocol::PersonalShopItemBuy(int Index, PMSG_PSHOP_ITEM_BUY_RECV* Data)
 	return pProtocolCore(0x3F, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
 
+int CProtocol::ViewportChange(int Index, LPBYTE Data)
+{
+	BYTE Buffer[5120];
+
+	PMSG_VIEWPORT_RECV* Info = (PMSG_VIEWPORT_RECV*)(Data);
+	PMSG_VIEWPORT_CHANGE* Change;
+
+	int Size = sizeof(PMSG_VIEWPORT_RECV);
+
+	PMSG_VIEWPORT_RECV pMsg;
+	PMSG_VIEWPORT_CHANGE2 pChange;
+
+	pMsg.header.set(0x45, 0);
+	pMsg.count = Info->count;
+
+	int NewSize = sizeof(pMsg);
+	WORD PlayerIndex;
+
+	for (BYTE i = 0; i < Info->count; ++i)
+	{
+		Change = (PMSG_VIEWPORT_CHANGE*)(&Data[Size]);
+
+		pChange.index[0] = Change->index[0];
+		pChange.index[1] = Change->index[1];
+		pChange.skin[0] = Change->skin[0];
+		pChange.skin[1] = Change->skin[1];
+		pChange.x = Change->x;
+		pChange.y = Change->y;
+		pChange.tx = Change->tx;
+		pChange.ty = Change->ty;
+		pChange.ViewSkillState = Change->ViewSkillState;
+		pChange.DirAndPkLevel = Change->DirAndPkLevel;
+
+		memcpy(pChange.name, Change->name, sizeof(pChange.name));
+		memcpy(pChange.CharSet, Change->CharSet, sizeof(pChange.CharSet));
+		memcpy(&Buffer[NewSize], &pChange, sizeof(pChange));
+
+		Size += sizeof(PMSG_VIEWPORT_CHANGE);
+		NewSize += sizeof(pChange);
+
+		PlayerIndex = MAKE_NUMBERW((Change->index[0] & ~0x80), Change->index[1]);
+		Viewport.AddCustom(PlayerIndex, Change->CharSet);
+	}
+
+	pMsg.header.size[0] = SET_NUMBERHB(NewSize);
+	pMsg.header.size[1] = SET_NUMBERLB(NewSize);
+
+	memcpy(Buffer, &pMsg, sizeof(pMsg));
+
+	return pProtocolCore(0x45, Buffer, NewSize, Index);
+}
+
+int CProtocol::ViewportCastleSiegeWeapon(int Index, LPBYTE Data)
+{
+	BYTE Buffer[5120];
+
+	PMSG_VIEWPORT_RECV* Info = (PMSG_VIEWPORT_RECV*)(Data);
+	PMSG_VIEWPORT_CASTLE_SIEGE_WEAPON* Weapon;
+
+	int Size = sizeof(PMSG_VIEWPORT_RECV);
+
+	PMSG_VIEWPORT_RECV pMsg;
+	PMSG_VIEWPORT_CASTLE_SIEGE_WEAPON2 pWeapon;
+
+	pMsg.header.set(0x68, 0);
+	pMsg.count = Info->count;
+
+	int NewSize = sizeof(pMsg);
+
+	for (BYTE i = 0; i < Info->count; ++i)
+	{
+		Weapon = (PMSG_VIEWPORT_CASTLE_SIEGE_WEAPON*)(&Data[Size]);
+
+		pWeapon.type = Weapon->type;
+		pWeapon.index[0] = Weapon->index[0];
+		pWeapon.index[1] = Weapon->index[1];
+		pWeapon.skin[0] = Weapon->skin[0];
+		pWeapon.skin[1] = Weapon->skin[1];
+		pWeapon.x = Weapon->x;
+		pWeapon.y = Weapon->y;
+		pWeapon.ViewSkillState = Weapon->ViewSkillState;
+
+		memcpy(pWeapon.CharSet, Weapon->CharSet, sizeof(pWeapon.CharSet));
+		memcpy(&Buffer[NewSize], &pWeapon, sizeof(pWeapon));
+
+		Size += sizeof(PMSG_VIEWPORT_CASTLE_SIEGE_WEAPON);
+		NewSize += sizeof(pWeapon);
+	}
+
+	pMsg.header.size[0] = SET_NUMBERHB(NewSize);
+	pMsg.header.size[1] = SET_NUMBERLB(NewSize);
+
+	memcpy(Buffer, &pMsg, sizeof(pMsg));
+
+	return pProtocolCore(0x68, Buffer, NewSize, Index);
+}
+
 int CProtocol::ChaosMix(int Index, PMSG_CHAOS_MIX_RECV* Data)
 {
 	PMSG_CHAOS_MIX_RECV2 pMsg;
@@ -531,6 +740,52 @@ int CProtocol::ClientConnect(int Index, PMSG_CONNECT_CLIENT_RECV* Data)
 	return pProtocolCore(0xF1, (LPBYTE)(Data), Data->header.size, Index);
 }
 
+int CProtocol::CharacterList(int Index, LPBYTE Data)
+{
+	BYTE Buffer[256];
+
+	PMSG_CHARACTER_LIST_RECV* Info = (PMSG_CHARACTER_LIST_RECV*)(Data);
+	PMSG_CHARACTER_LIST* Character;
+
+	int Size = sizeof(PMSG_CHARACTER_LIST_RECV);
+
+	PMSG_CHARACTER_LIST_RECV pMsg;
+	PMSG_CHARACTER_LIST2 pCharacter;
+
+	pMsg.header.set(0xF3, 0x00, 0);
+	pMsg.count = Info->count;
+	pMsg.ClassCode = Info->ClassCode;
+	pMsg.MoveCnt = Info->MoveCnt;
+
+	int NewSize = sizeof(pMsg);
+
+	for (BYTE i = 0; i < Info->count; ++i)
+	{
+		Character = (PMSG_CHARACTER_LIST*)(&Data[Size]);
+
+		pCharacter.slot = Character->slot;
+		pCharacter.Level = Character->Level;
+		pCharacter.CtlCode = Character->CtlCode;
+		pCharacter.GuildStatus = Character->GuildStatus;
+
+		memcpy(pCharacter.Name, Character->Name, sizeof(pCharacter.Name));
+		memcpy(pCharacter.CharSet, Character->CharSet, sizeof(pCharacter.CharSet));
+		memcpy(&Buffer[NewSize], &pCharacter, sizeof(pCharacter));
+
+		Size += sizeof(PMSG_CHARACTER_LIST);
+		NewSize += sizeof(pCharacter);
+
+		Item.ApplyPrismValue(Player.CharacterList[i].PrismArmor, Character->CharSet[18], Character->CharSet[19], Character->CharSet[20]);
+		Item.ApplyPrismValue(Player.CharacterList[i].PrismWeapon, Character->CharSet[21], Character->CharSet[22], Character->CharSet[23]);
+	}
+
+	pMsg.header.size = (BYTE)(NewSize);
+
+	memcpy(Buffer, &pMsg, sizeof(pMsg));
+
+	return pProtocolCore(0xF3, Buffer, NewSize, Index);
+}
+
 int CProtocol::CharacterInfo(int Index, PMSG_CHARACTER_INFO_RECV* Data)
 {
 	pLockMain = FALSE;
@@ -545,6 +800,9 @@ int CProtocol::CharacterInfo(int Index, PMSG_CHARACTER_INFO_RECV* Data)
 	Player.BP = Data->BP;
 	Player.MaxBP = Data->MaxBP;
 	Player.LevelUpPoints = Data->LevelUpPoint;
+
+	Item.ApplyPrismValue(Player.PrismArmor, 0, 0, 0);
+	Item.ApplyPrismValue(Player.PrismWeapon, 0, 0, 0);
 
 	auto Current = double(Player.Experience) - double(Player.PreviousNextExperience);
 	auto Total = double(Player.NextExperience) - double(Player.PreviousNextExperience);
@@ -721,12 +979,32 @@ int CProtocol::ItemList(int Index, LPBYTE Data)
 	pMsg.count = Info->count;
 
 	int NewSize = sizeof(pMsg);
+	int ItemIndex;
 
 	for (BYTE i = 0; i < Info->count; ++i)
 	{
 		Item = (PMSG_ITEM_LIST*)(&Data[Size]);
 
 		pItem.slot = Item->slot;
+
+		if (Item->slot == 10 || Item->slot == 11)	// Aneis
+		{
+			ItemIndex = Item->ItemInfo[0] + ((Item->ItemInfo[3] & 0x80) * 2) + ((Item->ItemInfo[5] & 0xF0) * 32);
+
+			switch (ItemIndex)
+			{
+				case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+				{
+					::Item.ApplyPrismValue(Player.PrismArmor, Item->ItemInfo[6], Item->ItemInfo[7], Item->ItemInfo[8]);
+					break;
+				}
+				case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+				{
+					::Item.ApplyPrismValue(Player.PrismWeapon, Item->ItemInfo[6], Item->ItemInfo[7], Item->ItemInfo[8]);
+					break;
+				}
+			}
+		}
 
 		memcpy(pItem.ItemInfo, Item->ItemInfo, sizeof(pItem.ItemInfo));
 		memcpy(&Buffer[NewSize], &pItem, sizeof(pItem));
@@ -741,6 +1019,20 @@ int CProtocol::ItemList(int Index, LPBYTE Data)
 	memcpy(Buffer, &pMsg, sizeof(pMsg));
 
 	return pProtocolCore(0xF3, Buffer, NewSize, Index);
+}
+
+int CProtocol::ItemEquipment(int Index, PMSG_ITEM_EQUIPMENT_RECV* Data)
+{
+	PMSG_ITEM_EQUIPMENT_RECV2 pMsg;
+	pMsg.header.set(0xF3, 0x13, sizeof(pMsg));
+	pMsg.index[0] = Data->index[0];
+	pMsg.index[1] = Data->index[1];
+	memcpy(pMsg.CharSet, Data->CharSet, sizeof(pMsg.CharSet));
+
+	WORD PlayerIndex = MAKE_NUMBERW(Data->index[0], Data->index[1]);
+	Viewport.AddCustom(PlayerIndex, Data->CharSet);
+
+	return pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
 
 int CProtocol::ItemModify(int Index, PMSG_ITEM_MODIFY_RECV* Data)

@@ -1453,6 +1453,37 @@ void CObjectManager::CharacterMakePreviewCharSet(int aIndex) // OK
 	{
 		lpObj->CharSet[16] |= 0x60;
 	}
+
+	bool PrismArmor = false;
+	bool PrismWeapon = false;
+
+	if (lpObj->Inventory[10].IsItem())
+	{
+		if (lpObj->Inventory[10].m_Index == GET_ITEM(13, 39))
+		{
+			PrismArmor = true;
+			memcpy(&lpObj->CharSet[18], lpObj->Inventory[10].m_Prism, sizeof(lpObj->Inventory[10].m_Prism));
+		}
+		else if (lpObj->Inventory[10].m_Index == GET_ITEM(13, 40))
+		{
+			PrismWeapon = true;
+			memcpy(&lpObj->CharSet[21], lpObj->Inventory[10].m_Prism, sizeof(lpObj->Inventory[10].m_Prism));
+		}
+	}
+
+	if (lpObj->Inventory[11].IsItem())
+	{
+		if (!PrismArmor && lpObj->Inventory[11].m_Index == GET_ITEM(13, 39))
+		{
+			PrismArmor = true;
+			memcpy(&lpObj->CharSet[18], lpObj->Inventory[11].m_Prism, sizeof(lpObj->Inventory[10].m_Prism));
+		}
+		else if (!PrismWeapon && lpObj->Inventory[11].m_Index == GET_ITEM(13, 40))
+		{
+			PrismWeapon = true;
+			memcpy(&lpObj->CharSet[21], lpObj->Inventory[11].m_Prism, sizeof(lpObj->Inventory[10].m_Prism));
+		}
+	}
 }
 
 bool CObjectManager::CharacterUseScroll(LPOBJ lpObj, CItem* lpItem) // OK
@@ -1875,6 +1906,118 @@ bool CObjectManager::CharacterUseJewelOfLife(LPOBJ lpObj, int SourceSlot, int Ta
 	lpItem->Convert(lpItem->m_Index, lpItem->m_Option1, lpItem->m_Option2, lpItem->m_Option3, lpItem->m_NewOption, lpItem->m_SetOption);
 
 	this->CharacterMakePreviewCharSet(lpObj->Index);
+	return 1;
+}
+
+bool CObjectManager::CharacterUseInkOrNeutralizer(LPOBJ lpObj, int SourceSlot, int TargetSlot)
+{
+	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
+	{
+		return 0;
+	}
+
+	if (INVENTORY_FULL_RANGE(TargetSlot) == 0)
+	{
+		return 0;
+	}
+
+	if (lpObj->Inventory[SourceSlot].IsItem() == 0)
+	{
+		return 0;
+	}
+
+	if (lpObj->Inventory[TargetSlot].IsItem() == 0)
+	{
+		return 0;
+	}
+
+	CItem* lpSource = &lpObj->Inventory[SourceSlot];
+	CItem* lpTarget = &lpObj->Inventory[TargetSlot];
+
+	if (lpTarget->m_Index != GET_ITEM(13, 39) && lpTarget->m_Index != GET_ITEM(13, 40))
+	{
+		return 0;
+	}
+
+	BYTE Red[] = {GET_NIBBLE_X(lpTarget->m_Prism[0]), GET_NIBBLE_Y(lpTarget->m_Prism[0])};
+	BYTE Green[] = {GET_NIBBLE_X(lpTarget->m_Prism[1]), GET_NIBBLE_Y(lpTarget->m_Prism[1])};
+	BYTE Blue[] = {GET_NIBBLE_X(lpTarget->m_Prism[2]), GET_NIBBLE_Y(lpTarget->m_Prism[2])};
+
+	if (Red[1] != 0 || Green[1] != 0 || Blue[1] != 0)
+	{
+		return 0;
+	}
+
+	switch (lpSource->m_Index)
+	{
+		case GET_ITEM(14, 32):
+		{
+			if (Red[0] >= 15)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[0] = SET_BYTE(++Red[0], Red[1]);
+
+			break;
+		}
+		case GET_ITEM(14, 33):
+		{
+			if (Green[0] >= 15)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[1] = SET_BYTE(++Green[0], Green[1]);
+
+			break;
+		}
+		case GET_ITEM(14, 34):
+		{
+			if (Blue[0] >= 15)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[2] = SET_BYTE(++Blue[0], Blue[1]);
+
+			break;
+		}
+		case GET_ITEM(14, 35):
+		{
+			if (Red[0] <= 0)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[0] = SET_BYTE(--Red[0], Red[1]);
+
+			break;
+		}
+		case GET_ITEM(14, 36):
+		{
+			if (Green[0] <= 0)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[1] = SET_BYTE(--Green[0], Green[1]);
+
+			break;
+		}
+		case GET_ITEM(14, 37):
+		{
+			if (Blue[0] <= 0)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[2] = SET_BYTE(--Blue[0], Blue[1]);
+
+			break;
+		}
+	}
+
 	return 1;
 }
 

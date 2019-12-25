@@ -1,6 +1,8 @@
 #include "Library.h"
 #include "Item.h"
 #include "Monster.h"
+#include "Viewport.h"
+#include "Player.h"
 
 BYTE CItem::SecondWeaponFixVal;
 char CItem::DescriptionText[60][100];
@@ -799,10 +801,15 @@ void CItem::Load()
     //
     // Ganchos
     //
+	Memory::Jump(0x5CF180, this->SetModelPosition);
+	Memory::Jump(0x5CF7AB, this->SetModelSize);
 	Memory::Jump(0x5F99A8, this->EnableGlow);
 	Memory::Call(0x5069A2, this->SetGlow);
 	Memory::Call(0x5F8445, this->SetGlow);
 	Memory::Jump(0x54177A, this->AllowExcellentOptions);
+	Memory::Jump(0x5C6CEB, this->AllowInsertItem);
+	Memory::Jump(0x5B8E66, this->AllowInsertItemGreenSlot);
+	Memory::Jump(0x5A7420, this->SetDescriptionInfo);
 	Memory::Jump(0x5048CA, this->WeaponViewCheck);
 	Memory::Jump(0x504A4F, this->SecondWeaponViewCheckReplacedCode);
 	Memory::Hook(0x5049BC, this->SecondWeaponViewCheck);
@@ -815,9 +822,8 @@ void CItem::Load()
     Memory::Jump(0x5A60DA, this->TransformationRings5);
     Memory::Jump(0x54181B, this->TransformationRings6);
     Memory::Jump(0x541ADE, this->TransformationRings7);
-    Memory::Jump(0x5CF5CF, this->TransformationRings8);
-    Memory::Jump(0x5F87BB, this->TransformationRings9);
-    Memory::Jump(0x5A18C7, this->TransformationRings10);
+    Memory::Jump(0x5F87BB, this->TransformationRings8);
+    Memory::Jump(0x5A18C7, this->TransformationRings9);
 }
 
 void CItem::LoadModels()
@@ -862,7 +868,6 @@ void CItem::LoadTextures()
 	pLoadTexture(GET_ITEM_MODEL(13, 37), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 	pLoadTexture(GET_ITEM_MODEL(13, 38), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 
-
 	//
 	// Anel de Prisma
 	//
@@ -879,9 +884,226 @@ void CItem::LoadTextures()
 	pLoadTexture(GET_ITEM_MODEL(14, 37), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 }
 
+bool CItem::GetModelPosition(DWORD Index)
+{
+	//
+	// Anéis de transformação
+	//
+	if (Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38)))
+	{
+		pModelPositionX = 270.f;
+		pModelPositionY = -10.f;
+		pModelPositionZ = 0.f;
+
+		return true;
+	}
+
+	//
+	// Anel de Prisma
+	//
+	if (Index == GET_ITEM_MODEL(13, 39))
+	{
+		pModelPositionX = 270.f;
+		pModelPositionY = -10.f;
+		pModelPositionZ = 0.f;
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CItem::GetModelSize(DWORD Index)
+{
+	//
+	// Anéis de transformação
+	//
+	if (Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38)))
+	{
+		this->ModelSize = 0.0025f;
+
+		return true;
+	}
+
+	//
+	// Anel de Prisma
+	//
+	if (Index == GET_ITEM_MODEL(13, 39))
+	{
+		this->ModelSize = 0.0025f;
+
+		return true;
+	}
+
+	return false;
+}
+
+void CItem::SetDescription(ItemInfo* Item)
+{
+	switch (Item->Index)
+	{
+		case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+		{
+			break;
+		}
+		case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+		{
+			break;
+		}
+	}
+}
+
+float CItem::InterpolateValue(float Start, float End, float Timer)
+{
+	return Start + (End - Start) * Timer;
+}
+
+bool CItem::Equals(float A, float B)
+{
+	return fabs(A - B) < 0.001f;
+}
+
+bool CItem::InterpolateColors(GlowColor* Color, float Timer, float R1, float G1, float B1, float R2, float G2, float B2)
+{
+	Color->Red = this->InterpolateValue(R1, R2, Timer);
+	Color->Green = this->InterpolateValue(G1, G2, Timer);
+	Color->Blue = this->InterpolateValue(B1, B2, Timer);
+
+	return Equals(Color->Red, R2) && Equals(Color->Green, G2) && Equals(Color->Blue, B2);
+}
+
+bool CItem::ApplyPrismEffect(GlowColor* Color, PrismEffect* Prism, int Index)
+{
+	int Rand = (Index * 18765 + 44162) % RAND_MAX;
+	float Timer = (1.0f + sin((GetTickCount() + (Rand % 750)) / (750.0f + (float)(Rand % 50)))) * 0.5f;
+
+	if ((Prism[0].Red != 0.f || Prism[0].Green != 0.f || Prism[0].Blue != 0.f) && 
+		(Prism[1].Red != 0.f || Prism[1].Green != 0.f || Prism[1].Blue != 0.f))
+	{
+		this->InterpolateColors(Color, Timer, Prism[0].Red, Prism[0].Green, Prism[0].Blue, Prism[1].Red, Prism[1].Green, Prism[1].Blue);
+	}
+	else if (Prism[0].Red != 0.f || Prism[0].Green != 0.f || Prism[0].Blue != 0.f)
+	{
+		Color->Red = Prism[0].Red;
+		Color->Green = Prism[0].Green;
+		Color->Blue = Prism[0].Blue;
+	}
+	else if (Prism[1].Red != 0.f || Prism[1].Green != 0.f || Prism[1].Blue != 0.f)
+	{
+		Color->Red = Prism[1].Red;
+		Color->Green = Prism[1].Green;
+		Color->Blue = Prism[1].Blue;
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void CItem::ApplyPrismValue(PrismEffect* Prism, BYTE Red, BYTE Green, BYTE Blue)
+{
+	BYTE RedValue[] = {GET_NIBBLE_X(Red), GET_NIBBLE_Y(Red)};
+	BYTE GreenValue[] = {GET_NIBBLE_X(Green), GET_NIBBLE_Y(Green)};
+	BYTE BlueValue[] = {GET_NIBBLE_X(Blue), GET_NIBBLE_Y(Blue)};
+
+	Prism[0].Red = float(RedValue[0] * 0x11) / 255.f;
+	Prism[1].Red = float(RedValue[1] * 0x11) / 255.f;
+	Prism[0].Green = float(GreenValue[0] * 0x11) / 255.f;
+	Prism[1].Green = float(GreenValue[1] * 0x11) / 255.f;
+	Prism[0].Blue = float(BlueValue[0] * 0x11) / 255.f;
+	Prism[1].Blue = float(BlueValue[1] * 0x11) / 255.f;
+}
+
+void __declspec(naked) CItem::SetModelPosition()
+{
+	static DWORD Back[2] = {0x5CF186, 0x5CF70E};
+	static DWORD Index;
+
+	__asm
+	{
+		MOV Index, ESI;
+		PUSHAD;
+	}
+
+	if (Item.GetModelPosition(Index))
+	{
+		__asm
+		{
+			POPAD;
+			JMP Back[4];
+		}
+	}	
+	
+	__asm
+	{
+		POPAD;
+		CMP ESI, 0xA0A;
+		JMP Back[0];
+	}
+}
+
+void __declspec(naked) CItem::SetModelSize()
+{
+	static DWORD Back[2] = {0x5CF7B8, 0x5CFC58};
+	static DWORD Index;
+	static float MSize;
+
+	__asm
+	{
+		MOV BYTE PTR DS : [ECX + 0xA0] , 0x00;
+		MOV Index, ESI;
+		PUSHAD;
+	}
+
+	if (Item.GetModelSize(Index))
+	{
+		MSize = Item.ModelSize;
+
+		__asm
+		{
+			POPAD;
+			MOV EAX, MSize;
+			MOV DWORD PTR SS : [EBP + 0x20] , EAX;
+			JMP Back[4];
+		}
+	}
+
+	__asm
+	{
+		POPAD;
+		CMP ESI, 0x1003;
+		JMP Back[0];
+	}
+}
+
+void __declspec(naked) CItem::SetDescriptionInfo()
+{
+	static DWORD Back = 0x5A7428;
+	static ItemInfo* Info;
+
+	__asm
+	{
+		PUSHAD;
+		MOV Info, EDI;
+	}
+
+	Item.SetDescription(Info);
+
+	__asm
+	{
+		POPAD;
+		MOV EAX, DWORD PTR DS : [0x788C850] ;
+		LEA EAX, DWORD PTR DS : [EAX + EAX * 0x4] ;
+		PUSH 0x6B8B64;
+		JMP Back;
+	}
+}
+
 void __declspec(naked) CItem::EnableGlow()
 {
-	static DWORD Local[4] = {0x5F9D77, 0x5F9D77, 0x5F99B1, 0x5F9C65};
+	static DWORD Back[4] = {0x5F9D77, 0x5F9D77, 0x5F99B1, 0x5F9C65};
 	static WORD Index;
 	static DWORD Level;
 	static BYTE Excellent;
@@ -897,32 +1119,39 @@ void __declspec(naked) CItem::EnableGlow()
 		MOV Excellent, AL;
 	}
 
+	//
 	// Aneis de transformação
-	if (Index == GET_ITEM_MODEL(13, 10) ||
-		(Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38)))
+	//
+	if (Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38)))
 	{
 		__asm
 		{
 			POPAD;
-			JMP Local[12];
+			JMP Back[12];
 		}
 	}
+
+	//
 	// Tintas
-	else if (Index >= GET_ITEM_MODEL(14, 32) && Index <= GET_ITEM_MODEL(14, 34))
+	//
+	if (Index >= GET_ITEM_MODEL(14, 32) && Index <= GET_ITEM_MODEL(14, 34))
 	{
 		__asm
 		{
 			POPAD;
-			JMP Local[12];
+			JMP Back[12];
 		}
 	}
+
+	//
 	// Neutralizadores
-	else if (Index >= GET_ITEM_MODEL(14, 35) && Index <= GET_ITEM_MODEL(14, 37))
+	//
+	if (Index >= GET_ITEM_MODEL(14, 35) && Index <= GET_ITEM_MODEL(14, 37))
 	{
 		__asm
 		{
 			POPAD;
-			JMP Local[8];
+			JMP Back[8];
 		}
 	}
 
@@ -931,41 +1160,104 @@ void __declspec(naked) CItem::EnableGlow()
 		POPAD;
 		CMP EBX, 0x3;
 		JL Less;
-		JMP Local[8];
+		JMP Back[8];
 
 	Less:
-		JMP Local[4];
+		JMP Back[4];
 	}
 }
 
-void CItem::SetGlow(int ItemModel, float Alpha, DWORD Unk2, GlowColor* Colors, DWORD Unk3)
+void CItem::SetGlow(int ItemModel, float Alpha, DWORD Unk2, GlowColor* Color, DWORD Unk3)
 {
 	switch (ItemModel)
 	{
 		case GET_ITEM_MODEL(14, 32):	// Tinta Vermelha
 		{
-			Colors->Red = 0.1f;
-			Colors->Green = 0.0f;
-			Colors->Blue = 0.0f;
+			Color->Red = 0.1f;
+			Color->Green = 0.0f;
+			Color->Blue = 0.0f;
 			return;
 		}
 		case GET_ITEM_MODEL(14, 33):	// Tinta Verde
 		{
-			Colors->Red = 0.0f;
-			Colors->Green = 0.1f;
-			Colors->Blue = 0.0f;
+			Color->Red = 0.0f;
+			Color->Green = 0.1f;
+			Color->Blue = 0.0f;
 			return;
 		}
 		case GET_ITEM_MODEL(14, 34):	// Tinta Azul
 		{
-			Colors->Red = 0.0f;
-			Colors->Green = 0.0f;
-			Colors->Blue = 0.1f;
+			Color->Red = 0.0f;
+			Color->Green = 0.0f;
+			Color->Blue = 0.1f;
 			return;
 		}
 	}
 
-	pSetGlow(ItemModel, Alpha, Unk2, Colors, Unk3);
+	if (Viewport.Renderizing && Viewport.Renderizing->Type == 1 && !Viewport.RenderizingInventory)
+	{		
+		if (Viewport.Renderizing->Index == Player.Index)
+		{
+			if (Viewport.Renderizing->Armor == ItemModel || Viewport.Renderizing->Helm == ItemModel || Viewport.Renderizing->Gloves == ItemModel || Viewport.Renderizing->Pants == ItemModel || Viewport.Renderizing->Boots == ItemModel)
+			{
+				if (Item.ApplyPrismEffect(Color, Player.PrismArmor, Player.Index))
+				{
+					return;
+				}
+			}
+			else if (Viewport.Renderizing->LeftWeapon == ItemModel || Viewport.Renderizing->RightWeapon == ItemModel)
+			{
+				if (Item.ApplyPrismEffect(Color, Player.PrismWeapon, Player.Index))
+				{
+					return;
+				}
+			}
+		}
+		else
+		{
+			if (pState == STATE_SELECT_CHARACTER && (Viewport.Renderizing->Index >= 0 && Viewport.Renderizing->Index <= 5))
+			{
+				if (Viewport.Renderizing->Armor == ItemModel || Viewport.Renderizing->Helm == ItemModel || Viewport.Renderizing->Gloves == ItemModel || Viewport.Renderizing->Pants == ItemModel || Viewport.Renderizing->Boots == ItemModel)
+				{
+					if (Item.ApplyPrismEffect(Color, Player.CharacterList[Viewport.Renderizing->Index].PrismArmor, Viewport.Renderizing->Index))
+					{
+						return;
+					}
+				}
+				else if (Viewport.Renderizing->LeftWeapon == ItemModel || Viewport.Renderizing->RightWeapon == ItemModel)
+				{
+					if (Item.ApplyPrismEffect(Color, Player.CharacterList[Viewport.Renderizing->Index].PrismWeapon, Viewport.Renderizing->Index))
+					{
+						return;
+					}
+				}
+			}
+			else
+			{
+				auto Target = Viewport.GetCustom(Viewport.Renderizing->Index);
+
+				if (Target)
+				{
+					if (Viewport.Renderizing->Armor == ItemModel || Viewport.Renderizing->Helm == ItemModel || Viewport.Renderizing->Gloves == ItemModel || Viewport.Renderizing->Pants == ItemModel || Viewport.Renderizing->Boots == ItemModel)
+					{
+						if (Item.ApplyPrismEffect(Color, Target->PrismArmor, Viewport.Renderizing->Index))
+						{
+							return;
+						}
+					}
+					else if (Viewport.Renderizing->LeftWeapon == ItemModel || Viewport.Renderizing->RightWeapon == ItemModel)
+					{
+						if (Item.ApplyPrismEffect(Color, Target->PrismWeapon, Viewport.Renderizing->Index))
+						{
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	pSetGlow(ItemModel, Alpha, Unk2, Color, Unk3);
 }
 
 void __declspec(naked) CItem::AllowExcellentOptions()
@@ -979,7 +1271,7 @@ void __declspec(naked) CItem::AllowExcellentOptions()
 		PUSHAD;
 	}
 
-	if (Index == GET_ITEM(13, 38))
+	if (Index == GET_ITEM(13, 39) || Index == GET_ITEM(13, 40)) // Aneis de Prisma
 	{
 		__asm
 		{
@@ -996,6 +1288,76 @@ void __declspec(naked) CItem::AllowExcellentOptions()
 		JMP Back[4];
 
 	Greater:
+		JMP Back[0];
+	}
+}
+
+void __declspec(naked) CItem::AllowInsertItem()
+{
+	static DWORD Back[2] = {0x5C6CF0, 0x5C6D65};
+	static WORD Index;
+
+	__asm
+	{
+		MOV Index, DX;
+		PUSHAD;
+	}
+
+	if ((Index >= GET_ITEM(14, 32) && Index <= GET_ITEM(14, 34)) ||		// Tintas
+		(Index >= GET_ITEM(14, 35) && Index <= GET_ITEM(14, 37)))		// Neutralizadores
+	{
+		__asm
+		{
+			POPAD;
+			IMUL EBX, EDI;
+			MOV EAX, DWORD PTR SS : [EBP - 0x34] ;
+			MOV ECX, DWORD PTR SS : [EBP + 0x10] ;
+			ADD EBX, EAX;
+			LEA EAX, DWORD PTR DS : [EBX + EBX * 0x8] ;
+			MOV BL, 0x1;
+			MOV BYTE PTR SS : [EBP - 0x2D] , BL;
+			MOVSX ESI, WORD PTR DS : [ECX + EAX * 0x8] ;
+			LEA ECX, DWORD PTR DS : [ECX + EAX * 0x8] ;
+			MOV EAX, DWORD PTR DS : [ECX + 0x4] ;
+			SAR EAX, 0x3;
+			AND EAX, 0xF;
+			JMP Back[4];
+		}
+	}
+
+	__asm
+	{
+		POPAD;
+		CMP DX, 0x1C0D;
+		JMP Back[0];
+	}
+}
+
+void __declspec(naked) CItem::AllowInsertItemGreenSlot()
+{
+	static DWORD Back[2] = {0x5B8E6B, 0x5B8E92};
+	static WORD Index;
+
+	__asm
+	{
+		MOV Index, SI;
+		PUSHAD;
+	}
+
+	if ((Index >= GET_ITEM(14, 32) && Index <= GET_ITEM(14, 34)) ||		// Tintas
+		(Index >= GET_ITEM(14, 35) && Index <= GET_ITEM(14, 37)))		// Neutralizadores
+	{
+		__asm
+		{
+			POPAD;
+			JMP Back[4];
+		}
+	}
+
+	__asm
+	{
+		POPAD;
+		CMP SI, 0x1C0D;
 		JMP Back[0];
 	}
 }
@@ -1456,38 +1818,6 @@ void __declspec(naked) CItem::TransformationRings7()
 
 void __declspec(naked) CItem::TransformationRings8()
 {
-	static DWORD Back[3] = {0x5CF5FE, 0x5CF5D7, 0x5CF6D0};
-	static DWORD Index;
-
-	__asm
-	{
-		MOV Index, ESI;
-		PUSHAD;
-	}
-
-	if (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38))
-	{
-		__asm
-		{
-			POPAD;
-			JMP Back[8];
-		}
-	}
-
-	__asm
-	{
-		POPAD;
-		CMP ESI, 0x1C0F;
-		JL Less;
-		JMP Back[4];
-
-	Less:
-		JMP Back[0];
-	}
-}
-
-void __declspec(naked) CItem::TransformationRings9()
-{
 	static DWORD Back[3] = {0x5F87C1, 0x5F87E0, 0x5F87DB};
 	static DWORD Index;
 
@@ -1514,7 +1844,7 @@ void __declspec(naked) CItem::TransformationRings9()
 	}
 }
 
-void __declspec(naked) CItem::TransformationRings10()
+void __declspec(naked) CItem::TransformationRings9()
 {
 	static DWORD Back[2] = {0x5A1910, 0x5A190B};
 	static DWORD Function = 0x68EFC7;

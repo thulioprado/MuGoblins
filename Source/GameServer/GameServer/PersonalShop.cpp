@@ -761,7 +761,7 @@ void CPersonalShop::GCPShopItemListSend(int aIndex, int bIndex, BYTE result, BYT
 			memcpy(&send[size], &info, sizeof(info));
 			size += sizeof(info);
 
-			pMsg.count++;
+			++pMsg.count;
 		}
 	}
 

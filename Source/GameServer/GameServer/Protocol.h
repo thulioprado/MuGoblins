@@ -640,9 +640,6 @@ struct PMSG_CHARACTER_LIST_SEND
 	BYTE ClassCode;
 	BYTE MoveCnt;
 	BYTE count;
-#if(GAMESERVER_UPDATE>=602)
-	BYTE ExtWarehouse;
-#endif
 };
 
 struct PMSG_CHARACTER_LIST
@@ -651,7 +648,7 @@ struct PMSG_CHARACTER_LIST
 	char Name[10];
 	WORD Level;
 	BYTE CtlCode;
-	BYTE CharSet[18];
+	BYTE CharSet[CHAR_SET_SIZE];
 	BYTE GuildStatus;
 };
 

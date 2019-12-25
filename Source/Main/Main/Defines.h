@@ -11,6 +11,16 @@ struct GlowColor
 };
 
 //
+// Prisma
+//
+struct PrismEffect
+{
+	float Red;
+	float Green;
+	float Blue;
+};
+
+//
 // Jogador
 //
 #define PLAYER_OBJECT_BASE					*(DWORD*)(0x7666A78)
@@ -110,6 +120,11 @@ struct GlowColor
 #define pImageDivisor						0.03125f
 #define pMaxTexture							*(DWORD*)(0x7D16FE8)
 #define pLockMain							*(BYTE*)(0x575491C)
+#define pModelPositionX						*(float*)(0x788BAFC)
+#define pModelPositionY						*(float*)(0x788BB00)
+#define pModelPositionZ						*(float*)(0x788BB04)
+#define pCursorInterface					*(DWORD*)(0x788C848)
+#define pCursorSlot							*(DWORD*)(0x788C84C)
 
 //
 // Funções
@@ -165,6 +180,15 @@ struct GlowColor
 //
 #define GET_ALLIANCE_NAME(i)				((char*)(2 * (11 * i) + 0x785B794))
 #define GET_MAX_WORD_VALUE(x)				((x > 65000) ? 65000 : (WORD)(x))
+#define SET_BYTE(x, y)						(BYTE((y & 0x0F) | ((int(x) << 4) & 0xF0)))
+#define GET_NIBBLE_X(v)						(BYTE((int(v) & 0xF0) >> 4))
+#define GET_NIBBLE_Y(v)						(BYTE(v & 0x0F))
+
+//
+// CharSet
+//
+#define CHAR_SET_SIZE						24
+#define CHAR_SET_SIZE_MAIN					18
 
 //
 // Itens
@@ -173,3 +197,20 @@ struct GlowColor
 #define MAX_ITEM_INFO_MAIN					7
 #define GET_ITEM(group, index)				(group * 512) + index
 #define GET_ITEM_MODEL(group, index)		GET_ITEM(group, index) + 515
+
+// 
+// Cursor
+//
+namespace CursorOn
+{
+	enum Value
+	{
+		Inventory = 0,
+		Warehouse = 1,
+		TradeSource = 2,
+		TradeTarget = 3,
+		ChaosMachine = 4,
+		PersonalShop = 5,
+		Shop = 6
+	};
+}

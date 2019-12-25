@@ -501,7 +501,7 @@ struct SDHP_CHARACTER_LIST
 	WORD level;
 	BYTE Class;
 	BYTE CtlCode;
-	BYTE Inventory[60];
+	BYTE Inventory[96];
 	BYTE GuildStatus;
 };
 

@@ -459,9 +459,7 @@ void gObjCharZeroSet(int aIndex) // OK
 	}
 
 	memset(lpObj->CharSet,0,sizeof(lpObj->CharSet));
-
 	memset(lpObj->Resistance,0,sizeof(lpObj->Resistance));
-
 	memset(lpObj->AddResistance,0,sizeof(lpObj->AddResistance));
 
 	gObjClearViewport(lpObj);

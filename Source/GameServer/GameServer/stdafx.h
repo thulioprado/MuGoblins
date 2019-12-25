@@ -56,3 +56,7 @@ typedef char chr;
 typedef float flt;
 typedef short shrt;
 typedef unsigned __int64 QWORD;
+
+#define SET_BYTE(x, y)						(BYTE((y & 0x0F) | ((int(x) << 4) & 0xF0)))
+#define GET_NIBBLE_X(v)						(BYTE((int(v) & 0xF0) >> 4))
+#define GET_NIBBLE_Y(v)						(BYTE(v & 0x0F))

@@ -264,29 +264,44 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 		info.CharSet[0] += (lpInfo->Class / 16) * 32;
 
 		WORD TempInventory[12];
+		BYTE PrismValue[2][3] = {{0, 0, 0}, {0, 0, 0}};
 
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 12; i++)
 		{
 			if (i == 0 || i == 1)
 			{
-				if (lpInfo->Inventory[0 + (i * 5)] == 0xFF && (lpInfo->Inventory[2 + (i * 5)] & 0x80) == 0x80 && (lpInfo->Inventory[4 + (i * 5)] & 0xF0) == 0xF0)
+				if (lpInfo->Inventory[0 + (i * 8)] == 0xFF && (lpInfo->Inventory[2 + (i * 8)] & 0x80) == 0x80 && (lpInfo->Inventory[4 + (i * 8)] & 0xF0) == 0xF0)
 				{
 					TempInventory[i] = 0xFFFF;
 				}
 				else
 				{
-					TempInventory[i] = (lpInfo->Inventory[0 + (i * 5)] + ((lpInfo->Inventory[2 + (i * 5)] & 0x80) * 2) + ((lpInfo->Inventory[4 + (i * 5)] & 0xF0) * 32));
+					TempInventory[i] = (lpInfo->Inventory[0 + (i * 8)] + ((lpInfo->Inventory[2 + (i * 8)] & 0x80) * 2) + ((lpInfo->Inventory[4 + (i * 8)] & 0xF0) * 32));
+				}
+			}
+			else if (i == 10 || i == 11)
+			{
+				if (lpInfo->Inventory[0 + (i * 8)] == 0xFF && (lpInfo->Inventory[2 + (i * 8)] & 0x80) == 0x80 && (lpInfo->Inventory[4 + (i * 8)] & 0xF0) == 0xF0)
+				{
+					TempInventory[i] = 0xFFFF;
+				}
+				else
+				{
+					TempInventory[i] = (lpInfo->Inventory[0 + (i * 8)] + ((lpInfo->Inventory[2 + (i * 8)] & 0x80) * 2) + ((lpInfo->Inventory[4 + (i * 8)] & 0xF0) * 32));
+					PrismValue[i - 10][0] = lpInfo->Inventory[5 + (i * 8)];
+					PrismValue[i - 10][1] = lpInfo->Inventory[6 + (i * 8)];
+					PrismValue[i - 10][2] = lpInfo->Inventory[7 + (i * 8)];
 				}
 			}
 			else
 			{
-				if (lpInfo->Inventory[0 + (i * 5)] == 0xFF && (lpInfo->Inventory[2 + (i * 5)] & 0x80) == 0x80 && (lpInfo->Inventory[4 + (i * 5)] & 0xF0) == 0xF0)
+				if (lpInfo->Inventory[0 + (i * 8)] == 0xFF && (lpInfo->Inventory[2 + (i * 8)] & 0x80) == 0x80 && (lpInfo->Inventory[4 + (i * 8)] & 0xF0) == 0xF0)
 				{
 					TempInventory[i] = 0x1FF;
 				}
 				else
 				{
-					TempInventory[i] = (lpInfo->Inventory[0 + (i * 5)] + ((lpInfo->Inventory[2 + (i * 5)] & 0x80) * 2) + ((lpInfo->Inventory[4 + (i * 5)] & 0xF0) * 32)) % MAX_ITEM_TYPE;
+					TempInventory[i] = (lpInfo->Inventory[0 + (i * 8)] + ((lpInfo->Inventory[2 + (i * 8)] & 0x80) * 2) + ((lpInfo->Inventory[4 + (i * 8)] & 0xF0) * 32)) % MAX_ITEM_TYPE;
 				}
 			}
 		}
@@ -325,10 +340,10 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 		{
 			if (TempInventory[i] != 0x1FF && TempInventory[i] != 0xFFFF)
 			{
-				level |= ((((lpInfo->Inventory[1 + (i * 5)] / 8) & 0x0F) - 1) / 2) << (i * 3);
+				level |= ((((lpInfo->Inventory[1 + (i * 8)] / 8) & 0x0F) - 1) / 2) << (i * 3);
 
-				info.CharSet[10] |= ((lpInfo->Inventory[2 + (i * 5)] & 0x3F) ? 2 : 0) << table[i];
-				info.CharSet[11] |= ((lpInfo->Inventory[3 + (i * 5)] & 0x03) ? 2 : 0) << table[i];
+				info.CharSet[10] |= ((lpInfo->Inventory[2 + (i * 8)] & 0x3F) ? 2 : 0) << table[i];
+				info.CharSet[11] |= ((lpInfo->Inventory[3 + (i * 8)] & 0x03) ? 2 : 0) << table[i];
 			}
 		}
 
@@ -434,6 +449,32 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 		{
 			info.CharSet[16] |= 0x60;
 		}
+
+		bool PrismArmor = false;
+		bool PrismWeapon = false;
+
+		if (TempInventory[10] == GET_ITEM(13, 39))
+		{
+			PrismArmor = true;
+			memcpy(&info.CharSet[18], PrismValue[0], 3);
+		}
+		else if (TempInventory[10] == GET_ITEM(13, 40))
+		{
+			PrismWeapon = true;
+			memcpy(&info.CharSet[21], PrismValue[0], 3);
+		}
+
+		if (!PrismArmor && TempInventory[11] == GET_ITEM(13, 39))
+		{
+			PrismArmor = true;
+			memcpy(&info.CharSet[18], PrismValue[1], 3);
+		}
+		else if (!PrismWeapon && TempInventory[11] == GET_ITEM(13, 40))
+		{
+			PrismWeapon = true;
+			memcpy(&info.CharSet[21], PrismValue[1], 3);
+		}
+
 
 	#pragma endregion
 

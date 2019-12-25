@@ -104,6 +104,32 @@ struct PSWMSG_HEAD
 	BYTE subh;
 };
 
+struct PMSG_VIEWPORT_PLAYER
+{
+	BYTE index[2];
+	BYTE x;
+	BYTE y;
+	BYTE CharSet[CHAR_SET_SIZE];
+	DWORD ViewSkillState;
+	char name[10];
+	BYTE tx;
+	BYTE ty;
+	BYTE DirAndPkLevel;
+};
+
+struct PMSG_VIEWPORT_PLAYER2
+{
+	BYTE index[2];
+	BYTE x;
+	BYTE y;
+	BYTE CharSet[CHAR_SET_SIZE_MAIN];
+	DWORD ViewSkillState;
+	char name[10];
+	BYTE tx;
+	BYTE ty;
+	BYTE DirAndPkLevel;
+};
+
 struct PMSG_USER_DIE_RECV
 {
 	PBMSG_HEAD header;
@@ -152,7 +178,8 @@ struct PMSG_ITEM_MOVE_RECV
 {
 	PBMSG_HEAD header;
 	BYTE result;
-	BYTE slot;
+	BYTE SourceSlot;
+	BYTE TargetSlot;
 	BYTE ItemInfo[MAX_ITEM_INFO];
 };
 
@@ -169,6 +196,7 @@ struct PMSG_ITEM_CHANGE_RECV
 	PBMSG_HEAD header;
 	BYTE index[2];
 	BYTE ItemInfo[MAX_ITEM_INFO];
+	BYTE CharSet[CHAR_SET_SIZE];
 };
 
 struct PMSG_ITEM_CHANGE_RECV2
@@ -299,6 +327,56 @@ struct PMSG_PSHOP_ITEM_BUY_RECV2
 	BYTE slot;
 };
 
+struct PMSG_VIEWPORT_CHANGE
+{
+	BYTE index[2];
+	BYTE x;
+	BYTE y;
+	BYTE skin[2];
+	DWORD ViewSkillState;
+	char name[10];
+	BYTE tx;
+	BYTE ty;
+	BYTE DirAndPkLevel;
+	BYTE CharSet[CHAR_SET_SIZE];
+};
+
+struct PMSG_VIEWPORT_CHANGE2
+{
+	BYTE index[2];
+	BYTE x;
+	BYTE y;
+	BYTE skin[2];
+	DWORD ViewSkillState;
+	char name[10];
+	BYTE tx;
+	BYTE ty;
+	BYTE DirAndPkLevel;
+	BYTE CharSet[CHAR_SET_SIZE_MAIN];
+};
+
+struct PMSG_VIEWPORT_CASTLE_SIEGE_WEAPON
+{
+	BYTE type;
+	BYTE skin[2];
+	BYTE index[2];
+	BYTE x;
+	BYTE y;
+	BYTE CharSet[CHAR_SET_SIZE - 1];
+	DWORD ViewSkillState;
+};
+
+struct PMSG_VIEWPORT_CASTLE_SIEGE_WEAPON2
+{
+	BYTE type;
+	BYTE skin[2];
+	BYTE index[2];
+	BYTE x;
+	BYTE y;
+	BYTE CharSet[CHAR_SET_SIZE_MAIN - 1];
+	DWORD ViewSkillState;
+};
+
 struct PMSG_CHAOS_MIX_RECV
 {
 	PBMSG_HEAD header;
@@ -377,6 +455,34 @@ struct PMSG_CONNECT_CLIENT_RECV
 	BYTE result;
 	BYTE index[2];
 	BYTE ClientVersion[5];
+};
+
+struct PMSG_CHARACTER_LIST_RECV
+{
+	PSBMSG_HEAD header;
+	BYTE ClassCode;
+	BYTE MoveCnt;
+	BYTE count;
+};
+
+struct PMSG_CHARACTER_LIST
+{
+	BYTE slot;
+	char Name[10];
+	WORD Level;
+	BYTE CtlCode;
+	BYTE CharSet[CHAR_SET_SIZE];
+	BYTE GuildStatus;
+};
+
+struct PMSG_CHARACTER_LIST2
+{
+	BYTE slot;
+	char Name[10];
+	WORD Level;
+	BYTE CtlCode;
+	BYTE CharSet[CHAR_SET_SIZE_MAIN];
+	BYTE GuildStatus;
 };
 
 struct PMSG_CHARACTER_INFO_RECV
@@ -545,6 +651,20 @@ struct PMSG_ITEM_LIST_RECV
 {
 	PSWMSG_HEAD header;
 	BYTE count;
+};
+
+struct PMSG_ITEM_EQUIPMENT_RECV
+{
+	PSBMSG_HEAD header;
+	BYTE index[2];
+	BYTE CharSet[CHAR_SET_SIZE];
+};
+
+struct PMSG_ITEM_EQUIPMENT_RECV2
+{
+	PSBMSG_HEAD header;
+	BYTE index[2];
+	BYTE CharSet[CHAR_SET_SIZE_MAIN];
 };
 
 struct PMSG_ITEM_MODIFY_RECV

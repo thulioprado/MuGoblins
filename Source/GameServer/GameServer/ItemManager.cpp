@@ -1530,9 +1530,10 @@ void CItemManager::ChaosBoxDelItem(int aIndex, int slot) // OK
 
 void CItemManager::ItemByteConvert(BYTE* lpMsg, CItem item) // OK
 {
+	memset(lpMsg, 0, 16);
+
 	lpMsg[0] = item.m_Index & 0xFF;
 
-	lpMsg[1] = 0;
 	lpMsg[1] |= item.m_Level * 8;
 	lpMsg[1] |= item.m_Option1 * 128;
 	lpMsg[1] |= item.m_Option2 * 4;
@@ -1540,20 +1541,23 @@ void CItemManager::ItemByteConvert(BYTE* lpMsg, CItem item) // OK
 
 	lpMsg[2] = (BYTE)item.m_Durability;
 
-	lpMsg[3] = 0;
 	lpMsg[3] |= (item.m_Index & 256) >> 1;
 	lpMsg[3] |= ((item.m_Option3 > 3) ? 0x40 : 0);
 	lpMsg[3] |= item.m_NewOption;
 
 	lpMsg[4] = item.m_SetOption;
 
-	lpMsg[5] = 0;
 	lpMsg[5] |= (item.m_Index & GET_ITEM(15, 0)) >> 5;
 	/*lpMsg[5] |= ((item.m_ItemOptionEx & 128) >> 4);
 	lpMsg[5] |= ((item.m_IsPeriodicItem & 1) << 1);
 	lpMsg[5] |= ((item.m_IsExpiredItem & 1) << 2);*/
-
-	lpMsg[6] = 0;
+	
+	if (item.m_Index == GET_ITEM(13, 39) || item.m_Index == GET_ITEM(13, 40))
+	{
+		lpMsg[6] = item.m_Prism[0];
+		lpMsg[7] = item.m_Prism[1];
+		lpMsg[8] = item.m_Prism[2];
+	}
 }
 
 void CItemManager::DBItemByteConvert(BYTE* lpMsg, CItem* lpItem) // OK
@@ -1570,9 +1574,10 @@ void CItemManager::DBItemByteConvert(BYTE* lpMsg, CItem* lpItem) // OK
 		return;
 	}
 
+	memset(lpMsg, 0, 16);
+
 	lpMsg[0] = lpItem->m_Index & 0xFF;
 
-	lpMsg[1] = 0;
 	lpMsg[1] |= lpItem->m_Level * 8;
 	lpMsg[1] |= lpItem->m_Option1 * 128;
 	lpMsg[1] |= lpItem->m_Option2 * 4;
@@ -1585,19 +1590,23 @@ void CItemManager::DBItemByteConvert(BYTE* lpMsg, CItem* lpItem) // OK
 	lpMsg[5] = SET_NUMBERHB(SET_NUMBERLW(lpItem->m_Serial));
 	lpMsg[6] = SET_NUMBERLB(SET_NUMBERLW(lpItem->m_Serial));
 
-	lpMsg[7] = 0;
 	lpMsg[7] |= (lpItem->m_Index & 256) >> 1;
 	lpMsg[7] |= ((lpItem->m_Option3 > 3) ? 64 : 0);
 	lpMsg[7] |= lpItem->m_NewOption;
 
-	lpMsg[8] = 0;
 	lpMsg[8] |= lpItem->m_SetOption & 15;
 
-	lpMsg[9] = 0;
 	lpMsg[9] |= (lpItem->m_Index & GET_ITEM(15, 0)) >> 5;
 	/*lpMsg[9] |= ((lpItem->m_ItemOptionEx & 128) >> 4);
 	lpMsg[9] |= ((lpItem->m_IsPeriodicItem & 1) << 1);
 	lpMsg[9] |= ((lpItem->m_IsExpiredItem & 1) << 2);*/
+
+	if (lpItem->m_Index == GET_ITEM(13, 39) || lpItem->m_Index == GET_ITEM(13, 40))
+	{
+		lpMsg[10] = lpItem->m_Prism[0];
+		lpMsg[11] = lpItem->m_Prism[1];
+		lpMsg[12] = lpItem->m_Prism[2];
+	}
 }
 
 bool CItemManager::ConvertItemByte(CItem* lpItem, BYTE* lpMsg) // OK
@@ -1625,9 +1634,7 @@ bool CItemManager::ConvertItemByte(CItem* lpItem, BYTE* lpMsg) // OK
 	lpItem->m_SetOption = lpMsg[8] & 15;
 
 	/*lpItem->m_ItemOptionEx = (lpMsg[9] & 8) * 16;
-
 	lpItem->m_IsPeriodicItem = ((lpMsg[9] & 2) / 2) & 1;
-
 	lpItem->m_IsExpiredItem = ((lpMsg[9] & 4) / 4) & 1;
 
 	if (lpMsg[11] == 0 && lpMsg[12] == 0 && lpMsg[13] == 0 && lpMsg[14] == 0 && lpMsg[15] == 0)
@@ -1638,6 +1645,11 @@ bool CItemManager::ConvertItemByte(CItem* lpItem, BYTE* lpMsg) // OK
 	{
 		memcpy(lpItem->m_SocketOption, &lpMsg[11], MAX_SOCKET_OPTION);
 	}*/
+
+	if (lpItem->m_Index == GET_ITEM(13, 39) || lpItem->m_Index == GET_ITEM(13, 40))
+	{
+		memcpy(lpItem->m_Prism, &lpMsg[10], sizeof(lpItem->m_Prism));
+	}
 
 	lpItem->Convert(lpItem->m_Index, lpItem->m_Option1, lpItem->m_Option2, lpItem->m_Option3, lpItem->m_NewOption, lpItem->m_SetOption);
 	return 1;
@@ -1703,9 +1715,7 @@ void CItemManager::UpdateInventoryViewport(int aIndex, int slot) // OK
 			gObjectManager.CharacterUpdateMapEffect(&gObj[aIndex]);
 		}
 	}
-
-	gObjectManager.CharacterMakePreviewCharSet(aIndex);
-
+	
 	this->GCItemChangeSend(aIndex, slot);
 }
 
@@ -2925,8 +2935,8 @@ void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex) // OK
 	pMsg.header.setE(0x24, sizeof(pMsg));
 
 	pMsg.result = 0xFF;
-
-	pMsg.slot = lpMsg->TargetSlot;
+	pMsg.SourceSlot = lpMsg->SourceSlot;
+	pMsg.TargetSlot = lpMsg->TargetSlot;
 
 	memset(pMsg.ItemInfo, 0xFF, sizeof(pMsg.ItemInfo));
 
@@ -3243,6 +3253,15 @@ void CItemManager::CGItemUseRecv(PMSG_ITEM_USE_RECV* lpMsg, int aIndex) // OK
 			this->GCItemDeleteSend(aIndex, lpMsg->SourceSlot, 1);
 		}
 	}
+	else if (lpItem->m_Index >= GET_ITEM(14, 32) && lpItem->m_Index <= GET_ITEM(14, 37)) // Tintas e Neutralizadores
+	{
+		if (gObjectManager.CharacterUseInkOrNeutralizer(lpObj, lpMsg->SourceSlot, lpMsg->TargetSlot) != 0)
+		{
+			this->InventoryDelItem(aIndex, lpMsg->SourceSlot);
+			this->GCItemDeleteSend(aIndex, lpMsg->SourceSlot, 1);
+			this->GCItemModifySend(aIndex, lpMsg->TargetSlot);
+		}
+	}
 	else
 	{
 		EFFECT_INFO* lpInfo = gEffectManager.GetInfoByItem(lpItem->m_Index);
@@ -3503,22 +3522,10 @@ void CItemManager::CGItemRepairRecv(PMSG_ITEM_REPAIR_RECV* lpMsg, int aIndex) //
 	}
 }
 
-void CItemManager::GCItemMoveSend(int aIndex, BYTE result, BYTE slot, BYTE* ItemInfo) // OK
-{
-	PMSG_ITEM_MOVE_SEND pMsg;
-
-	pMsg.header.setE(0x24, sizeof(pMsg));
-
-	pMsg.result = result;
-	pMsg.slot = slot;
-
-	memcpy(pMsg.ItemInfo, ItemInfo, MAX_ITEM_INFO);
-
-	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
-}
-
 void CItemManager::GCItemChangeSend(int aIndex, BYTE slot) // OK
 {
+	gObjectManager.CharacterMakePreviewCharSet(aIndex);
+
 	LPOBJ lpObj = &gObj[aIndex];
 
 	PMSG_ITEM_CHANGE_SEND pMsg;
@@ -3532,6 +3539,8 @@ void CItemManager::GCItemChangeSend(int aIndex, BYTE slot) // OK
 
 	pMsg.ItemInfo[1] = slot * 16;
 	pMsg.ItemInfo[1] |= ((lpObj->Inventory[slot].m_Level - 1) / 2) & 0x0F;
+
+	memcpy(pMsg.CharSet, lpObj->CharSet, sizeof(pMsg.CharSet));
 	
 	MsgSendV2(lpObj, (BYTE*)&pMsg, pMsg.header.size);
 }
@@ -3612,7 +3621,6 @@ void CItemManager::GCItemEquipmentSend(int aIndex) // OK
 	pMsg.header.set(0xF3, 0x13, sizeof(pMsg));
 
 	pMsg.index[0] = SET_NUMBERHB(aIndex);
-
 	pMsg.index[1] = SET_NUMBERLB(aIndex);
 
 	memcpy(pMsg.CharSet, gObj[aIndex].CharSet, sizeof(pMsg.CharSet));

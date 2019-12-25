@@ -98,6 +98,12 @@ struct ViewportInfo
 };
 #pragma pack(pop)
 
+struct ViewportCustom
+{
+	PrismEffect PrismWeapon[2];
+	PrismEffect PrismArmor[2];
+};
+
 class CViewport
 {
 public:
@@ -105,11 +111,25 @@ public:
 	~CViewport();
 
 public:
+	void Load();
 	void Clear();
 	ViewportInfo* GetMyself();
 	ViewportInfo* GetByPosition(int Position);
-	ViewportInfo* GetByIndex(short Index);
+	ViewportInfo* GetByIndex(WORD Index);
 	ViewportInfo* GetByName(char* Name);
+	ViewportCustom* GetCustom(WORD Index);
+	void AddCustom(WORD Index, LPBYTE CharSet);
+
+public:
+	static void SetRenderizing();
+	static void SetRenderizingInventory();
+
+public:
+	ViewportInfo* Renderizing;
+	bool RenderizingInventory;
+
+private:
+	std::unordered_map<WORD, ViewportCustom> Custom;
 };
 
 extern CViewport Viewport;

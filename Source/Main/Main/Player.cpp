@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "Protocol.h"
 
-CPlayer::CPlayer() : Index(0), HP(0), MaxHP(0), MP(0), MaxMP(0), BP(0), MaxBP(0), LevelUpPoints(0), Damage(0), X(0), Y(0), Experience(0), NextExperience(0), Resets(0)
+CPlayer::CPlayer() : Index(0), HP(0), MaxHP(0), MP(0), MaxMP(0), BP(0), MaxBP(0), LevelUpPoints(0), Damage(0), X(0), Y(0), Experience(0), NextExperience(0), PreviousNextExperience(0), PercentExperience(0), Resets(0), PrismWeapon{}, PrismArmor{}
 {
 }
 

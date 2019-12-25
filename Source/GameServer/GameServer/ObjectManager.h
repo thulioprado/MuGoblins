@@ -36,6 +36,7 @@ public:
 	bool CharacterUseJewelOfBless(LPOBJ lpObj, int SourceSlot, int TargetSlot);
 	bool CharacterUseJewelOfSoul(LPOBJ lpObj, int SourceSlot, int TargetSlot);
 	bool CharacterUseJewelOfLife(LPOBJ lpObj, int SourceSlot, int TargetSlot);
+	bool CharacterUseInkOrNeutralizer(LPOBJ lpObj, int SourceSlot, int TargetSlot);
 	void CharacterMonsterDieHunt(LPOBJ lpObj, LPOBJ lpTarget);
 	void CharacterAutoRecuperation(LPOBJ lpObj);
 	void CharacterItemDurationDown(LPOBJ lpObj);

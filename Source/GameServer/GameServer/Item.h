@@ -49,22 +49,22 @@ public:
 		this->m_DarkSpiritExpTable[0] = 0;
 		this->m_DarkSpiritExpTable[1] = 0;
 
-		for(int n=2;n < MAX_PET_LEVEL+2;n++)
+		for (int n = 2; n < MAX_PET_LEVEL + 2; n++)
 		{
-			this->m_DarkSpiritExpTable[n] = ((((n+10)*n)*n)*n)*100;
+			this->m_DarkSpiritExpTable[n] = ((((n + 10) * n) * n) * n) * 100;
 		}
 
 		this->m_DarkHorseExpTable[0] = 0;
 		this->m_DarkHorseExpTable[1] = 0;
 
-		for(int n=2;n < MAX_PET_LEVEL+2;n++)
+		for (int n = 2; n < MAX_PET_LEVEL + 2; n++)
 		{
-			this->m_DarkHorseExpTable[n] = ((((n+10)*n)*n)*n)*100;
+			this->m_DarkHorseExpTable[n] = ((((n + 10) * n) * n) * n) * 100;
 		}
 	};
 public:
-	int m_DarkSpiritExpTable[MAX_PET_LEVEL+2];
-	int m_DarkHorseExpTable[MAX_PET_LEVEL+2];
+	int m_DarkSpiritExpTable[MAX_PET_LEVEL + 2];
+	int m_DarkHorseExpTable[MAX_PET_LEVEL + 2];
 };
 
 class CItem
@@ -75,22 +75,22 @@ public:
 	bool IsItem();
 	bool IsExcItem();
 	bool IsSetItem();
-	bool IsClass(int Class,int ChangeUp);
-	void Convert(int index,BYTE Option1,BYTE Option2,BYTE Option3,BYTE NewOption,BYTE SetOption);
+	bool IsClass(int Class, int ChangeUp);
+	void Convert(int index, BYTE Option1, BYTE Option2, BYTE Option3, BYTE NewOption, BYTE SetOption);
 	void Value();
 	void OldValue();
 	void PetValue();
-	void SetPetItemInfo(int PetLevel,int PetExp);
+	void SetPetItemInfo(int PetLevel, int PetExp);
 	int GetDamageMin();
 	int GetDamageMax();
 	int GetDefense();
 	int GetDefenseSuccessRate();
 	int GetBookSuccessRate();
-	bool WeaponDurabilityDown(int aIndex,int defense,int type);
-	bool ArmorDurabilityDown(int aIndex,int damage);
-	bool WingDurabilityDown(int aIndex,int decrease);
-	bool PendantDurabilityDown(int aIndex,int decrease);
-	bool RingDurabilityDown(int aIndex,int decrease);
+	bool WeaponDurabilityDown(int aIndex, int defense, int type);
+	bool ArmorDurabilityDown(int aIndex, int damage);
+	bool WingDurabilityDown(int aIndex, int decrease);
+	bool PendantDurabilityDown(int aIndex, int decrease);
+	bool RingDurabilityDown(int aIndex, int decrease);
 	bool CheckDurabilityState();
 	bool AddPetItemExp(int amount);
 	bool DecPetItemExp(int amount);
@@ -151,4 +151,5 @@ public:
 	int m_LoadPetItemInfo;
 	int m_PetItemLevel;
 	int m_PetItemExp;
+	BYTE m_Prism[3];
 };

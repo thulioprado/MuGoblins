@@ -40,13 +40,6 @@ void CItem::Clear() // OK
 	this->m_Durability = 0;
 	this->m_DurabilitySmall = 0;
 	this->m_Leadership = 0;
-
-	memset(this->m_SpecialIndex, 0, sizeof(this->m_SpecialIndex));
-
-	memset(this->m_SpecialValue, 0, sizeof(this->m_SpecialValue));
-
-	memset(this->m_Resistance, 0, sizeof(this->m_Resistance));
-
 	this->m_Value = 0;
 	this->m_PShopValue = -1;
 	this->m_PcPointValue = 0;
@@ -65,6 +58,11 @@ void CItem::Clear() // OK
 	this->m_LoadPetItemInfo = 0;
 	this->m_PetItemLevel = 1;
 	this->m_PetItemExp = 0;
+
+	memset(this->m_SpecialIndex, 0, sizeof(this->m_SpecialIndex));
+	memset(this->m_SpecialValue, 0, sizeof(this->m_SpecialValue));
+	memset(this->m_Resistance, 0, sizeof(this->m_Resistance));
+	memset(this->m_Prism, 0, sizeof(this->m_Prism));
 }
 
 bool CItem::IsItem() // OK

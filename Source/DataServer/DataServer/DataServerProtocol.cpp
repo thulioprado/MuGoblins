@@ -366,19 +366,25 @@ void GDCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg, int index) // OK
 			{
 				if (Inventory[i][0] == 0xFF && (Inventory[i][7] & 0x80) == 0x80 && (Inventory[i][9] & 0xF0) == 0xF0)
 				{
-					info.Inventory[0 + (i * 5)] = 0xFF;
-					info.Inventory[1 + (i * 5)] = 0xFF;
-					info.Inventory[2 + (i * 5)] = 0xFF;
-					info.Inventory[3 + (i * 5)] = 0xFF;
-					info.Inventory[4 + (i * 5)] = 0xFF;
+					info.Inventory[0 + (i * 8)] = 0xFF;
+					info.Inventory[1 + (i * 8)] = 0xFF;
+					info.Inventory[2 + (i * 8)] = 0xFF;
+					info.Inventory[3 + (i * 8)] = 0xFF;
+					info.Inventory[4 + (i * 8)] = 0xFF;
+					info.Inventory[5 + (i * 8)] = 0;
+					info.Inventory[6 + (i * 8)] = 0;
+					info.Inventory[7 + (i * 8)] = 0;
 				}
 				else
 				{
-					info.Inventory[0 + (i * 5)] = Inventory[i][0];
-					info.Inventory[1 + (i * 5)] = Inventory[i][1];
-					info.Inventory[2 + (i * 5)] = Inventory[i][7];
-					info.Inventory[3 + (i * 5)] = Inventory[i][8];
-					info.Inventory[4 + (i * 5)] = Inventory[i][9];
+					info.Inventory[0 + (i * 8)] = Inventory[i][0];
+					info.Inventory[1 + (i * 8)] = Inventory[i][1];
+					info.Inventory[2 + (i * 8)] = Inventory[i][7];
+					info.Inventory[3 + (i * 8)] = Inventory[i][8];
+					info.Inventory[4 + (i * 8)] = Inventory[i][9];
+					info.Inventory[5 + (i * 8)] = Inventory[i][10];
+					info.Inventory[6 + (i * 8)] = Inventory[i][11];
+					info.Inventory[7 + (i * 8)] = Inventory[i][12];
 				}
 			}
 

@@ -53,6 +53,12 @@ struct PlayerObject
 };
 #pragma pack(pop)
 
+struct CharacterList
+{
+	PrismEffect PrismWeapon[2];
+	PrismEffect PrismArmor[2];
+};
+
 class CPlayer
 {
 public:
@@ -99,6 +105,7 @@ public:
 	static void GetY();
 
 public:
+	CharacterList CharacterList[5];
 	WORD Index;
 	DWORD HP;
 	DWORD MaxHP;
@@ -115,6 +122,8 @@ public:
 	QWORD PreviousNextExperience;
 	DWORD PercentExperience;
 	DWORD Resets;
+	PrismEffect PrismWeapon[2];
+	PrismEffect PrismArmor[2];
 
 public:
 	std::function<void(PlayerObject*)> Callback;
