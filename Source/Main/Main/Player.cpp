@@ -120,6 +120,72 @@ void CPlayer::Execute(int Index, std::function<void(PlayerObject*)> Callback)
 	pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
 
+void CPlayer::SetInventory(BYTE Slot, LPBYTE ItemInfo)
+{
+	if (Slot >= INVENTORY_SIZE)
+	{
+		return;
+	}
+
+	if (ItemInfo)
+	{
+		this->Inventory[Slot].Prism[0].Red = GET_NIBBLE_X(ItemInfo[0]);
+		this->Inventory[Slot].Prism[1].Red = GET_NIBBLE_Y(ItemInfo[0]);
+		this->Inventory[Slot].Prism[0].Green = GET_NIBBLE_X(ItemInfo[1]);
+		this->Inventory[Slot].Prism[1].Green = GET_NIBBLE_Y(ItemInfo[1]);
+		this->Inventory[Slot].Prism[0].Blue = GET_NIBBLE_X(ItemInfo[2]);
+		this->Inventory[Slot].Prism[1].Blue = GET_NIBBLE_Y(ItemInfo[2]);
+	}
+	else
+	{
+		memset(this->Inventory[Slot].Prism, 0, sizeof(this->Inventory[Slot].Prism));
+	}
+}
+
+void CPlayer::SetTempSource(BYTE Slot, LPBYTE ItemInfo)
+{
+	if (Slot >= WAREHOUSE_SIZE)
+	{
+		return;
+	}
+
+	if (ItemInfo)
+	{
+		this->TempSource[Slot].Prism[0].Red = GET_NIBBLE_X(ItemInfo[0]);
+		this->TempSource[Slot].Prism[1].Red = GET_NIBBLE_Y(ItemInfo[0]);
+		this->TempSource[Slot].Prism[0].Green = GET_NIBBLE_X(ItemInfo[1]);
+		this->TempSource[Slot].Prism[1].Green = GET_NIBBLE_Y(ItemInfo[1]);
+		this->TempSource[Slot].Prism[0].Blue = GET_NIBBLE_X(ItemInfo[2]);
+		this->TempSource[Slot].Prism[1].Blue = GET_NIBBLE_Y(ItemInfo[2]);
+	}
+	else
+	{
+		memset(this->TempSource[Slot].Prism, 0, sizeof(this->TempSource[Slot].Prism));
+	}
+}
+
+void CPlayer::SetTempTarget(BYTE Slot, LPBYTE ItemInfo)
+{
+	if (Slot >= WAREHOUSE_SIZE)
+	{
+		return;
+	}
+
+	if (ItemInfo)
+	{
+		this->TempTarget[Slot].Prism[0].Red = GET_NIBBLE_X(ItemInfo[0]);
+		this->TempTarget[Slot].Prism[1].Red = GET_NIBBLE_Y(ItemInfo[0]);
+		this->TempTarget[Slot].Prism[0].Green = GET_NIBBLE_X(ItemInfo[1]);
+		this->TempTarget[Slot].Prism[1].Green = GET_NIBBLE_Y(ItemInfo[1]);
+		this->TempTarget[Slot].Prism[0].Blue = GET_NIBBLE_X(ItemInfo[2]);
+		this->TempTarget[Slot].Prism[1].Blue = GET_NIBBLE_Y(ItemInfo[2]);
+	}
+	else
+	{
+		memset(this->TempTarget[Slot].Prism, 0, sizeof(this->TempTarget[Slot].Prism));
+	}
+}
+
 void __declspec(naked) CPlayer::Update()
 {
 	static DWORD Back = 0x4CC6BD;

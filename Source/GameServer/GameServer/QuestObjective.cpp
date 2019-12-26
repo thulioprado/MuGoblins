@@ -384,7 +384,7 @@ bool CQuestObjective::MonsterItemDrop(LPOBJ lpMonster) // OK
 
 		if (lpInfo->ItemDropRate > (GetLargeRand() % 10000) && lpInfo->Value > this->GetQuestObjectiveCount(lpObj, lpInfo))
 		{
-			GDCreateItemSend(aIndex, lpMonster->Map, (BYTE)lpMonster->X, (BYTE)lpMonster->Y, lpInfo->Index, lpInfo->Level, 0, lpInfo->Option1, lpInfo->Option2, lpInfo->Option3, aIndex, lpInfo->NewOption, 0, 0);
+			GDCreateItemSend(aIndex, lpMonster->Map, (BYTE)lpMonster->X, (BYTE)lpMonster->Y, lpInfo->Index, lpInfo->Level, 0, lpInfo->Option1, lpInfo->Option2, lpInfo->Option3, aIndex, lpInfo->NewOption, 0, 0, 0);
 			return 1;
 		}
 	}
@@ -431,7 +431,7 @@ bool CQuestObjective::MonsterItemDropParty(LPOBJ lpMonster, int PartyNumber) // 
 
 			if (lpInfo->ItemDropRate > (GetLargeRand() % 10000) && lpInfo->Value > this->GetQuestObjectiveCount(lpObj, lpInfo))
 			{
-				GDCreateItemSend(aIndex, lpMonster->Map, (BYTE)lpMonster->X, (BYTE)lpMonster->Y, lpInfo->Index, lpInfo->Level, 0, lpInfo->Option1, lpInfo->Option2, lpInfo->Option3, aIndex, lpInfo->NewOption, 0, 0);
+				GDCreateItemSend(aIndex, lpMonster->Map, (BYTE)lpMonster->X, (BYTE)lpMonster->Y, lpInfo->Index, lpInfo->Level, 0, lpInfo->Option1, lpInfo->Option2, lpInfo->Option3, aIndex, lpInfo->NewOption, 0, 0, 0);
 				return 1;
 			}
 		}

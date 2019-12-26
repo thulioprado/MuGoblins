@@ -58,6 +58,12 @@
     <Filter Include="Source\Texture">
       <UniqueIdentifier>{c49d916b-d885-4a3c-86eb-6c424214e5e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ChaosMachine">
+      <UniqueIdentifier>{62feb617-0e9d-4806-9fae-b8176505bde5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Message">
+      <UniqueIdentifier>{957a4ea6-65d4-4601-97f1-1f16ad6bbb6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -110,6 +116,12 @@
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Source\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="ChaosMachine.cpp">
+      <Filter>Source\ChaosMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Message.cpp">
+      <Filter>Source\Message</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +181,12 @@
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Source\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="ChaosMachine.h">
+      <Filter>Source\ChaosMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Message.h">
+      <Filter>Source\Message</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

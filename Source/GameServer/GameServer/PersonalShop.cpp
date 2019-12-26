@@ -198,10 +198,10 @@ void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj, int* table, int type) // O
 		switch (type)
 		{
 			case 0:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(14, 13), 0, 0, 0, 0, 0, -1, 0, 0, 0);
+				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(14, 13), 0, 0, 0, 0, 0, -1, 0, 0, 0, 0);
 				break;
 			case 1:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(14, 14), 0, 0, 0, 0, 0, -1, 0, 0, 0);
+				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(14, 14), 0, 0, 0, 0, 0, -1, 0, 0, 0, 0);
 				break;
 		}
 	}
@@ -211,10 +211,10 @@ void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj, int* table, int type) // O
 		switch (type)
 		{
 			case 0:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 30), 0, 0, 0, 0, 0, -1, 0, 0, 0);
+				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 30), 0, 0, 0, 0, 0, -1, 0, 0, 0, 0);
 				break;
 			case 1:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 31), 0, 0, 0, 0, 0, -1, 0, 0, 0);
+				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 31), 0, 0, 0, 0, 0, -1, 0, 0, 0, 0);
 				break;
 		}
 	}
@@ -224,10 +224,10 @@ void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj, int* table, int type) // O
 		switch (type)
 		{
 			case 0:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 30), 1, 0, 0, 0, 0, -1, 0, 0, 0);
+				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 30), 1, 0, 0, 0, 0, -1, 0, 0, 0, 0);
 				break;
 			case 1:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 31), 1, 0, 0, 0, 0, -1, 0, 0, 0);
+				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 31), 1, 0, 0, 0, 0, -1, 0, 0, 0, 0);
 				break;
 		}
 	}
@@ -237,10 +237,10 @@ void CPersonalShop::SetPaymentJewelCount(LPOBJ lpObj, int* table, int type) // O
 		switch (type)
 		{
 			case 0:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 30), 2, 0, 0, 0, 0, -1, 0, 0, 0);
+				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 30), 2, 0, 0, 0, 0, -1, 0, 0, 0, 0);
 				break;
 			case 1:
-				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 31), 2, 0, 0, 0, 0, -1, 0, 0, 0);
+				GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, GET_ITEM(12, 31), 2, 0, 0, 0, 0, -1, 0, 0, 0, 0);
 				break;
 		}
 	}
@@ -487,9 +487,9 @@ void CPersonalShop::CGPShopBuyItemRecv(PMSG_PSHOP_BUY_ITEM_RECV* lpMsg, int aInd
 		this->GCPShopBuyItemSend(aIndex, bIndex, 0, 8);
 		return;
 	}
-	
+
 	gLog.Output(LOG_TRADE, "[SellPesonalShopItem][%s][%s] - (Account: %s, Name: %s, Value: %d, Index: %04d, Level: %02d, Serial: %08X, Option1: %01d, Option2: %01d, Option3: %01d, NewOption: %03d)", lpTarget->Account, lpTarget->Name, lpObj->Account, lpObj->Name, lpTarget->Inventory[lpMsg->slot].m_PShopValue, lpTarget->Inventory[lpMsg->slot].m_Index, lpTarget->Inventory[lpMsg->slot].m_Level, lpTarget->Inventory[lpMsg->slot].m_Serial, lpTarget->Inventory[lpMsg->slot].m_Option1, lpTarget->Inventory[lpMsg->slot].m_Option2, lpTarget->Inventory[lpMsg->slot].m_Option3, lpTarget->Inventory[lpMsg->slot].m_NewOption);
-	
+
 	lpObj->Money -= lpTarget->Inventory[lpMsg->slot].m_PShopValue;
 
 	GCMoneySend(aIndex, lpObj->Money);

@@ -286,7 +286,7 @@ bool CItemBagEx::DropItem(LPOBJ lpObj, int map, int x, int y) // OK
 			gItemOptionRate.MakeNewOption(ItemIndex, ItemNewOption, &ItemNewOption);
 			gItemOptionRate.MakeSetOption(ItemIndex, ItemSetOption, &ItemSetOption);
 
-			GDCreateItemSend(lpObj->Index, map, px, py, ItemIndex, ItemLevel, 0, ItemOption1, ItemOption2, ItemOption3, lpObj->Index, ((ItemNewOption == 0) ? lpItemBagItemInfo->Grade : ItemNewOption), ItemSetOption, ((lpItemBagItemInfo->Duration > 0) ? ((DWORD)time(0) + lpItemBagItemInfo->Duration) : 0));
+			GDCreateItemSend(lpObj->Index, map, px, py, ItemIndex, ItemLevel, 0, ItemOption1, ItemOption2, ItemOption3, lpObj->Index, ((ItemNewOption == 0) ? lpItemBagItemInfo->Grade : ItemNewOption), ItemSetOption, ((lpItemBagItemInfo->Duration > 0) ? ((DWORD)time(0) + lpItemBagItemInfo->Duration) : 0), 0);
 
 			if ((lpItemBagDropInfo->OptionValue & 1) != 0)
 			{

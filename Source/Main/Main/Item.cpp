@@ -4,19 +4,21 @@
 #include "Viewport.h"
 #include "Player.h"
 
-BYTE CItem::SecondWeaponFixVal;
-char CItem::DescriptionText[60][100];
-DWORD CItem::DescriptionColor[60];
-DWORD CItem::DescriptionType[60];
+BYTE SecondWeaponFixVal;
+char DescriptionText[60][100];
+DWORD DescriptionColor[60];
+DWORD DescriptionType[60];
+DWORD DescriptionCustomColor[2][60];
 
 CItem::CItem() : TransformationRings{}, TransformationRingFormat("%s [%s]")
 {
-	this->SecondWeaponFixVal = 0;
-
-	memset(this->DescriptionText, 0, sizeof(this->DescriptionText));
-	memset(this->DescriptionColor, 0, sizeof(this->DescriptionColor));
-	memset(this->DescriptionType, 0, sizeof(this->DescriptionType));
 	memset(this->TransformationRings, 0, sizeof(this->TransformationRings));
+
+	SecondWeaponFixVal = 0;
+
+	memset(DescriptionText, 0, sizeof(DescriptionText));
+	memset(DescriptionColor, 0, sizeof(DescriptionColor));
+	memset(DescriptionType, 0, sizeof(DescriptionType));
 }
 
 CItem::~CItem()
@@ -43,760 +45,760 @@ void CItem::Load()
 	//
 	// Aumento de limite de descrições nos itens
 	//
-	Memory::Change<DWORD>(0x40C254, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40C2A4, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40CD4F, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40CE23, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40CE69, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40CEAD, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40CEF3, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40CF3B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40CF81, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40CFDC, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D18A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D1CD, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D334, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D350, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D36B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D4DA, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D500, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D527, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D543, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D570, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D729, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40D745, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4200F9, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x420182, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x420F2C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x42101A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4214A3, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421525, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421571, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4215A1, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4215BD, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4215F6, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421621, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421668, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x42168E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4216B7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4216F0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421967, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421B18, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421CFF, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421F29, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421F55, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x421F82, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x42201A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x422045, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x42208B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x432D39, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x432D5C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x432D98, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x43310A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x43313E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4331B8, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4331D4, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x433211, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x433230, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x492555, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x49258E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x4925C2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5960A2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59625F, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59635E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x599689, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5996C2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5996F6, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59E661, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59E6FB, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59E8C8, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59EB17, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59EE27, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59EE82, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59EEBB, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59EF11, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59EFA4, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59F04A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59F10D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59F20C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59F385, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FD77, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FDA6, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FDE7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FE0F, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FE76, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FEC0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FEF3, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FF34, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FF5C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x59FFC3, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A01B9, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A01E3, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A0228, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A0260, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A0286, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A02AC, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A0417, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A043D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A050A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A0580, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A05BC, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A21E8, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A222A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A252D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2620, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A27D0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2855, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2D4C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2D72, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2DC2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2DE8, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2E5D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2E81, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2EC0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2EEF, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2F46, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2F76, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2FC2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A2FE2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A300C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A302C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3069, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3089, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3157, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A31AD, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A31CD, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A31F1, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A323D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A325D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A32A1, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A32CB, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A32EB, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A332D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3365, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A33A7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A33C7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A36DB, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A39F2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3B17, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3B53, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3B8A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3BBE, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3BF0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3C2D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3C75, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3CAD, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3CDA, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3D34, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3D85, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3DD3, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3E22, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3E57, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3E8C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3EC0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3EFA, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3F35, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3F9D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A3FD1, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4007, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4060, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4094, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A40CA, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4105, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A413E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4174, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A41AD, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A41E3, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4217, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A424B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A429E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A42D2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A430B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A433F, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A437B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A43C4, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A43F8, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4431, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4465, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4493, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A44C7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4500, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4534, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A455D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A459C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A45D0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A463B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4B40, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4BF0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4C5B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4C9F, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4CF5, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4D37, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4D7E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4DB2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4DF2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4E26, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4E3B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4E6F, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4EAC, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4F26, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4F5A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4F9F, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A4FD3, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5015, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5050, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A508B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A50D0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A510B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5146, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5181, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A51BE, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A51F4, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A522F, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5281, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A52B6, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A52EA, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5331, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5378, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A53AE, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A53E2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5407, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A544C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5477, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A54C9, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A54F9, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5518, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5537, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A557E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A55AE, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A55CD, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A55EC, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A561D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5670, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A56C0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A56E6, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5719, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A574D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A579D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A57D6, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A580A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A583E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5877, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A58CC, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A58F1, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5906, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5E28, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5E7F, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5F0D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5F40, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A5F8B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A60F8, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A613A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6160, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6185, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A61DB, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6210, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A625C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A62C4, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A65C7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6802, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6B05, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6CD6, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6D45, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6DC8, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6E34, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6EA0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6F0C, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6F78, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A6FE4, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7075, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A70A8, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A70F8, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A712B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7187, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A71C0, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A720A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7243, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7283, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A730A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7350, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A736D, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7387, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A73DE, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A742E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7472, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7661, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A774B, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A77CE, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A77F7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7836, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7B29, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7DD2, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7DF7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7E19, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7E54, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7EB3, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7EED, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A7F1A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A877E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A89EC, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A8A1A, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A8A4E, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A8A82, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A8AB4, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A8B04, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A8B66, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A8BC7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A8EF9, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A8F39, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A90D6, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A9117, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A9375, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A93A7, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x5A95D1, (DWORD)(&this->DescriptionText));
-	Memory::Change<DWORD>(0x40CD8A, (DWORD)(&this->DescriptionText[1]));
-	Memory::Change<DWORD>(0x40D1F2, (DWORD)(&this->DescriptionText[1]));
-	Memory::Change<DWORD>(0x420115, (DWORD)(&this->DescriptionText[1]));
-	Memory::Change<DWORD>(0x420F53, (DWORD)(&this->DescriptionText[1]));
-	Memory::Change<DWORD>(0x42106E, (DWORD)(&this->DescriptionText[1]));
-	Memory::Change<DWORD>(0x4214C1, (DWORD)(&this->DescriptionText[1]));
-	Memory::Change<DWORD>(0x5960BB, (DWORD)(&this->DescriptionText[1]));
-	Memory::Change<DWORD>(0x5A8797, (DWORD)(&this->DescriptionText[1]));
-	Memory::Change<DWORD>(0x40CDA8, (DWORD)(&this->DescriptionText[2]));
-	Memory::Change<DWORD>(0x40D20E, (DWORD)(&this->DescriptionText[2]));
-	Memory::Change<DWORD>(0x420127, (DWORD)(&this->DescriptionText[2]));
-	Memory::Change<DWORD>(0x42143B, (DWORD)(&this->DescriptionText[2]));
-	Memory::Change<DWORD>(0x5960D9, (DWORD)(&this->DescriptionText[2]));
-	Memory::Change<DWORD>(0x5A87B8, (DWORD)(&this->DescriptionText[2]));
-	Memory::Change<DWORD>(0x40D220, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x420160, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x42145D, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x59610D, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x5961CF, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x5961DB, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x5961E7, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x5961F3, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x5961FF, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x59620B, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x5A8850, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x5A892D, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x5A895D, (DWORD)(&this->DescriptionText[3]));
-	Memory::Change<DWORD>(0x40D249, (DWORD)(&this->DescriptionText[4]));
-	Memory::Change<DWORD>(0x596222, (DWORD)(&this->DescriptionText[4]));
-	Memory::Change<DWORD>(0x5A8871, (DWORD)(&this->DescriptionText[4]));
-	Memory::Change<DWORD>(0x596234, (DWORD)(&this->DescriptionText[5]));
-	Memory::Change<DWORD>(0x5A88A4, (DWORD)(&this->DescriptionText[5]));
-	Memory::Change<DWORD>(0x40C266, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40C2B4, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40CD7A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40CE38, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40CEC2, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40CF50, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40CF96, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40D005, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40D018, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40D183, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40D510, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40D556, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x4200DC, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x420F3F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421030, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421044, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x42105F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x4214A9, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x4214DB, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421593, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421943, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421977, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x42198A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421CE9, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421D0F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421D18, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421F47, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x421FBB, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x42202F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x422052, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x432D6C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x432DA8, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x433100, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x43311A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x433174, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x433181, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x4331EA, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x433240, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x49256F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x4925A3, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x4925DD, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59624A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5996A3, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5996D7, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x599711, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59E70B, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59EB65, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59EE9E, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59EEDA, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59EF66, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59EF76, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59F012, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59F022, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59F0A6, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59F0B6, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59F0FB, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59F223, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59F230, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59F39E, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59FDCA, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59FE43, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59FF17, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x59FF90, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A023D, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A042F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A0480, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A04E3, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A0558, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A21C2, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A263D, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A27ED, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A2807, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A2821, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A282E, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A2D34, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A2DA6, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3C15, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3C63, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3C9C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3D53, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3DA4, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3DF2, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3E37, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3E6C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3EA1, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3F14, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3F4D, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3FB2, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A3FE6, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A401C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4075, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A40A9, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A40DF, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A411F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4153, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4189, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A41C2, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A41F8, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A422C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4263, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A42B3, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A42EC, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4320, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4354, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4390, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A43D9, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4412, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4446, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A447A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A44A8, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A44E1, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4515, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4549, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4572, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A45B1, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A45E5, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4BA6, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4BBB, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4C1A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4C2C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4C70, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4CBB, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4CC8, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4D0A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4D4C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4D93, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4DC7, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4E07, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4E50, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4E84, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4EC1, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4F3B, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4F6F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4FB4, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A4FE8, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A502A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5065, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A50A0, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A50E5, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5120, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A515B, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5196, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A51D3, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5209, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5244, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5296, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A52CB, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A52FF, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A534A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A538D, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A542A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A54A0, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5555, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A560C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A564B, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A565E, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5692, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A56AE, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A572E, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5762, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A57B7, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A57EB, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A581F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5858, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A588C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A591B, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5E0C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5E45, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5EAB, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5ED4, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5F58, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A5F77, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A619A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A61F0, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6225, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6271, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6599, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A65DC, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A65E7, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6ADE, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6B1A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6B3D, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6D22, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6D5A, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6D7F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6E11, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6E49, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6E57, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6EE9, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6F21, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6F2F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6FC1, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A6FF9, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A7007, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A70C2, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A7145, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A71DA, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A725D, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A7322, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A739C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A73F3, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A780C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A7E3C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A7ECA, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A8A2C, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A8A60, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A8A95, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A8AC4, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A8B14, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A8B76, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A8BD7, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A8F14, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A8F4F, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A90F6, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A9127, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x5A9385, (DWORD)(&this->DescriptionColor));
-	Memory::Change<DWORD>(0x40CD98, (DWORD)(&this->DescriptionColor[1]));
-	Memory::Change<DWORD>(0x40D200, (DWORD)(&this->DescriptionColor[1]));
-	Memory::Change<DWORD>(0x420107, (DWORD)(&this->DescriptionColor[1]));
-	Memory::Change<DWORD>(0x5960C9, (DWORD)(&this->DescriptionColor[1]));
-	Memory::Change<DWORD>(0x5A87A9, (DWORD)(&this->DescriptionColor[1]));
-	Memory::Change<DWORD>(0x40CDB3, (DWORD)(&this->DescriptionColor[2]));
-	Memory::Change<DWORD>(0x421441, (DWORD)(&this->DescriptionColor[2]));
-	Memory::Change<DWORD>(0x59EE03, (DWORD)(&this->DescriptionColor[2]));
-	Memory::Change<DWORD>(0x59EDFC, (DWORD)(&this->DescriptionColor[3]));
-	Memory::Change<DWORD>(0x5A8860, (DWORD)(&this->DescriptionColor[3]));
-	Memory::Change<DWORD>(0x5A893B, (DWORD)(&this->DescriptionColor[3]));
-	Memory::Change<DWORD>(0x5A896C, (DWORD)(&this->DescriptionColor[3]));
-	Memory::Change<DWORD>(0x40D246, (DWORD)(&this->DescriptionColor[4]));
-	Memory::Change<DWORD>(0x5A8888, (DWORD)(&this->DescriptionColor[4]));
-	Memory::Change<DWORD>(0x5A88B2, (DWORD)(&this->DescriptionColor[5]));
-	Memory::Change<DWORD>(0x40CD80, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x40CE42, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x40CECC, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x40CF57, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x40CFA1, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x40D02B, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x40D55D, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x4200E1, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x420F49, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x421074, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x4214AF, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x4214E2, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x42194A, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x42197E, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x421991, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x421CE2, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x421D2A, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x421FC6, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x42205E, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x433121, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x43318F, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x492576, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x4925AA, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x4925E4, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x596251, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5996AA, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5996DE, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x599718, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59E666, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59E7EF, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59E8CD, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59EB1E, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59EEE0, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59EFB9, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59F073, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59F122, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59F243, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59FDD1, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59FE4F, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59FF1E, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x59FF9C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A0248, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A0436, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A045C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A2839, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A2D3B, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A2DB1, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3C0A, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3C8A, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3CC2, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3CF7, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3D5A, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3DAB, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3DF9, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3E3E, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3E73, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3EA8, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3EDB, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3F1B, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3F54, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3FB9, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A3FED, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4023, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A407C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A40B0, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A40E6, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4126, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A415A, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4190, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A41C9, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A41FF, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4233, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A426A, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A42BA, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A42F3, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4327, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A43E0, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4419, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A444D, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A44AF, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A44E8, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A451C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A457D, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A45B8, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A45EC, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4BB1, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4BC2, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4C33, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4C77, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4CCF, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4D11, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4D53, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4D9A, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4DCE, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4E0E, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4E57, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4E8F, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4ECC, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4F42, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4F76, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4FBB, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A4FEF, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5031, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A506C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A50A7, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A50EC, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5127, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5162, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A519D, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A51DA, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5210, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A524B, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A529D, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A52D2, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5306, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5351, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5394, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5735, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5769, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A57BE, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A57F2, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5826, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A585F, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5893, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5926, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5E4C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A5EDF, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A61A1, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A61F7, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A622C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6278, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A65A0, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A65EE, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6AD7, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6B44, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6D29, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6D8C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6E18, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6E64, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6EF0, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6F3C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A6FC8, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A7014, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A70C9, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A714C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A71E1, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A7264, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A732D, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A73FE, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A7813, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A7E31, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A7ED1, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A8A33, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A8A67, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A8A9C, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A8ACB, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A8B1F, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A8B81, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A8BE2, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A8F1B, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A8F5B, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A90FD, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A912E, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x5A9390, (DWORD)(&this->DescriptionType));
-	Memory::Change<DWORD>(0x40CD9E, (DWORD)(&this->DescriptionType[1]));
-	Memory::Change<DWORD>(0x5960CF, (DWORD)(&this->DescriptionType[1]));
-	Memory::Change<DWORD>(0x5A87AE, (DWORD)(&this->DescriptionType[1]));
-	Memory::Change<DWORD>(0x40CDB9, (DWORD)(&this->DescriptionType[2]));
-	Memory::Change<DWORD>(0x421447, (DWORD)(&this->DescriptionType[2]));
-	Memory::Change<DWORD>(0x5A8866, (DWORD)(&this->DescriptionType[3]));
-	Memory::Change<DWORD>(0x5A8945, (DWORD)(&this->DescriptionType[3]));
-	Memory::Change<DWORD>(0x5A8971, (DWORD)(&this->DescriptionType[3]));
-	Memory::Change<DWORD>(0x40D23F, (DWORD)(&this->DescriptionType[4]));
-	Memory::Change<DWORD>(0x5A888E, (DWORD)(&this->DescriptionType[4]));
-	Memory::Change<DWORD>(0x5A88B8, (DWORD)(&this->DescriptionType[5]));
-	//Memory::Change<DWORD>(0x4BFFCB, (DWORD)(&this->DescriptionType[15]));
-	//Memory::Change<DWORD>(0x5AAF50, (DWORD)(&this->DescriptionType[15]));
-	//Memory::Change<DWORD>(0x647E73, (DWORD)(&this->DescriptionType[15]));
-	//Memory::Change<DWORD>(0x648B4B, (DWORD)(&this->DescriptionType[15]));
-	//Memory::Change<DWORD>(0x5D3941, (DWORD)(&this->DescriptionType[17]));
+	Memory::Change<DWORD>(0x40C254, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40C2A4, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40CD4F, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40CE23, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40CE69, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40CEAD, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40CEF3, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40CF3B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40CF81, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40CFDC, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D18A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D1CD, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D334, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D350, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D36B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D4DA, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D500, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D527, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D543, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D570, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D729, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40D745, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4200F9, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x420182, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x420F2C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x42101A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4214A3, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421525, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421571, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4215A1, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4215BD, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4215F6, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421621, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421668, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x42168E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4216B7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4216F0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421967, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421B18, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421CFF, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421F29, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421F55, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x421F82, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x42201A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x422045, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x42208B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x432D39, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x432D5C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x432D98, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x43310A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x43313E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4331B8, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4331D4, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x433211, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x433230, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x492555, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x49258E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x4925C2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5960A2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59625F, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59635E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x599689, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5996C2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5996F6, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59E661, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59E6FB, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59E8C8, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59EB17, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59EE27, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59EE82, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59EEBB, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59EF11, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59EFA4, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59F04A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59F10D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59F20C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59F385, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FD77, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FDA6, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FDE7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FE0F, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FE76, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FEC0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FEF3, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FF34, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FF5C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x59FFC3, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A01B9, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A01E3, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A0228, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A0260, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A0286, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A02AC, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A0417, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A043D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A050A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A0580, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A05BC, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A21E8, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A222A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A252D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2620, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A27D0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2855, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2D4C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2D72, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2DC2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2DE8, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2E5D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2E81, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2EC0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2EEF, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2F46, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2F76, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2FC2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A2FE2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A300C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A302C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3069, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3089, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3157, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A31AD, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A31CD, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A31F1, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A323D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A325D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A32A1, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A32CB, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A32EB, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A332D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3365, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A33A7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A33C7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A36DB, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A39F2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3B17, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3B53, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3B8A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3BBE, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3BF0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3C2D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3C75, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3CAD, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3CDA, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3D34, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3D85, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3DD3, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3E22, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3E57, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3E8C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3EC0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3EFA, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3F35, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3F9D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A3FD1, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4007, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4060, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4094, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A40CA, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4105, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A413E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4174, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A41AD, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A41E3, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4217, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A424B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A429E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A42D2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A430B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A433F, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A437B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A43C4, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A43F8, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4431, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4465, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4493, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A44C7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4500, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4534, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A455D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A459C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A45D0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A463B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4B40, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4BF0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4C5B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4C9F, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4CF5, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4D37, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4D7E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4DB2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4DF2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4E26, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4E3B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4E6F, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4EAC, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4F26, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4F5A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4F9F, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A4FD3, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5015, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5050, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A508B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A50D0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A510B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5146, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5181, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A51BE, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A51F4, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A522F, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5281, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A52B6, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A52EA, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5331, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5378, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A53AE, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A53E2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5407, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A544C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5477, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A54C9, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A54F9, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5518, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5537, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A557E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A55AE, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A55CD, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A55EC, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A561D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5670, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A56C0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A56E6, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5719, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A574D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A579D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A57D6, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A580A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A583E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5877, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A58CC, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A58F1, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5906, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5E28, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5E7F, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5F0D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5F40, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A5F8B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A60F8, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A613A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6160, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6185, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A61DB, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6210, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A625C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A62C4, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A65C7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6802, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6B05, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6CD6, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6D45, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6DC8, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6E34, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6EA0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6F0C, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6F78, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A6FE4, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7075, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A70A8, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A70F8, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A712B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7187, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A71C0, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A720A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7243, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7283, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A730A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7350, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A736D, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7387, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A73DE, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A742E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7472, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7661, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A774B, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A77CE, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A77F7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7836, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7B29, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7DD2, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7DF7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7E19, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7E54, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7EB3, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7EED, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A7F1A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A877E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A89EC, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A8A1A, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A8A4E, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A8A82, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A8AB4, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A8B04, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A8B66, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A8BC7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A8EF9, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A8F39, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A90D6, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A9117, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A9375, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A93A7, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x5A95D1, (DWORD)(&DescriptionText));
+	Memory::Change<DWORD>(0x40CD8A, (DWORD)(&DescriptionText[1]));
+	Memory::Change<DWORD>(0x40D1F2, (DWORD)(&DescriptionText[1]));
+	Memory::Change<DWORD>(0x420115, (DWORD)(&DescriptionText[1]));
+	Memory::Change<DWORD>(0x420F53, (DWORD)(&DescriptionText[1]));
+	Memory::Change<DWORD>(0x42106E, (DWORD)(&DescriptionText[1]));
+	Memory::Change<DWORD>(0x4214C1, (DWORD)(&DescriptionText[1]));
+	Memory::Change<DWORD>(0x5960BB, (DWORD)(&DescriptionText[1]));
+	Memory::Change<DWORD>(0x5A8797, (DWORD)(&DescriptionText[1]));
+	Memory::Change<DWORD>(0x40CDA8, (DWORD)(&DescriptionText[2]));
+	Memory::Change<DWORD>(0x40D20E, (DWORD)(&DescriptionText[2]));
+	Memory::Change<DWORD>(0x420127, (DWORD)(&DescriptionText[2]));
+	Memory::Change<DWORD>(0x42143B, (DWORD)(&DescriptionText[2]));
+	Memory::Change<DWORD>(0x5960D9, (DWORD)(&DescriptionText[2]));
+	Memory::Change<DWORD>(0x5A87B8, (DWORD)(&DescriptionText[2]));
+	Memory::Change<DWORD>(0x40D220, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x420160, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x42145D, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x59610D, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x5961CF, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x5961DB, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x5961E7, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x5961F3, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x5961FF, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x59620B, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x5A8850, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x5A892D, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x5A895D, (DWORD)(&DescriptionText[3]));
+	Memory::Change<DWORD>(0x40D249, (DWORD)(&DescriptionText[4]));
+	Memory::Change<DWORD>(0x596222, (DWORD)(&DescriptionText[4]));
+	Memory::Change<DWORD>(0x5A8871, (DWORD)(&DescriptionText[4]));
+	Memory::Change<DWORD>(0x596234, (DWORD)(&DescriptionText[5]));
+	Memory::Change<DWORD>(0x5A88A4, (DWORD)(&DescriptionText[5]));
+	Memory::Change<DWORD>(0x40C266, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40C2B4, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40CD7A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40CE38, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40CEC2, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40CF50, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40CF96, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40D005, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40D018, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40D183, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40D510, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40D556, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x4200DC, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x420F3F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421030, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421044, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x42105F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x4214A9, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x4214DB, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421593, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421943, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421977, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x42198A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421CE9, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421D0F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421D18, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421F47, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x421FBB, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x42202F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x422052, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x432D6C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x432DA8, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x433100, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x43311A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x433174, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x433181, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x4331EA, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x433240, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x49256F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x4925A3, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x4925DD, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59624A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5996A3, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5996D7, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x599711, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59E70B, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59EB65, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59EE9E, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59EEDA, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59EF66, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59EF76, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59F012, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59F022, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59F0A6, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59F0B6, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59F0FB, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59F223, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59F230, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59F39E, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59FDCA, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59FE43, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59FF17, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x59FF90, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A023D, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A042F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A0480, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A04E3, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A0558, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A21C2, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A263D, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A27ED, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A2807, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A2821, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A282E, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A2D34, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A2DA6, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3C15, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3C63, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3C9C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3D53, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3DA4, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3DF2, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3E37, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3E6C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3EA1, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3F14, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3F4D, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3FB2, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A3FE6, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A401C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4075, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A40A9, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A40DF, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A411F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4153, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4189, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A41C2, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A41F8, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A422C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4263, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A42B3, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A42EC, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4320, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4354, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4390, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A43D9, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4412, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4446, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A447A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A44A8, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A44E1, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4515, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4549, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4572, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A45B1, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A45E5, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4BA6, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4BBB, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4C1A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4C2C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4C70, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4CBB, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4CC8, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4D0A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4D4C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4D93, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4DC7, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4E07, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4E50, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4E84, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4EC1, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4F3B, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4F6F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4FB4, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A4FE8, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A502A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5065, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A50A0, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A50E5, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5120, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A515B, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5196, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A51D3, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5209, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5244, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5296, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A52CB, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A52FF, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A534A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A538D, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A542A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A54A0, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5555, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A560C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A564B, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A565E, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5692, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A56AE, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A572E, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5762, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A57B7, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A57EB, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A581F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5858, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A588C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A591B, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5E0C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5E45, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5EAB, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5ED4, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5F58, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A5F77, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A619A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A61F0, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6225, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6271, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6599, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A65DC, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A65E7, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6ADE, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6B1A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6B3D, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6D22, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6D5A, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6D7F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6E11, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6E49, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6E57, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6EE9, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6F21, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6F2F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6FC1, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A6FF9, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A7007, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A70C2, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A7145, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A71DA, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A725D, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A7322, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A739C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A73F3, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A780C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A7E3C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A7ECA, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A8A2C, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A8A60, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A8A95, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A8AC4, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A8B14, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A8B76, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A8BD7, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A8F14, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A8F4F, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A90F6, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A9127, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x5A9385, (DWORD)(&DescriptionColor));
+	Memory::Change<DWORD>(0x40CD98, (DWORD)(&DescriptionColor[1]));
+	Memory::Change<DWORD>(0x40D200, (DWORD)(&DescriptionColor[1]));
+	Memory::Change<DWORD>(0x420107, (DWORD)(&DescriptionColor[1]));
+	Memory::Change<DWORD>(0x5960C9, (DWORD)(&DescriptionColor[1]));
+	Memory::Change<DWORD>(0x5A87A9, (DWORD)(&DescriptionColor[1]));
+	Memory::Change<DWORD>(0x40CDB3, (DWORD)(&DescriptionColor[2]));
+	Memory::Change<DWORD>(0x421441, (DWORD)(&DescriptionColor[2]));
+	Memory::Change<DWORD>(0x59EE03, (DWORD)(&DescriptionColor[2]));
+	Memory::Change<DWORD>(0x59EDFC, (DWORD)(&DescriptionColor[3]));
+	Memory::Change<DWORD>(0x5A8860, (DWORD)(&DescriptionColor[3]));
+	Memory::Change<DWORD>(0x5A893B, (DWORD)(&DescriptionColor[3]));
+	Memory::Change<DWORD>(0x5A896C, (DWORD)(&DescriptionColor[3]));
+	Memory::Change<DWORD>(0x40D246, (DWORD)(&DescriptionColor[4]));
+	Memory::Change<DWORD>(0x5A8888, (DWORD)(&DescriptionColor[4]));
+	Memory::Change<DWORD>(0x5A88B2, (DWORD)(&DescriptionColor[5]));
+	Memory::Change<DWORD>(0x40CD80, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x40CE42, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x40CECC, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x40CF57, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x40CFA1, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x40D02B, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x40D55D, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x4200E1, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x420F49, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x421074, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x4214AF, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x4214E2, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x42194A, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x42197E, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x421991, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x421CE2, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x421D2A, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x421FC6, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x42205E, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x433121, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x43318F, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x492576, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x4925AA, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x4925E4, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x596251, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5996AA, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5996DE, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x599718, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59E666, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59E7EF, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59E8CD, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59EB1E, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59EEE0, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59EFB9, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59F073, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59F122, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59F243, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59FDD1, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59FE4F, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59FF1E, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x59FF9C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A0248, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A0436, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A045C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A2839, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A2D3B, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A2DB1, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3C0A, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3C8A, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3CC2, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3CF7, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3D5A, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3DAB, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3DF9, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3E3E, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3E73, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3EA8, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3EDB, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3F1B, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3F54, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3FB9, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A3FED, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4023, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A407C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A40B0, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A40E6, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4126, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A415A, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4190, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A41C9, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A41FF, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4233, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A426A, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A42BA, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A42F3, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4327, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A43E0, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4419, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A444D, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A44AF, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A44E8, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A451C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A457D, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A45B8, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A45EC, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4BB1, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4BC2, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4C33, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4C77, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4CCF, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4D11, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4D53, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4D9A, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4DCE, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4E0E, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4E57, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4E8F, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4ECC, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4F42, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4F76, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4FBB, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A4FEF, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5031, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A506C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A50A7, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A50EC, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5127, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5162, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A519D, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A51DA, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5210, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A524B, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A529D, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A52D2, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5306, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5351, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5394, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5735, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5769, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A57BE, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A57F2, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5826, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A585F, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5893, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5926, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5E4C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A5EDF, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A61A1, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A61F7, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A622C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6278, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A65A0, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A65EE, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6AD7, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6B44, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6D29, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6D8C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6E18, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6E64, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6EF0, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6F3C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A6FC8, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A7014, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A70C9, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A714C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A71E1, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A7264, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A732D, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A73FE, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A7813, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A7E31, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A7ED1, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A8A33, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A8A67, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A8A9C, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A8ACB, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A8B1F, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A8B81, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A8BE2, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A8F1B, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A8F5B, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A90FD, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A912E, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x5A9390, (DWORD)(&DescriptionType));
+	Memory::Change<DWORD>(0x40CD9E, (DWORD)(&DescriptionType[1]));
+	Memory::Change<DWORD>(0x5960CF, (DWORD)(&DescriptionType[1]));
+	Memory::Change<DWORD>(0x5A87AE, (DWORD)(&DescriptionType[1]));
+	Memory::Change<DWORD>(0x40CDB9, (DWORD)(&DescriptionType[2]));
+	Memory::Change<DWORD>(0x421447, (DWORD)(&DescriptionType[2]));
+	Memory::Change<DWORD>(0x5A8866, (DWORD)(&DescriptionType[3]));
+	Memory::Change<DWORD>(0x5A8945, (DWORD)(&DescriptionType[3]));
+	Memory::Change<DWORD>(0x5A8971, (DWORD)(&DescriptionType[3]));
+	Memory::Change<DWORD>(0x40D23F, (DWORD)(&DescriptionType[4]));
+	Memory::Change<DWORD>(0x5A888E, (DWORD)(&DescriptionType[4]));
+	Memory::Change<DWORD>(0x5A88B8, (DWORD)(&DescriptionType[5]));
+	//Memory::Change<DWORD>(0x4BFFCB, (DWORD)(&DescriptionType[15]));
+	//Memory::Change<DWORD>(0x5AAF50, (DWORD)(&DescriptionType[15]));
+	//Memory::Change<DWORD>(0x647E73, (DWORD)(&DescriptionType[15]));
+	//Memory::Change<DWORD>(0x648B4B, (DWORD)(&DescriptionType[15]));
+	//Memory::Change<DWORD>(0x5D3941, (DWORD)(&DescriptionType[17]));
 
     //
     // Ganchos
@@ -810,6 +812,8 @@ void CItem::Load()
 	Memory::Jump(0x5C6CEB, this->AllowInsertItem);
 	Memory::Jump(0x5B8E66, this->AllowInsertItemGreenSlot);
 	Memory::Jump(0x5A7420, this->SetDescriptionInfo);
+	Memory::Jump(0x59E78D, this->SetDescriptionColor1);
+	Memory::Jump(0x59EBE7, this->SetDescriptionColor2);
 	Memory::Jump(0x5048CA, this->WeaponViewCheck);
 	Memory::Jump(0x504A4F, this->SecondWeaponViewCheckReplacedCode);
 	Memory::Hook(0x5049BC, this->SecondWeaponViewCheck);
@@ -940,17 +944,155 @@ bool CItem::GetModelSize(DWORD Index)
 
 void CItem::SetDescription(ItemInfo* Item)
 {
-	switch (Item->Index)
+	CustomItemInfo* Custom = null;
+
+	switch (pCursorInterface)
 	{
-		case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+		case CursorInterface::Inventory:
 		{
+			if (pCursorSlot >= INVENTORY_SIZE)
+			{
+				return;
+			}
+
+			Custom = &Player.Inventory[pCursorSlot];
 			break;
 		}
-		case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+		case CursorInterface::Warehouse:
+		case CursorInterface::TradeSource:
+		case CursorInterface::ChaosMachine:
+		case CursorInterface::Shop:
 		{
+			if (pCursorSlot >= WAREHOUSE_SIZE)
+			{
+				return;
+			}
+
+			Custom = &Player.TempSource[pCursorSlot];
+			break;
+		}
+		case CursorInterface::TradeTarget:
+		case CursorInterface::PersonalShop:
+		{
+			if (pCursorSlot >= WAREHOUSE_SIZE)
+			{
+				return;
+			}
+
+			Custom = &Player.TempTarget[pCursorSlot];
 			break;
 		}
 	}
+
+	if (Custom)
+	{
+		switch (Item->Index)
+		{
+			case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+			case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+			{
+				BYTE Red[] = {(BYTE)(Custom->Prism[0].Red * 0x11), (BYTE)(Custom->Prism[1].Red * 0x11)};
+				BYTE Green[] = {(BYTE)(Custom->Prism[0].Green * 0x11), (BYTE)(Custom->Prism[1].Green * 0x11)};
+				BYTE Blue[] = {(BYTE)(Custom->Prism[0].Blue * 0x11), (BYTE)(Custom->Prism[1].Blue * 0x11)};
+				
+				if ((Red[0] != 0 || Green[0] != 0 || Blue[0] != 0) &&
+					(Red[1] != 0 || Green[1] != 0 || Blue[1] != 0))
+				{
+					float Timer = (1.0f + sin(GetTickCount() / 500.0f)) * 0.5f;
+
+					BYTE R = (BYTE)(this->InterpolateValue((float)(Red[0]), (float)(Red[1]), Timer));
+					BYTE G = (BYTE)(this->InterpolateValue((float)(Green[0]), (float)(Green[1]), Timer));
+					BYTE B = (BYTE)(this->InterpolateValue((float)(Blue[0]), (float)(Blue[1]), Timer));
+
+					this->SetNameColor(RGBA(R, G, B, 255), RGBA(255, 255, 255, 255));
+				}
+				else if (Red[0] != 0 || Green[0] != 0 || Blue[0] != 0)
+				{
+					this->SetNameColor(RGBA(Red[0], Green[0], Blue[0], 255), RGBA(255, 255, 255, 255));
+				}
+				else if (Red[1] != 0 || Green[1] != 0 || Blue[1] != 0)
+				{
+					this->SetNameColor(RGBA(Red[1], Green[1], Blue[1], 255), RGBA(255, 255, 255, 255));
+				}
+				else
+				{
+					this->SetNameColor(RGBA(0, 0, 0, 255), RGBA(255, 255, 255, 255));
+				}
+
+				this->AddLine();
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), "Cores:");
+				this->AddDescription(RGBA(Custom->Prism[0].Red * 0x11, Custom->Prism[0].Green * 0x11, Custom->Prism[0].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[0].Red, Custom->Prism[0].Green, Custom->Prism[0].Blue);
+				this->AddDescription(RGBA(Custom->Prism[1].Red * 0x11, Custom->Prism[1].Green * 0x11, Custom->Prism[1].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[1].Red, Custom->Prism[1].Green, Custom->Prism[1].Blue);
+
+				break;
+			}
+		}
+	}
+}
+
+void CItem::SetNameColor(DWORD Background, DWORD Foreground)
+{
+	int Line = 1;
+
+	switch (pCursorInterface)
+	{
+		case CursorInterface::Inventory:
+		{
+			if (pCursorSlot >= 76)
+			{
+				Line = 3;
+			}
+
+			if (pCheckInterface(0x10000))
+			{
+				Line = 3;
+			}
+
+			break;
+		}
+		case CursorInterface::Shop:
+		case CursorInterface::PersonalShop:
+		{
+			Line = 3;
+			break;
+		}
+	}
+
+	DescriptionColor[Line] = 100;
+	DescriptionType[Line] = 2;
+	DescriptionCustomColor[0][Line] = Background;
+	DescriptionCustomColor[1][Line] = Foreground;
+}
+
+void CItem::AddLine()
+{
+	auto Current = pCurrentMessage;
+
+	DescriptionColor[Current] = 100;
+	DescriptionType[Current] = 0;
+	DescriptionCustomColor[0][Current] = 0;
+	DescriptionCustomColor[1][Current] = 0;
+
+	strcpy_s(DescriptionText[Current], "\n");
+
+	++pCurrentMessage;
+}
+
+void CItem::AddDescription(DWORD Background, DWORD Foreground, const char* Format, ...)
+{
+	auto Current = pCurrentMessage;
+
+	DescriptionColor[Current] = 100;
+	DescriptionType[Current] = 0;
+	DescriptionCustomColor[0][Current] = Background;
+	DescriptionCustomColor[1][Current] = Foreground;
+
+	va_list Arguments;
+	va_start(Arguments, Format);
+	vsprintf_s(DescriptionText[Current], Format, Arguments);
+	va_end(Arguments);
+
+	++pCurrentMessage;
 }
 
 float CItem::InterpolateValue(float Start, float End, float Timer)
@@ -975,7 +1117,7 @@ bool CItem::InterpolateColors(GlowColor* Color, float Timer, float R1, float G1,
 bool CItem::ApplyPrismEffect(GlowColor* Color, PrismEffect* Prism, int Index)
 {
 	int Rand = (Index * 18765 + 44162) % RAND_MAX;
-	float Timer = (1.0f + sin((GetTickCount() + (Rand % 750)) / (750.0f + (float)(Rand % 50)))) * 0.5f;
+	float Timer = (1.0f + sin((GetTickCount() + (Rand % 750)) / (750.f + (float)(Rand % 50)))) * 0.5f;
 
 	if ((Prism[0].Red != 0.f || Prism[0].Green != 0.f || Prism[0].Blue != 0.f) && 
 		(Prism[1].Red != 0.f || Prism[1].Green != 0.f || Prism[1].Blue != 0.f))
@@ -1098,6 +1240,91 @@ void __declspec(naked) CItem::SetDescriptionInfo()
 		LEA EAX, DWORD PTR DS : [EAX + EAX * 0x4] ;
 		PUSH 0x6B8B64;
 		JMP Back;
+	}
+}
+
+void __declspec(naked) CItem::SetDescriptionColor1()
+{
+	static DWORD Back[2] = {0x59E794, 0x59E7EC};
+	static DWORD Index, Current;
+	static BYTE R, G, B;
+
+	__asm
+	{
+		MOV EAX, DWORD PTR DS : [EDI * 0x4 + DescriptionColor] ;
+		PUSHAD;
+		MOV Index, EAX;
+		MOV Current, EDI;
+	}
+
+	if (Index == 100)
+	{
+		R = (BYTE)(DescriptionCustomColor[1][Current] & 0xFF);
+		G = (BYTE)((DescriptionCustomColor[1][Current] & 0xFF00) >> 8);
+		B = (BYTE)((DescriptionCustomColor[1][Current] & 0xFF0000) >> 16);
+
+		glColor3f(R / 255.f, G / 255.f, B / 255.f);
+		
+		pMessageBackgroundColor = DescriptionCustomColor[0][Current];
+		pMessageForegroundColor = DescriptionCustomColor[1][Current];
+
+		DescriptionCustomColor[0][Current] = 0;
+		DescriptionCustomColor[1][Current] = 0;
+
+		__asm
+		{
+			POPAD;
+			JMP Back[4];
+		}
+	}
+
+	__asm
+	{
+		POPAD;
+		MOV EAX, DWORD PTR DS : [EDI * 0x4 + DescriptionColor] ;
+		JMP Back[0];
+	}
+}
+
+void __declspec(naked) CItem::SetDescriptionColor2()
+{
+	static DWORD Back[2] = {0x59EBEE, 0x59EC46};
+	static DWORD Index, Current;
+	static BYTE R, G, B;
+
+	__asm
+	{
+		MOV EAX, DWORD PTR DS : [EBX * 0x4 + DescriptionColor] ;
+		PUSHAD;
+		MOV Index, EAX;
+		MOV Current, EBX;
+	}
+
+	if (Index == 100)
+	{
+		R = (BYTE)(DescriptionCustomColor[1][Current] & 0xFF);
+		G = (BYTE)((DescriptionCustomColor[1][Current] & 0xFF00) >> 8);
+		B = (BYTE)((DescriptionCustomColor[1][Current] & 0xFF0000) >> 16);
+
+		glColor3f(R / 255.f, G / 255.f, B / 255.f);
+
+		pMessageBackgroundColor = DescriptionCustomColor[0][Current];
+		pMessageForegroundColor = DescriptionCustomColor[1][Current];
+
+		DescriptionCustomColor[0][Current] = 0;
+		DescriptionCustomColor[1][Current] = 0;
+
+		__asm
+		{
+			POPAD;
+			JMP Back[4];
+		}
+	}
+
+	__asm
+	{
+		POPAD;
+		JMP Back[0];
 	}
 }
 

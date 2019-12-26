@@ -120,6 +120,7 @@ struct SDHP_CREATE_ITEM_RECV
 	WORD LootIndex;
 	BYTE SetOption;
 	DWORD Duration;
+	BYTE Prism[3];
 };
 
 struct SDHP_OPTION_DATA_RECV
@@ -282,6 +283,7 @@ struct SDHP_CREATE_ITEM_SEND
 	WORD LootIndex;
 	BYTE SetOption;
 	DWORD Duration;
+	BYTE Prism[3];
 };
 
 struct SDHP_OPTION_DATA_SEND
@@ -610,7 +612,7 @@ void GDCharacterListSend(int aIndex);
 void GDCharacterCreateSend(int aIndex, char* name, BYTE Class);
 void GDCharacterDeleteSend(int aIndex, char* name);
 void GDCharacterInfoSend(int aIndex, char* name);
-void GDCreateItemSend(int aIndex, BYTE map, BYTE x, BYTE y, int index, BYTE level, BYTE dur, BYTE Option1, BYTE Option2, BYTE Option3, int LootIndex, BYTE newOption, BYTE SetOption, DWORD duration);
+void GDCreateItemSend(int aIndex, BYTE map, BYTE x, BYTE y, int index, BYTE level, BYTE dur, BYTE Option1, BYTE Option2, BYTE Option3, int LootIndex, BYTE newOption, BYTE SetOption, DWORD duration, BYTE* prism);
 void GDPetItemInfoSend(int aIndex, int type);
 void GDCrywolfSyncSend(int MapServerGroup, int CrywolfState, int OccupationState);
 void GDCrywolfInfoSend(int MapServerGroup);

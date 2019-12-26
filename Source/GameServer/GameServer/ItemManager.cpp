@@ -1071,7 +1071,7 @@ bool CItemManager::InventoryInsertItemStack(LPOBJ lpObj, CItem* lpItem) // OK
 						this->InventoryDelItem(lpObj->Index, n);
 						this->GCItemDeleteSend(lpObj->Index, n, 1);
 
-						GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, CreateItemIndex, (BYTE)lpItem->m_Level, 1, 0, 0, 0, lpObj->Index, 0, 0, 0);
+						GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, CreateItemIndex, (BYTE)lpItem->m_Level, 1, 0, 0, 0, lpObj->Index, 0, 0, 0, 0);
 
 						if (lpItem->m_Durability < 1)
 						{
@@ -1132,7 +1132,7 @@ bool CItemManager::InventoryAddItemStack(LPOBJ lpObj, int SourceSlot, int Target
 		this->InventoryDelItem(lpObj->Index, TargetSlot);
 		this->GCItemDeleteSend(lpObj->Index, TargetSlot, 1);
 
-		GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, CreateItemIndex, (BYTE)lpObj->Inventory[SourceSlot].m_Level, 0, 0, 0, 0, lpObj->Index, 0, 0, 0);
+		GDCreateItemSend(lpObj->Index, 0xEB, 0, 0, CreateItemIndex, (BYTE)lpObj->Inventory[SourceSlot].m_Level, 0, 0, 0, 0, lpObj->Index, 0, 0, 0, 0);
 	}
 	else
 	{
@@ -1551,7 +1551,7 @@ void CItemManager::ItemByteConvert(BYTE* lpMsg, CItem item) // OK
 	/*lpMsg[5] |= ((item.m_ItemOptionEx & 128) >> 4);
 	lpMsg[5] |= ((item.m_IsPeriodicItem & 1) << 1);
 	lpMsg[5] |= ((item.m_IsExpiredItem & 1) << 2);*/
-	
+
 	if (item.m_Index == GET_ITEM(13, 39) || item.m_Index == GET_ITEM(13, 40))
 	{
 		lpMsg[6] = item.m_Prism[0];
@@ -1715,7 +1715,7 @@ void CItemManager::UpdateInventoryViewport(int aIndex, int slot) // OK
 			gObjectManager.CharacterUpdateMapEffect(&gObj[aIndex]);
 		}
 	}
-	
+
 	this->GCItemChangeSend(aIndex, slot);
 }
 
@@ -2935,7 +2935,9 @@ void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex) // OK
 	pMsg.header.setE(0x24, sizeof(pMsg));
 
 	pMsg.result = 0xFF;
+	pMsg.SourceFlag = lpMsg->SourceFlag;
 	pMsg.SourceSlot = lpMsg->SourceSlot;
+	pMsg.TargetFlag = lpMsg->TargetFlag;
 	pMsg.TargetSlot = lpMsg->TargetSlot;
 
 	memset(pMsg.ItemInfo, 0xFF, sizeof(pMsg.ItemInfo));
@@ -3329,7 +3331,7 @@ void CItemManager::CGItemBuyRecv(PMSG_ITEM_BUY_RECV* lpMsg, int aIndex) // OK
 
 	if (item.m_Index == GET_ITEM(13, 4) || item.m_Index == GET_ITEM(13, 5)) //Dark Horse,Dark Reaven
 	{
-		GDCreateItemSend(aIndex, 0xEB, 0, 0, item.m_Index, (BYTE)item.m_Level, (BYTE)item.m_Durability, item.m_Option1, item.m_Option2, item.m_Option3, -1, item.m_NewOption, item.m_SetOption, 0);
+		GDCreateItemSend(aIndex, 0xEB, 0, 0, item.m_Index, (BYTE)item.m_Level, (BYTE)item.m_Durability, item.m_Option1, item.m_Option2, item.m_Option3, -1, item.m_NewOption, item.m_SetOption, 0, 0);
 
 		lpObj->Money -= item.m_BuyMoney + tax;
 
@@ -3541,7 +3543,7 @@ void CItemManager::GCItemChangeSend(int aIndex, BYTE slot) // OK
 	pMsg.ItemInfo[1] |= ((lpObj->Inventory[slot].m_Level - 1) / 2) & 0x0F;
 
 	memcpy(pMsg.CharSet, lpObj->CharSet, sizeof(pMsg.CharSet));
-	
+
 	MsgSendV2(lpObj, (BYTE*)&pMsg, pMsg.header.size);
 }
 
@@ -3564,9 +3566,7 @@ void CItemManager::GCItemDurSend(int aIndex, BYTE slot, BYTE dur, BYTE flag) // 
 	pMsg.header.set(0x2A, sizeof(pMsg));
 
 	pMsg.slot = slot;
-
 	pMsg.dur = dur;
-
 	pMsg.flag = flag;
 
 	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
@@ -3601,7 +3601,7 @@ void CItemManager::GCItemListSend(int aIndex) // OK
 				memcpy(&send[size], &info, sizeof(info));
 				size += sizeof(info);
 
-				pMsg.count++;
+				++pMsg.count;
 			}
 		}
 	}

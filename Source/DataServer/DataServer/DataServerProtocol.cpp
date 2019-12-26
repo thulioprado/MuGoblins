@@ -690,6 +690,7 @@ void GDCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg, int index) // OK
 	pMsg.LootIndex = lpMsg->LootIndex;
 	pMsg.SetOption = lpMsg->SetOption;
 	pMsg.Duration = lpMsg->Duration;
+	memcpy(pMsg.Prism, lpMsg->Prism, sizeof(pMsg.Prism));
 
 	gSocketManager.DataSend(index, (BYTE*)&pMsg, pMsg.header.size);
 }

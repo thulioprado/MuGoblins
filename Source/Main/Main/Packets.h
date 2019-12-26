@@ -178,7 +178,9 @@ struct PMSG_ITEM_MOVE_RECV
 {
 	PBMSG_HEAD header;
 	BYTE result;
+	BYTE SourceFlag;
 	BYTE SourceSlot;
+	BYTE TargetFlag;
 	BYTE TargetSlot;
 	BYTE ItemInfo[MAX_ITEM_INFO];
 };
@@ -269,6 +271,12 @@ struct PMSG_ITEM_BUY_RECV2
 	PBMSG_HEAD header;
 	BYTE result;
 	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_TRADE_ITEM_DEL_RECV
+{
+	PBMSG_HEAD header;
+	BYTE slot;
 };
 
 struct PMSG_TRADE_ITEM_ADD_RECV

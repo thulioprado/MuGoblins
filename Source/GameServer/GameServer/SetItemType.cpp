@@ -28,7 +28,7 @@ CSetItemType::~CSetItemType() // OK
 
 void CSetItemType::Init() // OK
 {
-	for(int n=0;n < MAX_SET_ITEM_TYPE;n++)
+	for (int n = 0; n < MAX_SET_ITEM_TYPE; n++)
 	{
 		this->m_SetItemTypeInfo[n].Index = -1;
 	}
@@ -40,44 +40,44 @@ void CSetItemType::Load(char* path) // OK
 {
 	CMemScript* lpMemScript = new CMemScript;
 
-	if(lpMemScript == 0)
+	if (lpMemScript == 0)
 	{
-		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR,path);
+		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR, path);
 		return;
 	}
 
-	if(lpMemScript->SetBuffer(path) == 0)
+	if (lpMemScript->SetBuffer(path) == 0)
 	{
 		ErrorMessageBox(lpMemScript->GetLastError());
 		delete lpMemScript;
 		return;
 	}
-	
+
 	this->Init();
-	
+
 	try
 	{
-		while(true)
+		while (true)
 		{
-			if(lpMemScript->GetToken() == TOKEN_END)
+			if (lpMemScript->GetToken() == TOKEN_END)
 			{
 				break;
 			}
 
-			if(strcmp("end",lpMemScript->GetString()) == 0)
+			if (strcmp("end", lpMemScript->GetString()) == 0)
 			{
 				break;
 			}
 
 			SET_ITEM_TYPE_INFO info;
 
-			memset(&info,0,sizeof(info));
+			memset(&info, 0, sizeof(info));
 
-			info.Index = SafeGetItem(GET_ITEM(lpMemScript->GetNumber(),lpMemScript->GetAsNumber()));
+			info.Index = SafeGetItem(GET_ITEM(lpMemScript->GetNumber(), lpMemScript->GetAsNumber()));
 
 			info.StatType = lpMemScript->GetAsNumber();
 
-			for(int n=0;n < MAX_SET_ITEM_OPTION_INDEX;n++)
+			for (int n = 0; n < MAX_SET_ITEM_OPTION_INDEX; n++)
 			{
 				info.OptionIndex[n] = lpMemScript->GetAsNumber();
 			}
@@ -85,7 +85,7 @@ void CSetItemType::Load(char* path) // OK
 			this->SetInfo(info);
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		ErrorMessageBox(lpMemScript->GetLastError());
 	}
@@ -95,7 +95,7 @@ void CSetItemType::Load(char* path) // OK
 
 void CSetItemType::SetInfo(SET_ITEM_TYPE_INFO info) // OK
 {
-	if(this->m_count < 0 || this->m_count >= MAX_SET_ITEM_TYPE)
+	if (this->m_count < 0 || this->m_count >= MAX_SET_ITEM_TYPE)
 	{
 		return;
 	}
@@ -105,37 +105,37 @@ void CSetItemType::SetInfo(SET_ITEM_TYPE_INFO info) // OK
 
 SET_ITEM_TYPE_INFO* CSetItemType::GetInfo(int index) // OK
 {
-	for(int n=0;n < this->m_count;n++)
+	for (int n = 0; n < this->m_count; n++)
 	{
-		if(this->m_SetItemTypeInfo[n].Index == -1)
+		if (this->m_SetItemTypeInfo[n].Index == -1)
 		{
 			continue;
 		}
 
-		if(this->m_SetItemTypeInfo[n].Index == index)
+		if (this->m_SetItemTypeInfo[n].Index == index)
 		{
 			return &this->m_SetItemTypeInfo[n];
 		}
 	}
-	
+
 	return 0;
 }
 
 bool CSetItemType::CheckSetItemType(int index) // OK
 {
-	return ((this->GetInfo(index)==0)?0:1);
+	return ((this->GetInfo(index) == 0) ? 0 : 1);
 }
 
-int CSetItemType::GetSetItemOptionIndex(int index,int number) // OK
+int CSetItemType::GetSetItemOptionIndex(int index, int number) // OK
 {
 	SET_ITEM_TYPE_INFO* lpInfo = this->GetInfo(index);
 
-	if(lpInfo == 0)
+	if (lpInfo == 0)
 	{
 		return -1;
 	}
 
-	if(number < 0 || number >= MAX_SET_ITEM_OPTION_INDEX)
+	if (number < 0 || number >= MAX_SET_ITEM_OPTION_INDEX)
 	{
 		return -1;
 	}
@@ -147,7 +147,7 @@ int CSetItemType::GetSetItemStatType(int index) // OK
 {
 	SET_ITEM_TYPE_INFO* lpInfo = this->GetInfo(index);
 
-	if(lpInfo == 0)
+	if (lpInfo == 0)
 	{
 		return -1;
 	}
@@ -157,26 +157,26 @@ int CSetItemType::GetSetItemStatType(int index) // OK
 
 int CSetItemType::GetRandomSetItem() // OK
 {
-	int IndexTable[MAX_SET_ITEM_TYPE],IndexTableCount=0;
+	int IndexTable[MAX_SET_ITEM_TYPE], IndexTableCount = 0;
 
-	for(int n=0;n < this->m_count;n++)
+	for (int n = 0; n < this->m_count; n++)
 	{
 		ITEM_INFO ItemInfo;
 
-		if(gItemManager.GetInfo(this->m_SetItemTypeInfo[n].Index,&ItemInfo) != 0 && ItemInfo.DropItem != 0)
+		if (gItemManager.GetInfo(this->m_SetItemTypeInfo[n].Index, &ItemInfo) != 0 && ItemInfo.DropItem != 0)
 		{
 			IndexTable[IndexTableCount++] = ItemInfo.Index;
 		}
 	}
 
-	return ((IndexTableCount==0)?-1:IndexTable[GetLargeRand()%IndexTableCount]);
+	return ((IndexTableCount == 0) ? -1 : IndexTable[GetLargeRand() % IndexTableCount]);
 }
 
-void CSetItemType::MakeRandomSetItem(int aIndex,int map,int x,int y) // OK
+void CSetItemType::MakeRandomSetItem(int aIndex, int map, int x, int y) // OK
 {
 	WORD ItemIndex = this->GetRandomSetItem();
 
-	if(ItemIndex == -1)
+	if (ItemIndex == -1)
 	{
 		return;
 	}
@@ -188,14 +188,14 @@ void CSetItemType::MakeRandomSetItem(int aIndex,int map,int x,int y) // OK
 	BYTE ItemNewOption = 0;
 	BYTE ItemSetOption = 0;
 
-	gItemOptionRate.GetItemOption0(2,&ItemLevel);
-	gItemOptionRate.GetItemOption1(2,&ItemOption1);
-	gItemOptionRate.GetItemOption2(2,&ItemOption2);
-	gItemOptionRate.GetItemOption3(2,&ItemOption3);
-	gItemOptionRate.GetItemOption4(2,&ItemNewOption);
-	gItemOptionRate.GetItemOption5(2,&ItemSetOption);
-	gItemOptionRate.MakeNewOption(ItemIndex,ItemNewOption,&ItemNewOption);
-	gItemOptionRate.MakeSetOption(ItemIndex,ItemSetOption,&ItemSetOption);
+	gItemOptionRate.GetItemOption0(2, &ItemLevel);
+	gItemOptionRate.GetItemOption1(2, &ItemOption1);
+	gItemOptionRate.GetItemOption2(2, &ItemOption2);
+	gItemOptionRate.GetItemOption3(2, &ItemOption3);
+	gItemOptionRate.GetItemOption4(2, &ItemNewOption);
+	gItemOptionRate.GetItemOption5(2, &ItemSetOption);
+	gItemOptionRate.MakeNewOption(ItemIndex, ItemNewOption, &ItemNewOption);
+	gItemOptionRate.MakeSetOption(ItemIndex, ItemSetOption, &ItemSetOption);
 
-	GDCreateItemSend(aIndex,map,x,y,ItemIndex,ItemLevel,0,ItemOption1,ItemOption2,ItemOption3,aIndex,ItemNewOption,ItemSetOption,0);
+	GDCreateItemSend(aIndex, map, x, y, ItemIndex, ItemLevel, 0, ItemOption1, ItemOption2, ItemOption3, aIndex, ItemNewOption, ItemSetOption, 0, 0);
 }

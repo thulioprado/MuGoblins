@@ -8,6 +8,8 @@
 #include "Model.h"
 #include "Texture.h"
 #include "Viewport.h"
+#include "Message.h"
+#include "ChaosMachine.h"
 #include "Discord.h"
 
 HMODULE wzAudio = nullptr;
@@ -76,6 +78,8 @@ BOOL APIENTRY DllMain(HINSTANCE Instance, DWORD Reason, LPVOID Reserved)
 			Model.Load();
 			Texture.Load();
 			Viewport.Load();
+			Message.Load();
+			ChaosMachine.Load();
 			Discord.Load();
 
 			break;

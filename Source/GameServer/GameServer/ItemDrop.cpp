@@ -32,13 +32,13 @@ void CItemDrop::Load(char* path) // OK
 {
 	CMemScript* lpMemScript = new CMemScript;
 
-	if(lpMemScript == 0)
+	if (lpMemScript == 0)
 	{
-		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR,path);
+		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR, path);
 		return;
 	}
 
-	if(lpMemScript->SetBuffer(path) == 0)
+	if (lpMemScript->SetBuffer(path) == 0)
 	{
 		ErrorMessageBox(lpMemScript->GetLastError());
 		delete lpMemScript;
@@ -49,14 +49,14 @@ void CItemDrop::Load(char* path) // OK
 
 	try
 	{
-		while(true)
+		while (true)
 		{
-			if(lpMemScript->GetToken() == TOKEN_END)
+			if (lpMemScript->GetToken() == TOKEN_END)
 			{
 				break;
 			}
 
-			if(strcmp("end",lpMemScript->GetString()) == 0)
+			if (strcmp("end", lpMemScript->GetString()) == 0)
 			{
 				break;
 			}
@@ -98,7 +98,7 @@ void CItemDrop::Load(char* path) // OK
 			this->m_ItemDropInfo.push_back(info);
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		ErrorMessageBox(lpMemScript->GetLastError());
 	}
@@ -106,52 +106,52 @@ void CItemDrop::Load(char* path) // OK
 	delete lpMemScript;
 }
 
-int CItemDrop::DropItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
+int CItemDrop::DropItem(LPOBJ lpObj, LPOBJ lpTarget) // OK
 {
 	CRandomManager RandomManager;
 
-	for(std::vector<ITEM_DROP_INFO>::iterator it=this->m_ItemDropInfo.begin();it != this->m_ItemDropInfo.end();it++)
+	for (std::vector<ITEM_DROP_INFO>::iterator it = this->m_ItemDropInfo.begin(); it != this->m_ItemDropInfo.end(); it++)
 	{
 		int DropRate;
 
 		ITEM_INFO ItemInfo;
 
-		if(gItemManager.GetInfo(it->Index,&ItemInfo) == 0)
+		if (gItemManager.GetInfo(it->Index, &ItemInfo) == 0)
 		{
 			continue;
 		}
 
-		if(it->MapNumber != -1 && it->MapNumber != lpObj->Map)
+		if (it->MapNumber != -1 && it->MapNumber != lpObj->Map)
 		{
 			continue;
 		}
 
-		if(it->MonsterClass != -1 && it->MonsterClass != lpObj->Class)
+		if (it->MonsterClass != -1 && it->MonsterClass != lpObj->Class)
 		{
 			continue;
 		}
 
-		if(it->MonsterLevelMin != -1 && it->MonsterLevelMin > lpObj->Level)
+		if (it->MonsterLevelMin != -1 && it->MonsterLevelMin > lpObj->Level)
 		{
 			continue;
 		}
 
-		if(it->MonsterLevelMax != -1 && it->MonsterLevelMax < lpObj->Level)
+		if (it->MonsterLevelMax != -1 && it->MonsterLevelMax < lpObj->Level)
 		{
 			continue;
 		}
 
-		if((DropRate=it->DropRate) == -1 || (GetLargeRand()%1000000) < (DropRate=this->GetItemDropRate(lpObj,lpTarget,it->Index,it->Level,it->DropRate)))
+		if ((DropRate = it->DropRate) == -1 || (GetLargeRand() % 1000000) < (DropRate = this->GetItemDropRate(lpObj, lpTarget, it->Index, it->Level, it->DropRate)))
 		{
-			int rate = (1000000/((DropRate==-1)?1000000:DropRate));
+			int rate = (1000000 / ((DropRate == -1) ? 1000000 : DropRate));
 
-			RandomManager.AddElement((int)(&(*it)),rate);
+			RandomManager.AddElement((int)(&(*it)), rate);
 		}
 	}
 
 	ITEM_DROP_INFO* lpItemDropInfo;
 
-	if(RandomManager.GetRandomElement((int*)&lpItemDropInfo) == 0)
+	if (RandomManager.GetRandomElement((int*)&lpItemDropInfo) == 0)
 	{
 		return 0;
 	}
@@ -165,22 +165,22 @@ int CItemDrop::DropItem(LPOBJ lpObj,LPOBJ lpTarget) // OK
 		BYTE ItemNewOption = 0;
 		BYTE ItemSetOption = 0;
 
-		gItemOptionRate.GetItemOption0(lpItemDropInfo->Option0,&ItemLevel);
-		gItemOptionRate.GetItemOption1(lpItemDropInfo->Option1,&ItemOption1);
-		gItemOptionRate.GetItemOption2(lpItemDropInfo->Option2,&ItemOption2);
-		gItemOptionRate.GetItemOption3(lpItemDropInfo->Option3,&ItemOption3);
-		gItemOptionRate.GetItemOption4(lpItemDropInfo->Option4,&ItemNewOption);
-		gItemOptionRate.GetItemOption5(lpItemDropInfo->Option5,&ItemSetOption);
-		gItemOptionRate.MakeNewOption(ItemIndex,ItemNewOption,&ItemNewOption);
-		gItemOptionRate.MakeSetOption(ItemIndex,ItemSetOption,&ItemSetOption);
+		gItemOptionRate.GetItemOption0(lpItemDropInfo->Option0, &ItemLevel);
+		gItemOptionRate.GetItemOption1(lpItemDropInfo->Option1, &ItemOption1);
+		gItemOptionRate.GetItemOption2(lpItemDropInfo->Option2, &ItemOption2);
+		gItemOptionRate.GetItemOption3(lpItemDropInfo->Option3, &ItemOption3);
+		gItemOptionRate.GetItemOption4(lpItemDropInfo->Option4, &ItemNewOption);
+		gItemOptionRate.GetItemOption5(lpItemDropInfo->Option5, &ItemSetOption);
+		gItemOptionRate.MakeNewOption(ItemIndex, ItemNewOption, &ItemNewOption);
+		gItemOptionRate.MakeSetOption(ItemIndex, ItemSetOption, &ItemSetOption);
 
-		GDCreateItemSend(lpTarget->Index,lpObj->Map,(BYTE)lpObj->X,(BYTE)lpObj->Y,ItemIndex,ItemLevel,0,ItemOption1,ItemOption2,ItemOption3,lpTarget->Index,((ItemNewOption==0)?lpItemDropInfo->Grade:ItemNewOption),ItemSetOption,((lpItemDropInfo->Duration>0)?((DWORD)time(0)+lpItemDropInfo->Duration):0));
+		GDCreateItemSend(lpTarget->Index, lpObj->Map, (BYTE)lpObj->X, (BYTE)lpObj->Y, ItemIndex, ItemLevel, 0, ItemOption1, ItemOption2, ItemOption3, lpTarget->Index, ((ItemNewOption == 0) ? lpItemDropInfo->Grade : ItemNewOption), ItemSetOption, ((lpItemDropInfo->Duration > 0) ? ((DWORD)time(0) + lpItemDropInfo->Duration) : 0), 0);
 
 		return 1;
 	}
 }
 
-int CItemDrop::GetItemDropRate(LPOBJ lpObj,LPOBJ lpTarget,int ItemIndex,int ItemLevel,int DropRate) // OK
+int CItemDrop::GetItemDropRate(LPOBJ lpObj, LPOBJ lpTarget, int ItemIndex, int ItemLevel, int DropRate) // OK
 {
-	return gBonusManager.GetBonusValue(lpTarget,BONUS_INDEX_CMN_ITEM_DROP_RATE,DropRate,ItemIndex,ItemLevel,lpObj->Class,lpObj->Level);
+	return gBonusManager.GetBonusValue(lpTarget, BONUS_INDEX_CMN_ITEM_DROP_RATE, DropRate, ItemIndex, ItemLevel, lpObj->Class, lpObj->Level);
 }

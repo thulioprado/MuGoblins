@@ -1901,7 +1901,7 @@ void CBloodCastle::MonsterDieProc(LPOBJ lpObj, LPOBJ lpTarget) // OK
 
 	if (lpObj->Class >= 132 && lpObj->Class <= 134 && lpObj->Index == this->m_BloodCastleLevel[level].SaintStatueIndex && this->m_BloodCastleLevel[level].Stage == 4)
 	{
-		GDCreateItemSend(lpTarget->Index, lpObj->Map, (BYTE)lpObj->X, (BYTE)lpObj->Y, GET_ITEM(13, 19), (lpObj->Class - 132), 0, 0, 0, 0, lpTarget->Index, 0, 0, 0);
+		GDCreateItemSend(lpTarget->Index, lpObj->Map, (BYTE)lpObj->X, (BYTE)lpObj->Y, GET_ITEM(13, 19), (lpObj->Class - 132), 0, 0, 0, 0, lpTarget->Index, 0, 0, 0, 0);
 		this->m_BloodCastleLevel[level].SaintStatueIndex = -1;
 		this->NoticeSendToAll(&this->m_BloodCastleLevel[level], 0, gMessage.GetMessage(11), lpTarget->Name);
 		return;

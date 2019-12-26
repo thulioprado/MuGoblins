@@ -37,6 +37,9 @@ public:
 	bool GetModelPosition(DWORD Index);
 	bool GetModelSize(DWORD Index);
 	void SetDescription(ItemInfo* Item);
+	void SetNameColor(DWORD Background, DWORD Foreground);
+	void AddLine();
+	void AddDescription(DWORD Background, DWORD Foreground, const char* Format, ...);
 	float InterpolateValue(float Start, float End, float Timer);
 	bool Equals(float A, float B);
 	bool InterpolateColors(GlowColor* Color, float Timer, float R1, float G1, float B1, float R2, float G2, float B2);
@@ -47,6 +50,8 @@ public:
 	static void SetModelPosition();
 	static void SetModelSize();
 	static void SetDescriptionInfo();
+	static void SetDescriptionColor1();
+	static void SetDescriptionColor2();
 	static void EnableGlow();
 	static void SetGlow(int ItemModel, float Alpha, DWORD Unk2, GlowColor* Color, DWORD Unk3);
 	static void AllowExcellentOptions();
@@ -65,13 +70,7 @@ public:
 	static void TransformationRings7();
 	static void TransformationRings8();
 	static void TransformationRings9();
-
-public:
-	static BYTE SecondWeaponFixVal;
-	static char DescriptionText[60][100];
-	static DWORD DescriptionColor[60];
-	static DWORD DescriptionType[60];
-
+	
 public:
 	WORD TransformationRings[8][16];
 	const char* TransformationRingFormat;

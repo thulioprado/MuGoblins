@@ -29,6 +29,7 @@ enum eChaosMixNumber
 	CHAOS_MIX_SENIOR = 18,
 	CHAOS_MIX_PLUS_ITEM_LEVEL3 = 22,
 	CHAOS_MIX_PLUS_ITEM_LEVEL4 = 23,
+	CHAOS_MIX_PRISM_RING = 24
 };
 
 //**********************************************//
@@ -63,25 +64,26 @@ public:
 	CChaosBox();
 	virtual ~CChaosBox();
 	void ChaosBoxInit(LPOBJ lpObj);
-	void ChaosBoxItemDown(LPOBJ lpObj,int slot);
-	void ChaosBoxItemKeep(LPOBJ lpObj,int slot);
+	void ChaosBoxItemDown(LPOBJ lpObj, int slot);
+	void ChaosBoxItemKeep(LPOBJ lpObj, int slot);
 	void ChaosBoxItemSave(LPOBJ lpObj);
 	void ChaosItemMix(LPOBJ lpObj);
 	void DevilSquareMix(LPOBJ lpObj);
-	void PlusItemLevelMix(LPOBJ lpObj,int type);
+	void PlusItemLevelMix(LPOBJ lpObj, int type);
 	void DinorantMix(LPOBJ lpObj);
 	void FruitMix(LPOBJ lpObj);
-	void Wing2Mix(LPOBJ lpObj,int type);
+	void Wing2Mix(LPOBJ lpObj, int type);
 	void BloodCastleMix(LPOBJ lpObj);
 	void Wing1Mix(LPOBJ lpObj);
-	void PetMix(LPOBJ lpObj,int type);
-	void SiegePotionMix(LPOBJ lpObj,int type);
+	void PetMix(LPOBJ lpObj, int type);
+	void SiegePotionMix(LPOBJ lpObj, int type);
 	void LifeStoneMix(LPOBJ lpObj);
 	void SeniorMix(LPOBJ lpObj);
-	void CGChaosMixRecv(PMSG_CHAOS_MIX_RECV* lpMsg,int aIndex);
+	void PrismRing(LPOBJ lpObj);
+	void CGChaosMixRecv(PMSG_CHAOS_MIX_RECV* lpMsg, int aIndex);
 	void CGChaosMixCloseRecv(int aIndex);
-	void GCChaosBoxSend(LPOBJ lpObj,BYTE type);
-	void GCChaosMixSend(int aIndex,BYTE result,CItem* lpItem);
+	void GCChaosBoxSend(LPOBJ lpObj, BYTE type);
+	void GCChaosMixSend(int aIndex, BYTE result, CItem* lpItem);
 public:
 	int m_SeniorMixLimitDay;
 	int m_SeniorMixLimitMonth;

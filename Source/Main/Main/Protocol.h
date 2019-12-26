@@ -25,6 +25,7 @@ private:
 	int UpdateMP(int Index, PMSG_MANA_RECV* Data);
 	int ShopItemList(int Index, LPBYTE Data);
 	int ItemBuy(int Index, PMSG_ITEM_BUY_RECV* Data);
+	int TradeItemDel(int Index, PMSG_TRADE_ITEM_DEL_RECV* Data);
 	int TradeItemAdd(int Index, PMSG_TRADE_ITEM_ADD_RECV* Data);
 	int PersonalShopItemList(int Index, LPBYTE Data);
 	int PersonalShopItemBuy(int Index, PMSG_PSHOP_ITEM_BUY_RECV* Data);

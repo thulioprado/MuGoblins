@@ -54,7 +54,7 @@ void gObjMonsterDieGiveItem(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	{
 		return;
 	}
-	
+
 	if (gItemBagManager.DropItemByMonsterClass(lpObj->Class, lpTarget, lpObj->Map, lpObj->X, lpObj->Y) != 0)
 	{
 		return;
@@ -134,7 +134,7 @@ void gObjMonsterDieGiveItem(LPOBJ lpObj, LPOBJ lpTarget) // OK
 		gItemOptionRate.MakeNewOption(ItemIndex, ItemNewOption, &ItemNewOption);
 		gItemOptionRate.MakeSetOption(ItemIndex, ItemSetOption, &ItemSetOption);
 
-		GDCreateItemSend(lpTarget->Index, lpObj->Map, (BYTE)lpObj->X, (BYTE)lpObj->Y, ItemIndex, ItemLevel, 0, ItemOption1, ItemOption2, ItemOption3, lpTarget->Index, ItemNewOption, ItemSetOption, 0);
+		GDCreateItemSend(lpTarget->Index, lpObj->Map, (BYTE)lpObj->X, (BYTE)lpObj->Y, ItemIndex, ItemLevel, 0, ItemOption1, ItemOption2, ItemOption3, lpTarget->Index, ItemNewOption, ItemSetOption, 0, 0);
 	}
 	else if (lpObj->Money > 0 && (GetLargeRand() % ((lpObj->MoneyRate == 0) ? 1 : lpObj->MoneyRate)) < 10)
 	{
@@ -818,7 +818,7 @@ void gObjMonsterMagicAttack(LPOBJ lpObj, int skill) // OK
 		{
 			continue;
 		}
-		
+
 		info.index[0] = SET_NUMBERHB(lpObj->VpPlayer2[n].index);
 		info.index[1] = SET_NUMBERLB(lpObj->VpPlayer2[n].index);
 		info.MagicKey = 0;
@@ -964,7 +964,7 @@ void gObjMonsterAttack(LPOBJ lpObj, LPOBJ lpTarget) // OK
 		PMSG_SKILL_ATTACK_RECV pMsg;
 
 		pMsg.header.set(0x19, sizeof(pMsg));
-		
+
 		pMsg.skill = 1 + (GetLargeRand() % 2);
 		pMsg.index[0] = SET_NUMBERHB(lpObj->TargetNumber);
 		pMsg.index[1] = SET_NUMBERLB(lpObj->TargetNumber);
@@ -1081,7 +1081,7 @@ void gObjMonsterDie(LPOBJ lpObj, LPOBJ lpTarget) // OK
 	{
 		gObjSummonKill(lpObj->SummonIndex);
 	}
-		}
+}
 
 void gObjMonsterStateProc(LPOBJ lpObj, int code, int aIndex, int SubCode) // OK
 {
@@ -1565,8 +1565,8 @@ void gObjMonsterProcess(LPOBJ lpObj)
 			gObjMonsterRegen(lpObj);
 			gBattleSoccerScoreUpdate(ground, team);
 			return;
+		}
 	}
-}
 	else
 	{
 		if (lpObj->Class == 287 || lpObj->Class == 286)
@@ -1606,7 +1606,7 @@ void gObjMonsterProcess(LPOBJ lpObj)
 				lpObj->Map = lpCallMonObj->Map;
 				return;
 			}
-	}
+		}
 	}
 
 	if (lpObj->ActionState.Move != 0)

@@ -30,7 +30,7 @@ CItemBag::~CItemBag() // OK
 
 void CItemBag::Init() // OK
 {
-	memset(this->m_EventName,0,sizeof(this->m_EventName));
+	memset(this->m_EventName, 0, sizeof(this->m_EventName));
 
 	this->m_DropZen = 0;
 	this->m_ItemDropRate = 0;
@@ -45,13 +45,13 @@ void CItemBag::Load(char* path) // OK
 {
 	CMemScript* lpMemScript = new CMemScript;
 
-	if(lpMemScript == 0)
+	if (lpMemScript == 0)
 	{
-		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR,path);
+		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR, path);
 		return;
 	}
 
-	if(lpMemScript->SetBuffer(path) == 0)
+	if (lpMemScript->SetBuffer(path) == 0)
 	{
 		ErrorMessageBox(lpMemScript->GetLastError());
 		delete lpMemScript;
@@ -62,25 +62,25 @@ void CItemBag::Load(char* path) // OK
 
 	try
 	{
-		while(true)
+		while (true)
 		{
-			if(lpMemScript->GetToken() == TOKEN_END)
+			if (lpMemScript->GetToken() == TOKEN_END)
 			{
 				break;
 			}
 
 			int section = lpMemScript->GetNumber();
 
-			while(true)
+			while (true)
 			{
-				if(section == 0)
+				if (section == 0)
 				{
-					if(strcmp("end",lpMemScript->GetAsString()) == 0)
+					if (strcmp("end", lpMemScript->GetAsString()) == 0)
 					{
 						break;
 					}
 
-					strcpy_s(this->m_EventName,lpMemScript->GetString());
+					strcpy_s(this->m_EventName, lpMemScript->GetString());
 
 					this->m_DropZen = lpMemScript->GetAsNumber();
 					this->m_ItemDropRate = lpMemScript->GetAsNumber();
@@ -89,18 +89,18 @@ void CItemBag::Load(char* path) // OK
 					this->m_ItemDropType = lpMemScript->GetAsNumber();
 					this->m_SendFirework = lpMemScript->GetAsNumber();
 				}
-				else if(section == 1)
+				else if (section == 1)
 				{
-					if(strcmp("end",lpMemScript->GetAsString()) == 0)
+					if (strcmp("end", lpMemScript->GetAsString()) == 0)
 					{
 						break;
 					}
 
 					ITEM_BAG_INFO info;
 
-					memset(&info,0,sizeof(info));
+					memset(&info, 0, sizeof(info));
 
-					info.Index = SafeGetItem(GET_ITEM(lpMemScript->GetNumber(),lpMemScript->GetAsNumber()));
+					info.Index = SafeGetItem(GET_ITEM(lpMemScript->GetNumber(), lpMemScript->GetAsNumber()));
 
 					info.MinLevel = lpMemScript->GetAsNumber();
 					info.MaxLevel = lpMemScript->GetAsNumber();
@@ -113,18 +113,18 @@ void CItemBag::Load(char* path) // OK
 
 					this->SetInfo(info);
 				}
-				else if(section == 2)
+				else if (section == 2)
 				{
-					if(strcmp("end",lpMemScript->GetAsString()) == 0)
+					if (strcmp("end", lpMemScript->GetAsString()) == 0)
 					{
 						break;
 					}
 
 					ITEM_BAG_INFO info;
 
-					memset(&info,0,sizeof(info));
+					memset(&info, 0, sizeof(info));
 
-					info.Index = SafeGetItem(GET_ITEM(lpMemScript->GetNumber(),lpMemScript->GetAsNumber()));
+					info.Index = SafeGetItem(GET_ITEM(lpMemScript->GetNumber(), lpMemScript->GetAsNumber()));
 
 					info.MinLevel = lpMemScript->GetAsNumber();
 					info.MaxLevel = lpMemScript->GetAsNumber();
@@ -139,7 +139,7 @@ void CItemBag::Load(char* path) // OK
 				}
 				else
 				{
-					if(strcmp("end",lpMemScript->GetAsString()) == 0)
+					if (strcmp("end", lpMemScript->GetAsString()) == 0)
 					{
 						break;
 					}
@@ -147,7 +147,7 @@ void CItemBag::Load(char* path) // OK
 			}
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		ErrorMessageBox(lpMemScript->GetLastError());
 	}
@@ -159,7 +159,7 @@ void CItemBag::Load(char* path) // OK
 
 void CItemBag::SetInfo(ITEM_BAG_INFO info) // OK
 {
-	if(this->m_count < 0 || this->m_count >= MAX_BAG_ITEM)
+	if (this->m_count < 0 || this->m_count >= MAX_BAG_ITEM)
 	{
 		return;
 	}
@@ -169,7 +169,7 @@ void CItemBag::SetInfo(ITEM_BAG_INFO info) // OK
 
 ITEM_BAG_INFO* CItemBag::GetInfo(int index) // OK
 {
-	if(index < 0 || index >= this->m_count)
+	if (index < 0 || index >= this->m_count)
 	{
 		return 0;
 	}
@@ -179,12 +179,12 @@ ITEM_BAG_INFO* CItemBag::GetInfo(int index) // OK
 
 int CItemBag::GetItemLevel(ITEM_BAG_INFO* lpInfo) // OK
 {
-	if(lpInfo->MinLevel >= lpInfo->MaxLevel)
+	if (lpInfo->MinLevel >= lpInfo->MaxLevel)
 	{
 		return lpInfo->MinLevel;
 	}
 
-	return (lpInfo->MinLevel+(GetLargeRand()%((lpInfo->MaxLevel-lpInfo->MinLevel)+1)));
+	return (lpInfo->MinLevel + (GetLargeRand() % ((lpInfo->MaxLevel - lpInfo->MinLevel) + 1)));
 }
 
 int CItemBag::GetItemNewOption(ITEM_BAG_INFO* lpInfo) // OK
@@ -193,16 +193,16 @@ int CItemBag::GetItemNewOption(ITEM_BAG_INFO* lpInfo) // OK
 
 	int NewOption = 0;
 
-	while(true)
+	while (true)
 	{
-		if(count >= lpInfo->NewOption || count >= MAX_EXC_OPTION)
+		if (count >= lpInfo->NewOption || count >= MAX_EXC_OPTION)
 		{
 			break;
 		}
 
-		int value = 1 << (GetLargeRand()%MAX_EXC_OPTION);
+		int value = 1 << (GetLargeRand() % MAX_EXC_OPTION);
 
-		if((NewOption & value) == 0)
+		if ((NewOption & value) == 0)
 		{
 			NewOption |= value;
 			count++;
@@ -214,29 +214,29 @@ int CItemBag::GetItemNewOption(ITEM_BAG_INFO* lpInfo) // OK
 
 int CItemBag::GetItemSetOption(ITEM_BAG_INFO* lpInfo) // OK
 {
-	if(lpInfo->SetOption == 0)
+	if (lpInfo->SetOption == 0)
 	{
 		return 0;
 	}
 
 	int SetOption = 0;
 
-	for(int n=0;n < MAX_SET_ITEM_OPTION_INDEX;n++)
+	for (int n = 0; n < MAX_SET_ITEM_OPTION_INDEX; n++)
 	{
-		if(gSetItemType.GetSetItemOptionIndex(lpInfo->Index,n) <= 0)
+		if (gSetItemType.GetSetItemOptionIndex(lpInfo->Index, n) <= 0)
 		{
 			continue;
 		}
 
-		SetOption = ((SetOption==0)?(n+1):(((GetLargeRand()%2)==0)?(n+1):SetOption));
+		SetOption = ((SetOption == 0) ? (n + 1) : (((GetLargeRand() % 2) == 0) ? (n + 1) : SetOption));
 	}
 
-	if(SetOption == 0)
+	if (SetOption == 0)
 	{
 		return 0;
 	}
 
-	if((GetLargeRand()%100) < 80)
+	if ((GetLargeRand() % 100) < 80)
 	{
 		SetOption |= 4;
 	}
@@ -248,20 +248,20 @@ int CItemBag::GetItemSetOption(ITEM_BAG_INFO* lpInfo) // OK
 	return SetOption;
 }
 
-bool::CItemBag::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx,int ty,int count) // OK
+bool::CItemBag::GetRandomItemDropLocation(int map, int* ox, int* oy, int tx, int ty, int count) // OK
 {
 	int x = (*ox);
 	int y = (*oy);
 
-	tx = ((tx<1)?1:tx);
-	ty = ((ty<1)?1:ty);
+	tx = ((tx < 1) ? 1 : tx);
+	ty = ((ty < 1) ? 1 : ty);
 
-	for(int n=0;n < count;n++)
+	for (int n = 0; n < count; n++)
 	{
-		(*ox) = ((GetLargeRand()%(tx+1))*((GetLargeRand()%2==0)?-1:1))+x;
-		(*oy) = ((GetLargeRand()%(ty+1))*((GetLargeRand()%2==0)?-1:1))+y;
+		(*ox) = ((GetLargeRand() % (tx + 1)) * ((GetLargeRand() % 2 == 0) ? -1 : 1)) + x;
+		(*oy) = ((GetLargeRand() % (ty + 1)) * ((GetLargeRand() % 2 == 0) ? -1 : 1)) + y;
 
-		if(gMap[map].CheckAttr((*ox),(*oy),4) == 0 && gMap[map].CheckAttr((*ox),(*oy),8) == 0)
+		if (gMap[map].CheckAttr((*ox), (*oy), 4) == 0 && gMap[map].CheckAttr((*ox), (*oy), 8) == 0)
 		{
 			return 1;
 		}
@@ -270,21 +270,21 @@ bool::CItemBag::GetRandomItemDropLocation(int map,int* ox,int* oy,int tx,int ty,
 	return 0;
 }
 
-bool CItemBag::GetItem(LPOBJ lpObj,CItem* lpItem) // OK
+bool CItemBag::GetItem(LPOBJ lpObj, CItem* lpItem) // OK
 {
-	if(this->m_ItemBagEx.m_ItemBagInfo.empty() == 0)
+	if (this->m_ItemBagEx.m_ItemBagInfo.empty() == 0)
 	{
-		return this->m_ItemBagEx.GetItem(lpObj,lpItem);
+		return this->m_ItemBagEx.GetItem(lpObj, lpItem);
 	}
 
-	if(this->m_count == 0)
+	if (this->m_count == 0)
 	{
 		return 0;
 	}
 
-	ITEM_BAG_INFO* lpInfo = this->GetInfo(GetLargeRand()%this->m_count);
+	ITEM_BAG_INFO* lpInfo = this->GetInfo(GetLargeRand() % this->m_count);
 
-	if(lpInfo == 0)
+	if (lpInfo == 0)
 	{
 		return 0;
 	}
@@ -296,30 +296,30 @@ bool CItemBag::GetItem(LPOBJ lpObj,CItem* lpItem) // OK
 	int NewOption = this->GetItemNewOption(lpInfo);
 	int SetOption = this->GetItemSetOption(lpInfo);
 
-	if(this->m_ItemDropType != 0)
+	if (this->m_ItemDropType != 0)
 	{
-		if(Option1 != 0)
+		if (Option1 != 0)
 		{
-			Option1 = GetLargeRand()%2;
+			Option1 = GetLargeRand() % 2;
 		}
 
-		if(Option2 != 0)
+		if (Option2 != 0)
 		{
-			Option2 = GetLargeRand()%2;
+			Option2 = GetLargeRand() % 2;
 		}
 
-		Option3 = 1+(GetLargeRand()%gServerInfo.m_MaxItemOption);
+		Option3 = 1 + (GetLargeRand() % gServerInfo.m_MaxItemOption);
 
-		if((GetLargeRand()%100) < (Option3*3))
+		if ((GetLargeRand() % 100) < (Option3 * 3))
 		{
-			Option3 = (gServerInfo.m_MaxItemOption+1)-Option3;
+			Option3 = (gServerInfo.m_MaxItemOption + 1) - Option3;
 		}
 		else
 		{
 			Option3 = 0;
 		}
 
-		if(NewOption != 0)
+		if (NewOption != 0)
 		{
 			Option1 = 1;
 		}
@@ -327,55 +327,55 @@ bool CItemBag::GetItem(LPOBJ lpObj,CItem* lpItem) // OK
 
 	lpItem->m_Level = level;
 
-	lpItem->Convert(lpInfo->Index,Option1,Option2,Option3,NewOption,SetOption);
+	lpItem->Convert(lpInfo->Index, Option1, Option2, Option3, NewOption, SetOption);
 	return 1;
 }
 
-bool CItemBag::DropItem(LPOBJ lpObj,int map,int x,int y) // OK
+bool CItemBag::DropItem(LPOBJ lpObj, int map, int x, int y) // OK
 {
-	if(this->m_ItemBagEx.m_ItemBagInfo.empty() == 0)
+	if (this->m_ItemBagEx.m_ItemBagInfo.empty() == 0)
 	{
-		return this->m_ItemBagEx.DropItem(lpObj,map,x,y);
+		return this->m_ItemBagEx.DropItem(lpObj, map, x, y);
 	}
 
-	for(int n=0;n < this->m_ItemDropCount;n++)
+	for (int n = 0; n < this->m_ItemDropCount; n++)
 	{
 		int px = x;
 		int py = y;
 
-		if(this->m_ItemDropCount > 1 || (gMap[map].CheckAttr(px,py,4) != 0 || gMap[map].CheckAttr(px,py,8) != 0))
+		if (this->m_ItemDropCount > 1 || (gMap[map].CheckAttr(px, py, 4) != 0 || gMap[map].CheckAttr(px, py, 8) != 0))
 		{
-			if(this->GetRandomItemDropLocation(map,&px,&py,2,2,10) == 0)
+			if (this->GetRandomItemDropLocation(map, &px, &py, 2, 2, 10) == 0)
 			{
 				px = lpObj->X;
 				py = lpObj->Y;
 			}
 		}
 
-		if((GetLargeRand()%100) >= this->m_ItemDropRate)
+		if ((GetLargeRand() % 100) >= this->m_ItemDropRate)
 		{
-			gMap[map].MoneyItemDrop(this->m_DropZen,px,py);
+			gMap[map].MoneyItemDrop(this->m_DropZen, px, py);
 			continue;
 		}
 
-		if((GetLargeRand()%10000) < this->m_SetItemDropRate)
+		if ((GetLargeRand() % 10000) < this->m_SetItemDropRate)
 		{
-			gSetItemType.MakeRandomSetItem(lpObj->Index,map,px,py);
+			gSetItemType.MakeRandomSetItem(lpObj->Index, map, px, py);
 			continue;
 		}
 
 		CItem item;
 
-		if(this->GetItem(lpObj,&item) != 0)
+		if (this->GetItem(lpObj, &item) != 0)
 		{
-			GDCreateItemSend(lpObj->Index,map,px,py,item.m_Index,(BYTE)item.m_Level,0,item.m_Option1,item.m_Option2,item.m_Option3,lpObj->Index,item.m_NewOption,item.m_SetOption,0);
+			GDCreateItemSend(lpObj->Index, map, px, py, item.m_Index, (BYTE)item.m_Level, 0, item.m_Option1, item.m_Option2, item.m_Option3, lpObj->Index, item.m_NewOption, item.m_SetOption, 0, 0);
 			continue;
 		}
 	}
 
-	if(this->m_SendFirework != 0)
+	if (this->m_SendFirework != 0)
 	{
-		GCFireworksSend(lpObj,lpObj->X,lpObj->Y);
+		GCFireworksSend(lpObj, lpObj->X, lpObj->Y);
 	}
 
 	return 1;

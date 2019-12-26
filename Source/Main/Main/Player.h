@@ -59,6 +59,18 @@ struct CharacterList
 	PrismEffect PrismArmor[2];
 };
 
+struct PrismInfo
+{
+	BYTE Red;
+	BYTE Green;
+	BYTE Blue;
+};
+
+struct CustomItemInfo
+{
+	PrismInfo Prism[2];
+};
+
 class CPlayer
 {
 public:
@@ -68,6 +80,9 @@ public:
 public:
 	void Load();
 	void Execute(int Index, std::function<void(PlayerObject*)> Callback);
+	void SetInventory(BYTE Slot, LPBYTE ItemInfo);
+	void SetTempSource(BYTE Slot, LPBYTE ItemInfo);
+	void SetTempTarget(BYTE Slot, LPBYTE ItemInfo);
 
 public:
 	static void Update();
@@ -124,6 +139,10 @@ public:
 	DWORD Resets;
 	PrismEffect PrismWeapon[2];
 	PrismEffect PrismArmor[2];
+
+	CustomItemInfo Inventory[INVENTORY_SIZE];
+	CustomItemInfo TempSource[WAREHOUSE_SIZE];
+	CustomItemInfo TempTarget[WAREHOUSE_SIZE];
 
 public:
 	std::function<void(PlayerObject*)> Callback;

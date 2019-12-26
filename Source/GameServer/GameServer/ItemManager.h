@@ -108,7 +108,9 @@ struct PMSG_ITEM_MOVE_SEND
 {
 	PBMSG_HEAD header; // C3:24
 	BYTE result;
+	BYTE SourceFlag;
 	BYTE SourceSlot;
+	BYTE TargetFlag;
 	BYTE TargetSlot;
 	BYTE ItemInfo[MAX_ITEM_INFO];
 };

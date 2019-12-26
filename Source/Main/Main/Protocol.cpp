@@ -63,6 +63,10 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 		{
 			return ::Protocol.ItemBuy(Index, (PMSG_ITEM_BUY_RECV*)(Data));
 		}
+		case 0x38:
+		{
+			return ::Protocol.TradeItemDel(Index, (PMSG_TRADE_ITEM_DEL_RECV*)(Data));
+		}
 		case 0x39:
 		{
 			return ::Protocol.TradeItemAdd(Index, (PMSG_TRADE_ITEM_ADD_RECV*)(Data));
@@ -294,6 +298,11 @@ int CProtocol::ViewportItems(int Index, LPBYTE Data)
 
 int CProtocol::ItemGet(int Index, PMSG_ITEM_GET_RECV* Data)
 {
+	if (Data->result < 0xFD)
+	{
+		Player.SetInventory(Data->result, &Data->ItemInfo[6]);
+	}
+
 	PMSG_ITEM_GET_RECV2 pMsg;
 	pMsg.header.setE(0x22, sizeof(pMsg));
 	pMsg.result = Data->result;
@@ -304,39 +313,80 @@ int CProtocol::ItemGet(int Index, PMSG_ITEM_GET_RECV* Data)
 
 int CProtocol::ItemMove(int Index, PMSG_ITEM_MOVE_RECV* Data)
 {
-	if (Data->SourceSlot == 10 || Data->SourceSlot == 11)	// Movendo do slot de anel
+	if (Data->result != 0xFF)
 	{
-		int ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
-
-		switch (ItemIndex)
+		switch (Data->SourceFlag)
 		{
-			case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+			case TargetFlag::Inventory:
+			case TargetFlag::PersonalShop:
 			{
-				Item.ApplyPrismValue(Player.PrismArmor, 0, 0, 0);
+				Player.SetInventory(Data->SourceSlot, null);
+
+				if (Data->SourceSlot == 10 || Data->SourceSlot == 11)	// Movendo do slot de anel
+				{
+					int ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
+
+					switch (ItemIndex)
+					{
+						case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+						{
+							Item.ApplyPrismValue(Player.PrismArmor, 0, 0, 0);
+							break;
+						}
+						case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+						{
+							Item.ApplyPrismValue(Player.PrismWeapon, 0, 0, 0);
+							break;
+						}
+					}
+				}
+
 				break;
 			}
-			case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+			case TargetFlag::Trade:
+			case TargetFlag::Warehouse:
+			case TargetFlag::ChaosMachine:
+			case TargetFlag::Trainer:
 			{
-				Item.ApplyPrismValue(Player.PrismWeapon, 0, 0, 0);
+				Player.SetTempSource(Data->SourceSlot, null);
 				break;
 			}
 		}
-	}
 
-	if (Data->TargetSlot == 10 || Data->TargetSlot == 11)	// Movendo para slot de anel
-	{
-		int ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
-
-		switch (ItemIndex)
+		switch (Data->TargetFlag)
 		{
-			case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+			case TargetFlag::Inventory:
+			case TargetFlag::PersonalShop:
 			{
-				Item.ApplyPrismValue(Player.PrismArmor, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
+				Player.SetInventory(Data->TargetSlot, &Data->ItemInfo[6]);
+
+				if (Data->TargetSlot == 10 || Data->TargetSlot == 11)	// Movendo para slot de anel
+				{
+					int ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
+
+					switch (ItemIndex)
+					{
+						case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+						{
+							Item.ApplyPrismValue(Player.PrismArmor, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
+							break;
+						}
+						case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+						{
+							Item.ApplyPrismValue(Player.PrismWeapon, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
+							break;
+						}
+					}
+				}
+
 				break;
 			}
-			case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+			case TargetFlag::Trade:
+			case TargetFlag::Warehouse:
+			case TargetFlag::ChaosMachine:
+			case TargetFlag::Trainer:
 			{
-				Item.ApplyPrismValue(Player.PrismWeapon, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
+				Player.SetTempSource(Data->TargetSlot, &Data->ItemInfo[6]);
 				break;
 			}
 		}
@@ -461,6 +511,8 @@ int CProtocol::ShopItemList(int Index, LPBYTE Data)
 	{
 		Item = (PMSG_SHOP_ITEM_LIST*)(&Data[Size]);
 
+		Player.SetTempSource(Item->slot, &Item->ItemInfo[6]);
+
 		pItem.slot = Item->slot;
 
 		memcpy(pItem.ItemInfo, Item->ItemInfo, sizeof(pItem.ItemInfo));
@@ -488,12 +540,21 @@ int CProtocol::ItemBuy(int Index, PMSG_ITEM_BUY_RECV* Data)
 	return pProtocolCore(0x32, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
 
+int CProtocol::TradeItemDel(int Index, PMSG_TRADE_ITEM_DEL_RECV* Data)
+{
+	Player.SetTempTarget(Data->slot, null);
+
+	return pProtocolCore(0x38, (LPBYTE)(Data), Data->header.size, Index);
+}
+
 int CProtocol::TradeItemAdd(int Index, PMSG_TRADE_ITEM_ADD_RECV* Data)
 {
 	PMSG_TRADE_ITEM_ADD_RECV2 pMsg;
 	pMsg.header.set(0x39, sizeof(pMsg));
 	pMsg.slot = Data->slot;
 	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	Player.SetTempTarget(Data->slot, &Data->ItemInfo[6]);
 
 	return pProtocolCore(0x39, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
@@ -525,6 +586,8 @@ int CProtocol::PersonalShopItemList(int Index, LPBYTE Data)
 	{
 		Item = (PMSG_PSHOP_ITEM_LIST*)(&Data[Size]);
 
+		Player.SetTempTarget(Item->slot, &Item->ItemInfo[6]);
+
 		pItem.slot = Item->slot;
 		pItem.value = Item->value;
 
@@ -545,6 +608,11 @@ int CProtocol::PersonalShopItemList(int Index, LPBYTE Data)
 
 int CProtocol::PersonalShopItemBuy(int Index, PMSG_PSHOP_ITEM_BUY_RECV* Data)
 {
+	if (Data->slot < INVENTORY_SIZE)
+	{
+		Player.SetInventory(Data->slot, &Data->ItemInfo[6]);
+	}
+
 	PMSG_PSHOP_ITEM_BUY_RECV2 pMsg;
 	pMsg.header.set(0x3F, 0x06, sizeof(pMsg));
 	pMsg.result = Data->result;
@@ -552,7 +620,7 @@ int CProtocol::PersonalShopItemBuy(int Index, PMSG_PSHOP_ITEM_BUY_RECV* Data)
 	pMsg.index[1] = Data->index[1];
 	pMsg.slot = Data->slot;
 	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
-
+	
 	return pProtocolCore(0x3F, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
 
@@ -659,6 +727,11 @@ int CProtocol::ChaosMix(int Index, PMSG_CHAOS_MIX_RECV* Data)
 	pMsg.header.set(0x86, sizeof(pMsg));
 	pMsg.result = Data->result;
 	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	if (Data->result == 1 || Data->result == 100)
+	{
+		Player.SetTempSource(0, &Data->ItemInfo[6]);
+	}
 
 	return pProtocolCore(0x86, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
@@ -985,6 +1058,8 @@ int CProtocol::ItemList(int Index, LPBYTE Data)
 	{
 		Item = (PMSG_ITEM_LIST*)(&Data[Size]);
 
+		Player.SetInventory(Item->slot, &Item->ItemInfo[6]);
+
 		pItem.slot = Item->slot;
 
 		if (Item->slot == 10 || Item->slot == 11)	// Aneis
@@ -1041,6 +1116,8 @@ int CProtocol::ItemModify(int Index, PMSG_ITEM_MODIFY_RECV* Data)
 	pMsg.header.set(0xF3, 0x14, sizeof(pMsg));
 	pMsg.slot = Data->slot;
 	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
+
+	Player.SetInventory(Data->slot, &Data->ItemInfo[6]);
 
 	return pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }

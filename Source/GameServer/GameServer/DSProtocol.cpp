@@ -708,7 +708,6 @@ void DGCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg) // OK
 		CItem item;
 
 		item.m_Level = lpMsg->Level;
-
 		item.m_Serial = lpMsg->Serial;
 
 		if (lpMsg->ItemIndex == GET_ITEM(13, 18) || lpMsg->ItemIndex == GET_ITEM(14, 7) || lpMsg->ItemIndex == GET_ITEM(14, 19))
@@ -728,15 +727,13 @@ void DGCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg) // OK
 		}
 
 		item.m_IsPeriodicItem = ((lpMsg->Duration > 0) ? 1 : 0);
-
 		item.m_LoadPeriodicItem = ((lpMsg->Duration > 0) ? 1 : 0);
-
 		item.m_PeriodicItemTime = ((lpMsg->Duration > 0) ? lpMsg->Duration : 0);
 
+		memcpy(item.m_Prism, lpMsg->Prism, sizeof(item.m_Prism));
+
 		gChaosBox.ChaosBoxInit(lpObj);
-
 		gItemManager.ChaosBoxAddItem(lpObj->Index, item, 0);
-
 		gChaosBox.GCChaosMixSend(lpObj->Index, ((lpMsg->Map == 0xFF) ? 1 : 100), &item);
 	}
 	else
@@ -997,7 +994,7 @@ void GDCharacterInfoSend(int aIndex, char* name) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GDCreateItemSend(int aIndex, BYTE map, BYTE x, BYTE y, int index, BYTE level, BYTE dur, BYTE Option1, BYTE Option2, BYTE Option3, int LootIndex, BYTE NewOption, BYTE SetOption, DWORD duration) // OK
+void GDCreateItemSend(int aIndex, BYTE map, BYTE x, BYTE y, int index, BYTE level, BYTE dur, BYTE Option1, BYTE Option2, BYTE Option3, int LootIndex, BYTE NewOption, BYTE SetOption, DWORD duration, BYTE* prism) // OK
 {
 	if (gObjIsAccountValid(aIndex, gObj[aIndex].Account) == 0)
 	{
@@ -1025,6 +1022,15 @@ void GDCreateItemSend(int aIndex, BYTE map, BYTE x, BYTE y, int index, BYTE leve
 	pMsg.LootIndex = LootIndex;
 	pMsg.SetOption = SetOption;
 	pMsg.Duration = duration;
+
+	if (index == GET_ITEM(13, 39) || index == GET_ITEM(13, 40))
+	{
+		memcpy(pMsg.Prism, prism, sizeof(pMsg.Prism));
+	}
+	else
+	{
+		memset(pMsg.Prism, 0, sizeof(pMsg.Prism));
+	}
 
 	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }

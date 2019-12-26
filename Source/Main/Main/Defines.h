@@ -75,7 +75,7 @@ struct PrismEffect
 #define pState								*(DWORD*)(0x6C41C0)
 #define pMessageBackgroundColor				*(DWORD*)(0x6B7DF8)
 #define pMessageForegroundColor				*(DWORD*)(0x6B7DF0)
-#define pItemDescriptionCount			 	*(DWORD*)(0x788C850)
+#define pCurrentMessage					 	*(DWORD*)(0x788C850)
 #define pMapNumber							(BYTE)(*(DWORD*)(0x6B8D48))
 #define pMyViewport							*(DWORD*)(0x742464C)
 #define pCameraZoom							*(float*)(0x626681)
@@ -174,6 +174,7 @@ struct PrismEffect
 #define pShowEffect1						((int(*)(short, DWORD, float, float*, DWORD, DWORD, DWORD))(0x53DE20))
 #define pShowEffect2						((int(*)(int, DWORD, DWORD, float*, DWORD, float, DWORD))(0x5353B0))
 #define pMakePreviewCharacter				((void(*)(int, BYTE*, int, int))(0x50A590))
+#define pCheckInterface(code)				((bool(__stdcall*)(void*))(0x648BB0))((void*)(code))
 
 //
 // Macros
@@ -183,12 +184,7 @@ struct PrismEffect
 #define SET_BYTE(x, y)						(BYTE((y & 0x0F) | ((int(x) << 4) & 0xF0)))
 #define GET_NIBBLE_X(v)						(BYTE((int(v) & 0xF0) >> 4))
 #define GET_NIBBLE_Y(v)						(BYTE(v & 0x0F))
-
-//
-// CharSet
-//
-#define CHAR_SET_SIZE						24
-#define CHAR_SET_SIZE_MAIN					18
+#define RGBA(R, G, B, A)					(A << 24) | (B << 16) | (G << 8) | R
 
 //
 // Itens
@@ -199,9 +195,30 @@ struct PrismEffect
 #define GET_ITEM_MODEL(group, index)		GET_ITEM(group, index) + 515
 
 // 
-// Cursor
+// Outros
 //
-namespace CursorOn
+#define CHAR_SET_SIZE						24
+#define CHAR_SET_SIZE_MAIN					18
+#define INVENTORY_SIZE						108
+#define TRADE_SIZE							32
+#define WAREHOUSE_SIZE						120
+#define CHAOS_BOX_SIZE						32
+#define PERSONAL_SHOP_SIZE					32
+
+namespace TargetFlag
+{
+	enum Value
+	{
+		Inventory = 0,
+		Trade = 1,
+		Warehouse = 2,
+		ChaosMachine = 3,
+		PersonalShop = 4,
+		Trainer = 5,
+	};
+}
+
+namespace CursorInterface
 {
 	enum Value
 	{

@@ -395,7 +395,7 @@ end
 36       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
 37       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
 38       10     0       1       1        1            0            0          "Transformation Ring"                0       200          0             0             0             0             0             0             0             0      1       1       1       1       1
-39       10     0       1       1        1            1            0          "Prism Ring"                         50      50           0             0             0             0             0             0             0             0      1       1       1       1       1
+39       10     0       1       1        1            1            0          "Prism Ring"                         50      50           1             1             1             1             1             1             1             0      1       1       1       1       1
 40       10     0       1       1        1            1            0          "Prism Ring"                         50      50           0             0             0             0             0             0             0             0      1       1       1       1       1
 end
 

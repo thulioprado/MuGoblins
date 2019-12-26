@@ -178,6 +178,7 @@ struct SDHP_CREATE_ITEM_RECV
 	WORD LootIndex;
 	BYTE SetOption;
 	DWORD Duration;
+	BYTE Prism[3];
 };
 
 struct SDHP_PET_ITEM_INFO_RECV
@@ -587,6 +588,7 @@ struct SDHP_CREATE_ITEM_SEND
 	WORD LootIndex;
 	BYTE SetOption;
 	DWORD Duration;
+	BYTE Prism[3];
 };
 
 struct SDHP_PET_ITEM_INFO_SEND
