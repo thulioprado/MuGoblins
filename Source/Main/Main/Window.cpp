@@ -2,6 +2,8 @@
 #include "Window.h"
 #include "resource.h"
 #include "Resolution.h"
+#include "Message.h"
+#include "Camera.h"
 
 auto pCreateWindowEx = CreateWindowEx;
 auto pChangeDisplaySettings = ChangeDisplaySettings;
@@ -138,15 +140,12 @@ SHORT WINAPI CWindow::GetKeyState(int Key)
 		return pGetAsyncKeyState(Key);
 	}
 
-	if (!IsWindowVisible(::Window.Window))
+	if (!IsWindowVisible(::Window.Window) && (pGetAsyncKeyState(VK_F9) & 0x8000))
 	{
-		if (pGetAsyncKeyState(VK_F12) & 0x8000)
-		{
-			ShowWindow(::Window.Window, SW_SHOW);
-			SetForegroundWindow(::Window.Window);
-			SetFocus(::Window.Window);
-			Shell_NotifyIcon(NIM_DELETE, &::Window.Notify);
-		}
+		ShowWindow(::Window.Window, SW_SHOW);
+		SetForegroundWindow(::Window.Window);
+		SetFocus(::Window.Window);
+		Shell_NotifyIcon(NIM_DELETE, &::Window.Notify);
 	}
 
 	return 0;
@@ -169,22 +168,182 @@ HFONT WINAPI CWindow::CreateFont(int Height, int Width, int Escapement, int Orie
 
 LRESULT CALLBACK CWindow::Procedure(HWND Window, UINT Code, WPARAM W, LPARAM L)
 {
+	static BYTE MouseState = 0;
+	static bool AutoClick[3] = {false, false, false};
+
 	switch (Code)
 	{
 		case WM_NCACTIVATE:
 		{
-			return 0;
+			if (::Window.WindowMode)
+			{
+				return 0;
+			}
+		}
+		case WM_RBUTTONDOWN:
+		{
+			if (MouseState == 2)
+			{
+				return 0;
+			}
+
+			MouseState = 1;
+			break;
+		}
+		case WM_RBUTTONUP:
+		{
+			if (MouseState == 1)
+			{
+				MouseState = 0;
+			}
+
+			break;
+		}
+		case WM_LBUTTONDOWN:
+		{
+			if (MouseState == 1)
+			{
+				return 0;
+			}
+
+			MouseState = 2;
+			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			if (MouseState == 2)
+			{
+				MouseState = 0;
+			}
+
+			break;
+		}
+		case WM_MOUSEWHEEL:
+		{
+			Camera.Zoom(GET_WHEEL_DELTA_WPARAM(W));
+
+			break;
 		}
 		case WM_KEYDOWN:
 		{
 			switch (W)
 			{
-				case VK_F11:
+				case VK_F9:
 				{
 					if (IsWindowVisible(::Window.Window))
 					{
+						static std::thread Thread;
+
+						if (Thread.joinable())
+						{
+							Thread.join();
+						}
+
 						ShowWindow(::Window.Window, SW_HIDE);
 						Shell_NotifyIcon(NIM_ADD, &::Window.Notify);
+
+						Thread = std::thread([]() -> void {
+							bool Up = false;
+
+							while (true)
+							{
+								if (GetAsyncKeyState(VK_F9))
+								{
+									if (Up)
+									{
+										ShowWindow(::Window.Window, SW_SHOW);
+										SetForegroundWindow(::Window.Window);
+										SetFocus(::Window.Window);
+										Shell_NotifyIcon(NIM_DELETE, &::Window.Notify);
+
+										break;
+									}
+								}
+								else
+								{
+									Up = true;
+								}
+
+								Sleep(10);
+							}
+						});
+					}
+					else
+					{
+						ShowWindow(::Window.Window, SW_SHOW);
+						Shell_NotifyIcon(NIM_DELETE, &::Window.Notify);
+					}
+
+					break;
+				}
+				case VK_F11:
+				{
+					if (!AutoClick[1]) // Right
+					{
+						AutoClick[0] = !AutoClick[0];
+						AutoClick[2] = false;
+
+						if (!AutoClick[0])  // Left
+						{
+							KillTimer(Window, WM_TIMER_CLICK_LEFT);
+							SendMessage(Window, WM_LBUTTONUP, 0, 0);
+							Message.Success(2);
+						}
+						else
+						{
+							SetTimer(Window, WM_TIMER_CLICK_LEFT, 100, null);
+							Message.Success(1);
+						}
+					}
+
+					break;
+				}
+				case VK_F12:
+				{
+					if (!AutoClick[0]) // Left
+					{
+						AutoClick[1] = !AutoClick[1];
+						AutoClick[2] = false;
+
+						if (!AutoClick[1])  // Right
+						{
+							KillTimer(Window, WM_TIMER_CLICK_RIGHT);
+							SendMessage(Window, WM_RBUTTONUP, 0, 0);
+							Message.Success(2);
+						}
+						else
+						{
+							SetTimer(Window, WM_TIMER_CLICK_RIGHT, 100, null);
+							Message.Success(1);
+						}
+					}
+
+					break;
+				}
+			}
+
+			break;
+		}
+		case WM_TIMER:
+		{
+			switch (W)
+			{
+				case WM_TIMER_CLICK_LEFT:
+				{
+					if (AutoClick[0])
+					{
+						SendMessage(Window, (AutoClick[2]) ? WM_LBUTTONUP : WM_LBUTTONDOWN, 0, 0);
+						AutoClick[2] = !AutoClick[2];
+					}
+
+					break;
+				}
+				case WM_TIMER_CLICK_RIGHT:
+				{
+					if (AutoClick[1])
+					{
+						SendMessage(Window, (AutoClick[2]) ? WM_RBUTTONUP : WM_RBUTTONDOWN, 0, 0);
+						AutoClick[2] = !AutoClick[2];
 					}
 
 					break;

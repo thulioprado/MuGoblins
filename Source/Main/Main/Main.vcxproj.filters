@@ -64,6 +64,9 @@
     <Filter Include="Source\Message">
       <UniqueIdentifier>{957a4ea6-65d4-4601-97f1-1f16ad6bbb6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Camera">
+      <UniqueIdentifier>{b874d815-ccbc-4645-b9c4-0a661d145ad4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -122,6 +125,9 @@
     </ClCompile>
     <ClCompile Include="Message.cpp">
       <Filter>Source\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="Message.h">
       <Filter>Source\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Source\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

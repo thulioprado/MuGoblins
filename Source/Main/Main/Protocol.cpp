@@ -5,6 +5,7 @@
 #include "Discord.h"
 #include "Item.h"
 #include "Viewport.h"
+#include "Camera.h"
 
 CProtocol::CProtocol()
 {
@@ -862,6 +863,8 @@ int CProtocol::CharacterList(int Index, LPBYTE Data)
 
 int CProtocol::CharacterInfo(int Index, PMSG_CHARACTER_INFO_RECV* Data)
 {
+	Camera.Clip();
+
 	pLockMain = FALSE;
 
 	Player.Experience = Data->Experience;

@@ -1,6 +1,9 @@
 #pragma once
 
-#define WM_TRAYICON		2000
+#define WM_TRAYICON				2000
+
+#define WM_TIMER_CLICK_LEFT		10000
+#define WM_TIMER_CLICK_RIGHT	10001
 
 class CWindow
 {

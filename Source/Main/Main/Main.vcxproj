@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChaosMachine.cpp" />
     <ClCompile Include="creatwth.cpp" />
     <ClCompile Include="detours.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ChaosMachine.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="detours.h" />
