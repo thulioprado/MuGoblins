@@ -175,6 +175,8 @@ struct PrismEffect
 #define pShowEffect2						((int(*)(int, DWORD, DWORD, float*, DWORD, float, DWORD))(0x5353B0))
 #define pMakePreviewCharacter				((void(*)(int, BYTE*, int, int))(0x50A590))
 #define pCheckInterface(code)				((bool(__stdcall*)(void*))(0x648BB0))((void*)(code))
+#define pRenderModel						((void(*)(float, float, float, int, float, int))(0x5E5D0B))
+#define pRenderizeEquippedItems				((void(*)())(0x5D1760))
 
 //
 // Macros

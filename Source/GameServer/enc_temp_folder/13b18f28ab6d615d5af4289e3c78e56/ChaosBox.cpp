@@ -1242,7 +1242,7 @@ void CChaosBox::PrismRing(LPOBJ lpObj)
 		return;
 	}
 
-	lpObj->ChaosSuccessRate = 100;
+	lpObj->ChaosSuccessRate = 0;
 	lpObj->ChaosMoney = 5000000;
 
 	int TaxMoney = (lpObj->ChaosMoney * gCastleSiegeSync.GetTaxRateChaos(lpObj->Index)) / 100;

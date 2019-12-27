@@ -122,11 +122,9 @@ public:
 
 public:
 	static void SetRenderizing();
-	static void SetRenderizingInventory();
 
 public:
 	ViewportInfo* Renderizing;
-	bool RenderizingInventory;
 
 private:
 	std::unordered_map<WORD, ViewportCustom> Custom;

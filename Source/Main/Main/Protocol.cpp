@@ -504,6 +504,7 @@ int CProtocol::ShopItemList(int Index, LPBYTE Data)
 
 	pMsg.header.set(0x31, 0);
 	pMsg.count = Info->count;
+	pMsg.type = Info->type;
 
 	int NewSize = sizeof(pMsg);
 

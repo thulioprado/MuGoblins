@@ -70,11 +70,15 @@ public:
 	static void TransformationRings7();
 	static void TransformationRings8();
 	static void TransformationRings9();
+	static void ConfirmToSell();
+	static void RenderizingInventory();
+	static void RenderizingShop();
 	
 public:
 	WORD TransformationRings[8][16];
 	const char* TransformationRingFormat;
 	float ModelSize;
+	bool ApplyPrismGlow;
 };
 
 extern CItem Item;

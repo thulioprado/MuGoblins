@@ -10,7 +10,7 @@ DWORD DescriptionColor[60];
 DWORD DescriptionType[60];
 DWORD DescriptionCustomColor[2][60];
 
-CItem::CItem() : TransformationRings{}, TransformationRingFormat("%s [%s]")
+CItem::CItem() : TransformationRings{}, TransformationRingFormat("%s [%s]"), ModelSize(0.f), ApplyPrismGlow(true)
 {
 	memset(this->TransformationRings, 0, sizeof(this->TransformationRings));
 
@@ -828,6 +828,9 @@ void CItem::Load()
     Memory::Jump(0x541ADE, this->TransformationRings7);
     Memory::Jump(0x5F87BB, this->TransformationRings8);
     Memory::Jump(0x5A18C7, this->TransformationRings9);
+	Memory::Jump(0x5CD82C, this->ConfirmToSell);
+	Memory::Jump(0x5E5CC4, this->RenderizingInventory);
+	Memory::Jump(0x5E5D0B, this->RenderizingShop);
 }
 
 void CItem::LoadModels()
@@ -919,20 +922,8 @@ bool CItem::GetModelPosition(DWORD Index)
 
 bool CItem::GetModelSize(DWORD Index)
 {
-	//
-	// Anéis de transformação
-	//
-	if (Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38)))
-	{
-		this->ModelSize = 0.0025f;
-
-		return true;
-	}
-
-	//
-	// Anel de Prisma
-	//
-	if (Index == GET_ITEM_MODEL(13, 39))
+	if ((Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38))) ||		// Aneis de transformação
+		(Index == GET_ITEM_MODEL(13, 39) || Index == GET_ITEM_MODEL(13, 40)))												// Aneis de prisma
 	{
 		this->ModelSize = 0.0025f;
 
@@ -1190,7 +1181,6 @@ void __declspec(naked) CItem::SetModelSize()
 {
 	static DWORD Back[2] = {0x5CF7B8, 0x5CFC58};
 	static DWORD Index;
-	static float MSize;
 
 	__asm
 	{
@@ -1201,12 +1191,10 @@ void __declspec(naked) CItem::SetModelSize()
 
 	if (Item.GetModelSize(Index))
 	{
-		MSize = Item.ModelSize;
-
 		__asm
 		{
 			POPAD;
-			MOV EAX, MSize;
+			MOV EAX, Item.ModelSize;
 			MOV DWORD PTR SS : [EBP + 0x20] , EAX;
 			JMP Back[4];
 		}
@@ -1346,10 +1334,8 @@ void __declspec(naked) CItem::EnableGlow()
 		MOV Excellent, AL;
 	}
 
-	//
-	// Aneis de transformação
-	//
-	if (Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38)))
+	if ((Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38))) ||	// Aneis de transformação
+		(Index >= GET_ITEM_MODEL(14, 32) && Index <= GET_ITEM_MODEL(14, 34)))											// Tintas
 	{
 		__asm
 		{
@@ -1358,22 +1344,7 @@ void __declspec(naked) CItem::EnableGlow()
 		}
 	}
 
-	//
-	// Tintas
-	//
-	if (Index >= GET_ITEM_MODEL(14, 32) && Index <= GET_ITEM_MODEL(14, 34))
-	{
-		__asm
-		{
-			POPAD;
-			JMP Back[12];
-		}
-	}
-
-	//
-	// Neutralizadores
-	//
-	if (Index >= GET_ITEM_MODEL(14, 35) && Index <= GET_ITEM_MODEL(14, 37))
+	if (Index >= GET_ITEM_MODEL(14, 35) && Index <= GET_ITEM_MODEL(14, 37))	// Neutralizadores
 	{
 		__asm
 		{
@@ -1421,7 +1392,7 @@ void CItem::SetGlow(int ItemModel, float Alpha, DWORD Unk2, GlowColor* Color, DW
 		}
 	}
 
-	if (Viewport.Renderizing && Viewport.Renderizing->Type == 1 && !Viewport.RenderizingInventory)
+	if (Viewport.Renderizing && Viewport.Renderizing->Type == 1 && Item.ApplyPrismGlow)
 	{		
 		if (Viewport.Renderizing->Index == Player.Index)
 		{
@@ -1498,7 +1469,7 @@ void __declspec(naked) CItem::AllowExcellentOptions()
 		PUSHAD;
 	}
 
-	if (Index == GET_ITEM(13, 39) || Index == GET_ITEM(13, 40)) // Aneis de Prisma
+	if (Index == GET_ITEM(13, 39) || Index == GET_ITEM(13, 40)) // Aneis de prisma
 	{
 		__asm
 		{
@@ -1780,8 +1751,7 @@ void __declspec(naked) CItem::TransformationRings1()
 		PUSHAD;
 	}
 
-	if (Index == GET_ITEM(13, 10) || 
-		(Index >= GET_ITEM(13, 32) && Index <= GET_ITEM(13, 38)))
+	if (Index == GET_ITEM(13, 10) || (Index >= GET_ITEM(13, 32) && Index <= GET_ITEM(13, 38)))
 	{
 		__asm
 		{
@@ -1848,8 +1818,7 @@ void __declspec(naked) CItem::TransformationRings2()
 		PUSHAD;
 	}
 
-	if (Index == GET_ITEM_MODEL(13, 10) || 
-		(Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38)))
+	if (Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38)))
 	{
 		__asm
 		{
@@ -2086,8 +2055,7 @@ void __declspec(naked) CItem::TransformationRings9()
 		PUSHAD;
 	}
 
-	if (Index == GET_ITEM(13, 10) || 
-		(Index >= GET_ITEM(13, 32) && Index <= GET_ITEM(13, 38)))
+	if (Index == GET_ITEM(13, 10) || (Index >= GET_ITEM(13, 32) && Index <= GET_ITEM(13, 38)))
 	{
 		__asm
 		{
@@ -2132,5 +2100,63 @@ void __declspec(naked) CItem::TransformationRings9()
 		JMP Back[0];
 	}
 }
+
+void __declspec(naked) CItem::ConfirmToSell()
+{
+	static DWORD Back[2] = {0x5CDE0D, 0x5CD833};
+	static WORD Index;
+
+	__asm
+	{
+		MOV Index, CX;
+		PUSHAD;
+	}
+
+	if ((Index == GET_ITEM(13, 10) || (Index >= GET_ITEM(13, 32) && Index <= GET_ITEM(13, 38))) ||		// Aneis de transformação
+		(Index == GET_ITEM(13, 39) || Index == GET_ITEM(13, 40)))										// Aneis de prisma
+	{
+		__asm
+		{
+			POPAD;
+			JMP Back[0];
+		}
+	}
+
+	__asm
+	{
+		POPAD;
+		TEST BYTE PTR DS : [0x785ACE3] , 0x3F;
+		JMP Back[4];
+	}
+}
+
+void __declspec(naked) CItem::RenderizingInventory()
+{
+	static DWORD Back = 0x5E5CC9;
+	static DWORD Function = 0x5D1EF0;
+
+	__asm
+	{
+		MOV Item.ApplyPrismGlow, 0;
+		CALL Function;
+		MOV Item.ApplyPrismGlow, 1;
+		JMP Back;
+	}
+}
+
+void __declspec(naked) CItem::RenderizingShop()
+{
+	static DWORD Back = 0x5E5D10;
+	static DWORD Function = 0x5D1EF0;
+
+	__asm
+	{
+		MOV Item.ApplyPrismGlow, 0;
+		CALL Function;
+		MOV Item.ApplyPrismGlow, 1;
+		JMP Back;
+	}
+}
+
 
 CItem Item;

@@ -57,7 +57,7 @@ void CChaosMachine::Check()
         this->Title = Message.Get(0);
         this->Index = 24;
         this->Money = 5000000;
-        this->Rate = 10;
+        this->Rate = 100;
         this->X = 1;
         this->Y = 1;
 

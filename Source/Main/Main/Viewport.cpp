@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "Item.h"
 
-CViewport::CViewport() : Renderizing(null), RenderizingInventory(false), Custom()
+CViewport::CViewport() : Renderizing(null), Custom()
 {
 }
 
@@ -14,7 +14,6 @@ CViewport::~CViewport()
 void CViewport::Load()
 {
 	Memory::Jump(0x50273B, this->SetRenderizing);
-	Memory::Jump(0x5E5CC4, this->SetRenderizingInventory);
 }
 
 void CViewport::Clear()
@@ -122,21 +121,5 @@ void __declspec(naked) CViewport::SetRenderizing()
 		JMP Back;
 	}
 }
-
-void __declspec(naked) CViewport::SetRenderizingInventory()
-{
-	static DWORD Back = 0x5E5CCC;
-	static DWORD Function = 0x5D1EF0;
-
-	__asm
-	{
-		MOV Viewport.RenderizingInventory, 1;
-		CALL Function;
-		ADD ESP, 0x18;
-		MOV Viewport.RenderizingInventory, 0;
-		JMP Back;
-	}
-}
-
 
 CViewport Viewport;
