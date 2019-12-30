@@ -12,7 +12,6 @@
 #include "DefaultClassInfo.h"
 #include "DevilSquare.h"
 #include "EffectManager.h"
-#include "ExperienceTable.h"
 #include "Filter.h"
 #include "GameMaster.h"
 #include "Gate.h"
@@ -46,7 +45,6 @@
 #include "Quest.h"
 #include "QuestObjective.h"
 #include "QuestReward.h"
-#include "ResetTable.h"
 #include "SetItemOption.h"
 #include "SetItemType.h"
 #include "ShopManager.h"
@@ -141,21 +139,10 @@ void CServerInfo::ReadEventInfo() // OK
 	this->ReadEventInfo("GameServerInfo", ".\\Data\\GameServerInfo - Event.dat");
 
 	gBloodCastle.Load(gPath.GetFullPath("Event\\BloodCastle.dat"));
-
 	gBonusManager.Load(gPath.GetFullPath("Event\\BonusManager.dat"));
-
 	gCastleDeep.Load(gPath.GetFullPath("Event\\CastleDeepEvent.dat"));
-
 	gChaosCastle.Load(gPath.GetFullPath("Event\\ChaosCastle.dat"));
-
-#if(GAMESERVER_TYPE==1)
-
-	gCrywolf.Load(gPath.GetFullPath("Event\\Crywolf.dat"));
-
-#endif
-
 	gDevilSquare.Load(gPath.GetFullPath("Event\\DevilSquare.dat"));
-
 	gInvasionManager.Load(gPath.GetFullPath("Event\\InvasionManager.dat"));
 
 #if(GAMESERVER_TYPE==1)
@@ -292,7 +279,6 @@ void CServerInfo::ReadSkillInfo() // OK
 	this->ReadSkillInfo("GameServerInfo", ".\\Data\\GameServerInfo - Skill.dat");
 
 	gSkillHitBox.Load(gPath.GetFullPath("Skill\\SkillElect.hit"));
-
 	gSkillManager.Load(gPath.GetFullPath("Skill\\Skill.txt"));
 
 	LogAdd(LOG_BLUE, "[ServerInfo] Skill loaded successfully");
@@ -300,11 +286,8 @@ void CServerInfo::ReadSkillInfo() // OK
 
 void CServerInfo::ReadUtilInfo() // OK
 {
-	gExperienceTable.Load(gPath.GetFullPath("Util\\ExperienceTable.txt"));
 	gFilter.Load(gPath.GetFullPath("Util\\Filter.txt"));
 	gGameMaster.Load(gPath.GetFullPath("Util\\GameMaster.txt"));
-	gNotice.Load(gPath.GetFullPath("Util\\Notice.txt"));
-	gResetTable.Load(gPath.GetFullPath("Util\\ResetTable.txt"));
 
 	LogAdd(LOG_BLUE, "[ServerInfo] Util loaded successfully");
 }

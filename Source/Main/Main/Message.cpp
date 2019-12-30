@@ -1,7 +1,7 @@
 #include "Library.h"
 #include "Message.h"
 
-CMessage::CMessage() : Language(0), Text{0}
+CMessage::CMessage() : Text{0}
 {
 }
 
@@ -11,8 +11,6 @@ CMessage::~CMessage()
 
 void CMessage::Load()
 {
-	this->Language = Registry::Read<BYTE>("Language");
-
 	//
 	// Ganchos
 	//
@@ -25,26 +23,22 @@ void CMessage::Load()
 
 const char* CMessage::Get(int Index) const
 {
-	switch (this->Language)
+    switch (Index)
 	{
 		case 0:
-		{
-			switch (Index)
-			{
-				case 0:
-					return "Combinação: Anéis de Prisma";
-				case 1:
-					return "Auto-click ativado.";
-				case 2:
-					return "Auto-click desativado.";
-			}
-
-			break;
-		}
-		default:
-		{
-			break;
-		}
+			return "Combinação: Anéis de Prisma";
+		case 1:
+			return "Auto-click ativado.";
+		case 2:
+			return "Auto-click desativado.";
+        case 3:
+            return "Cor:";
+        case 4:
+            return "Cores:";
+        case 5:
+            return "Usado no Anel de Prisma para aumentar um canal de cor.";
+        case 6:
+            return "Usado no Anel de Prisma para diminuir um canal de cor.";
 	}
 
 	return "";

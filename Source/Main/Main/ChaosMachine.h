@@ -9,7 +9,7 @@ public:
 public:
 	void Load();
 	void Clear();
-	void Add(WORD Index);
+	void Add(struct ItemInfo* Item);
 	void Check();
 
 public:

@@ -165,6 +165,10 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 				{
 					return ::Protocol.ItemModify(Index, (PMSG_ITEM_MODIFY_RECV*)(Data));
 				}
+				case 0xFB:
+				{
+					return ::Protocol.PostMessage((PMSG_POST_MESSAGE_RECV*)(Data));
+				}
 				case 0xFC:
 				{
 					return ::Protocol.CustomSettings((PMSG_CUSTOM_SETTINGS_RECV*)(Data));
@@ -534,6 +538,8 @@ int CProtocol::ShopItemList(int Index, LPBYTE Data)
 
 int CProtocol::ItemBuy(int Index, PMSG_ITEM_BUY_RECV* Data)
 {
+	Player.SetInventory(Data->result, &Data->ItemInfo[6]);
+
 	PMSG_ITEM_BUY_RECV2 pMsg;
 	pMsg.header.set(0x32, sizeof(pMsg));
 	pMsg.result = Data->result;
@@ -1124,6 +1130,12 @@ int CProtocol::ItemModify(int Index, PMSG_ITEM_MODIFY_RECV* Data)
 	Player.SetInventory(Data->slot, &Data->ItemInfo[6]);
 
 	return pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
+}
+
+int CProtocol::PostMessage(PMSG_POST_MESSAGE_RECV* Data)
+{
+	pShowMessage("", Data->message, 97);
+	return 1;
 }
 
 int CProtocol::CustomSettings(PMSG_CUSTOM_SETTINGS_RECV* Data)

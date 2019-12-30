@@ -180,9 +180,6 @@ void CALLBACK QueueTimerCallback(PVOID lpParameter,BOOLEAN TimerOrWaitFired) // 
 		case QUEUE_TIMER_CLOSE:
 			gObjCloseProc();
 			break;
-		case QUEUE_TIMER_MATH_AUTHENTICATOR:
-			gObjMathAuthenticatorProc();
-			break;
 		case QUEUE_TIMER_ACCOUNT_LEVEL:
 			gObjAccountLevelProc();
 			break;

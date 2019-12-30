@@ -22,7 +22,6 @@ public:
 	static void SetColor4();
 
 private:
-	BYTE Language;
 	char Text[256];
 };
 

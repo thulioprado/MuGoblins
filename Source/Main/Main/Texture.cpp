@@ -1,6 +1,7 @@
 #include "Library.h"
 #include "Texture.h"
 #include "Item.h"
+#include "Sign.h"
 
 TextureImage CTexture::Textures[TEXTURE_MAX];
 
@@ -146,6 +147,7 @@ void CTexture::LoadTextures()
 	pLoadTextures();
 
 	Item.LoadTextures();
+	Sign.LoadTextures();
 }
 
 CTexture Texture;

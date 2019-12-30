@@ -1033,32 +1033,24 @@ void CViewport::GCViewportChangeSend(int aIndex) // OK
 		{
 			switch (lpTarget->CsJoinSide)
 			{
-				case 0:
+				case 1:
 				{
 					lpTarget->ViewSkillState |= 0x40000;
 					break;
 				}
-				case 1:
+				case 2:
 				{
-					switch (lpTarget->m_btCsJoinSide)
-					{
-						case 2:
-						{
-							lpTarget->ViewSkillState |= 0x80000;
-							break;
-						}
-						case 3:
-						{
-							lpTarget->ViewSkillState |= 0x400000;
-							break;
-						}
-						case 4:
-						{
-							lpTarget->ViewSkillState |= 0x800000;
-							break;
-						}
-					}
-
+					lpTarget->ViewSkillState |= 0x80000;
+					break;
+				}
+				case 3:
+				{
+					lpTarget->ViewSkillState |= 0x400000;
+					break;
+				}
+				case 4:
+				{
+					lpTarget->ViewSkillState |= 0x800000;
 					break;
 				}
 				default:
@@ -1622,32 +1614,24 @@ void CViewport::GCViewportSimpleChangeSend(LPOBJ lpObj) // OK
 	{
 		switch (lpObj->CsJoinSide)
 		{
-			case 0:
+			case 1:
 			{
 				lpObj->ViewSkillState |= 0x40000;
 				break;
 			}
-			case 1:
+			case 2:
 			{
-				switch (lpObjObj->m_btCsJoinSide)
-				{
-					case 2:
-					{
-						lpObj->ViewSkillState |= 0x80000;
-						break;
-					}
-					case 3:
-					{
-						lpObj->ViewSkillState |= 0x400000;
-						break;
-					}
-					case 4:
-					{
-						lpObj->ViewSkillState |= 0x800000;
-						break;
-					}
-				}
-
+				lpObj->ViewSkillState |= 0x80000;
+				break;
+			}
+			case 3:
+			{
+				lpObj->ViewSkillState |= 0x400000;
+				break;
+			}
+			case 4:
+			{
+				lpObj->ViewSkillState |= 0x800000;
 				break;
 			}
 			default:

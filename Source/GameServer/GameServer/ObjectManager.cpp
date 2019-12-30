@@ -20,7 +20,6 @@
 #include "Duel.h"
 #include "EffectManager.h"
 #include "ESProtocol.h"
-#include "ExperienceTable.h"
 #include "GameMaster.h"
 #include "Gate.h"
 #include "Guild.h"
@@ -220,16 +219,7 @@ void CObjectManager::ObjectSetStateProc() // OK
 				gObjDel(lpObj->Index);
 				continue;
 			}
-
-		#if(GAMESERVER_TYPE==1)
-
-			if (lpObj->Map == MAP_CRYWOLF && gCrywolf.GetCrywolfState() == CRYWOLF_STATE_READY)
-			{
-				continue;
-			}
-
-		#endif
-
+			
 			if (lpObj->Attribute == 60 || lpObj->Attribute == 61)
 			{
 				gObjDel(lpObj->Index);
@@ -880,17 +870,6 @@ bool CObjectManager::CharacterGetRespawnLocation(LPOBJ lpObj) // OK
 	{
 		result = gGate.GetGate(119, &gate, &map, &x, &y, &dir, &level);
 	}
-	else if (lpObj->Map == MAP_CRYWOLF)
-	{
-	#if(GAMESERVER_TYPE==1)
-
-		if (gCrywolf.GetCrywolfState() == CRYWOLF_STATE_START)
-		{
-			result = gGate.GetGate(118, &gate, &map, &x, &y, &dir, &level);
-		}
-
-	#endif
-	}
 	else if (lpObj->Map == MAP_RESERVED2)
 	{
 		result = gGate.GetGate(401, &gate, &map, &x, &y, &dir, &level);
@@ -968,7 +947,6 @@ void CObjectManager::CharacterCalcExperienceAlone(LPOBJ lpObj, LPOBJ lpMonster, 
 	experience = (experience * (lpObj->ExperienceRate + lpObj->EffectOption.AddExperienceRate)) / 100;
 	experience = (experience * gMapManager.GetMapExperienceRate(lpObj->Map)) / 100;
 	experience = (experience * gBonusManager.GetBonusValue(lpObj, BONUS_INDEX_EXPERIENCE_RATE, 100, -1, -1, lpMonster->Class, lpMonster->Level)) / 100;
-	experience = (experience * gExperienceTable.GetExperienceRate(lpObj)) / 100;
 	
 	lpMonster->Money = (DWORD)(experience);
 
@@ -1081,8 +1059,7 @@ void CObjectManager::CharacterCalcExperienceParty(LPOBJ lpObj, LPOBJ lpMonster, 
 		experience = (experience * (lpTarget->ExperienceRate + lpTarget->EffectOption.AddExperienceRate + (lpTarget->EffectOption.AddPartyBonusExperienceRate * (PartyCount - 1)))) / 100;
 		experience = (experience * gMapManager.GetMapExperienceRate(lpTarget->Map)) / 100;
 		experience = (experience * gBonusManager.GetBonusValue(lpTarget, BONUS_INDEX_EXPERIENCE_RATE, 100, -1, -1, lpMonster->Class, lpMonster->Level)) / 100;
-		experience = (experience * gExperienceTable.GetExperienceRate(lpTarget)) / 100;
-		
+	
 		lpMonster->Money += (DWORD)(experience) / PartyCount;
 
 		this->CharacterPetLevelUp(lpTarget, (DWORD)experience);
@@ -3300,15 +3277,6 @@ void CObjectManager::CharacterLifeCheck(LPOBJ lpObj, LPOBJ lpTarget, int damage,
 			{
 				gCastleDeep.MonsterDieProc(lpTarget, &gObj[SummonIndex]);
 			}
-
-		#if(GAMESERVER_TYPE==1)
-
-			if (lpTarget->Map == MAP_CRYWOLF)
-			{
-				gCrywolf.CrywolfMonsterDieProc(lpTarget, &gObj[SummonIndex]);
-			}
-
-		#endif
 
 			if (gObj[SummonIndex].Type == OBJECT_USER)
 			{

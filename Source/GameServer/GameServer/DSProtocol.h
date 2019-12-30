@@ -175,15 +175,6 @@ struct SDHP_CHARACTER_NAME_CHANGE_RECV
 	BYTE result;
 };
 
-struct SDHP_GLOBAL_POST_RECV
-{
-	PBMSG_HEAD header; // C1:20
-	WORD MapServerGroup;
-	BYTE type;
-	char name[11];
-	char message[60];
-};
-
 struct SDHP_GLOBAL_NOTICE_RECV
 {
 	PBMSG_HEAD header; // C1:21
@@ -338,15 +329,6 @@ struct SDHP_CRYWOLF_INFO_SEND
 {
 	PBMSG_HEAD header; // C1:1F
 	WORD MapServerGroup;
-};
-
-struct SDHP_GLOBAL_POST_SEND
-{
-	PBMSG_HEAD header; // C1:20
-	WORD MapServerGroup;
-	BYTE type;
-	char name[11];
-	char message[60];
 };
 
 struct SDHP_GLOBAL_NOTICE_SEND
@@ -603,7 +585,6 @@ void DGCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg);
 void DGCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg);
 void DGCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg);
 void DGPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg);
-void DGGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg);
 void DGGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg);
 void DGGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg);
 void DGGlobalWhisperEchoRecv(SDHP_GLOBAL_WHISPER_ECHO_RECV* lpMsg);
@@ -616,7 +597,6 @@ void GDCreateItemSend(int aIndex, BYTE map, BYTE x, BYTE y, int index, BYTE leve
 void GDPetItemInfoSend(int aIndex, int type);
 void GDCrywolfSyncSend(int MapServerGroup, int CrywolfState, int OccupationState);
 void GDCrywolfInfoSend(int MapServerGroup);
-void GDGlobalPostSend(int MapServerGroup, BYTE type, char* name, char* message);
 void GDGlobalNoticeSend(int MapServerGroup, BYTE type, BYTE count, BYTE opacity, WORD delay, DWORD color, BYTE speed, char* message);
 void GDCharacterInfoSaveSend(int aIndex);
 void GDInventoryItemSaveSend(int aIndex);

@@ -752,6 +752,23 @@ bool CItemManager::CheckItemMoveToChaos(LPOBJ lpObj, CItem* lpItem, BYTE TargetF
 		return 0;
 	}
 
+	if (lpItem->m_Index == GET_ITEM(13, 39) || lpItem->m_Index == GET_ITEM(13, 40)) // Aneis de prisma
+	{
+		BYTE Red[] = {GET_NIBBLE_X(lpItem->m_Prism[0]), GET_NIBBLE_Y(lpItem->m_Prism[0])};
+		BYTE Green[] = {GET_NIBBLE_X(lpItem->m_Prism[1]), GET_NIBBLE_Y(lpItem->m_Prism[1])};
+		BYTE Blue[] = {GET_NIBBLE_X(lpItem->m_Prism[2]), GET_NIBBLE_Y(lpItem->m_Prism[2])};
+
+		if (Red[0] == 0 && Green[0] == 0 && Blue[0] == 0)
+		{
+			return 0;
+		}
+
+		if (Red[1] != 0 || Green[1] != 0 || Blue[1] != 0)
+		{
+			return 0;
+		}
+	}
+
 	return 1;
 }
 

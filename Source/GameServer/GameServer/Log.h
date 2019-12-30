@@ -14,8 +14,8 @@ enum eLogType
 	LOG_TRADE = 3,
 	LOG_CONNECT = 4,
 	LOG_HACK = 5,
-	LOG_CASH_SHOP = 6,
-	LOG_CHAOS_MIX = 7,
+	LOG_CHAOS_MIX = 6,
+	LOG_SCRIPT = 7
 };
 
 struct LOG_INFO
@@ -34,8 +34,8 @@ class CLog
 public:
 	CLog();
 	virtual ~CLog();
-	void AddLog(BOOL active,char* directory);
-	void Output(eLogType type,char* text,...);
+	void AddLog(BOOL active, char* directory);
+	void Output(eLogType type, const char* text, ...);
 private:
 	LOG_INFO m_LogInfo[MAX_LOG];
 	int m_count;

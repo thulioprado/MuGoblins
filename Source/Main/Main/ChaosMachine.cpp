@@ -1,6 +1,7 @@
 #include "Library.h"
 #include "ChaosMachine.h"
 #include "Message.h"
+#include "Item.h"
 
 CChaosMachine::CChaosMachine() : Items(), Total(0), Title(""), Index(0xFF), Money(0), Rate(0), X(0), Y(0)
 {
@@ -37,9 +38,9 @@ void CChaosMachine::Clear()
     this->Items[GET_ITEM(13, 40)] = 0;  // Prism Ring
 }
 
-void CChaosMachine::Add(WORD Index)
+void CChaosMachine::Add(ItemInfo* Item)
 {
-    ++this->Items.at(Index);
+    ++this->Items.at(Item->Index);
     ++this->Total;
 }
 
@@ -87,16 +88,16 @@ void __declspec(naked) CChaosMachine::ClearItems()
 void __declspec(naked) CChaosMachine::CountItems()
 {
     static DWORD Back = 0x5EBB6F;
-    static WORD Index;
+    static ItemInfo* Item;
 
     __asm
     {
         AND EDI, 0xF;
-        MOV Index, AX;
+        MOV Item, ESI;
         PUSHAD;
     }
 
-    ChaosMachine.Add(Index);
+    ChaosMachine.Add(Item);
 
     __asm
     {

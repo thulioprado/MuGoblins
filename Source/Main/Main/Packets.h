@@ -689,6 +689,12 @@ struct PMSG_ITEM_MODIFY_RECV2
 	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
 };
 
+struct PMSG_POST_MESSAGE_RECV
+{
+	PSBMSG_HEAD header;
+	char message[80];
+};
+
 struct PMSG_CUSTOM_SETTINGS_RECV
 {
 	PSWMSG_HEAD header;

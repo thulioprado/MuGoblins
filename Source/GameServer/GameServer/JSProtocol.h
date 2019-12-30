@@ -84,6 +84,12 @@ struct SDHP_ACCOUNT_ALREADY_CONNECTED_RECV
 	char account[11];
 };
 
+struct SDHP_POST_MESSAGE_RECV
+{
+	PBMSG_HEAD header;
+	char message[80];
+};
+
 //**********************************************//
 //********** GameServer -> JoinServer **********//
 //**********************************************//
@@ -176,11 +182,17 @@ struct SDHP_JOIN_SERVER_TOTAL_RECV
 	int total;
 };
 
+struct SDHP_POST_MESSAGE_SEND
+{
+	PBMSG_HEAD header;
+	char message[80];
+};
+
 //**********************************************//
 //**********************************************//
 //**********************************************//
 
-void JoinServerProtocolCore(BYTE head,BYTE* lpMsg,int size);
+void JoinServerProtocolCore(BYTE head, BYTE* lpMsg, int size);
 void JGServerInfoRecv(SDHP_JOIN_SERVER_INFO_RECV* lpMsg);
 void JGConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg);
 void JGDisconnectAccountRecv(SDHP_DISCONNECT_ACCOUNT_RECV* lpMsg);
@@ -188,27 +200,15 @@ void JGMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg);
 void JGMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg);
 void JGAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg);
 void JGAccountAlreadyConnectedRecv(SDHP_ACCOUNT_ALREADY_CONNECTED_RECV* lpMsg);
+void JGTotalUpdateRecv(SDHP_JOIN_SERVER_TOTAL_RECV* lpMsg);
+void JGPostMessageRecv(SDHP_POST_MESSAGE_RECV* lpMsg);
 void GJServerInfoSend();
-void GJConnectAccountSend(int aIndex,char* account,char* password,char* IpAddress);
-void GJDisconnectAccountSend(int aIndex,char* account,char* IpAddress);
-void GJMapServerMoveSend(int aIndex,WORD NextServerCode,WORD map,BYTE x,BYTE y);
-void GJMapServerMoveAuthSend(int aIndex,char* account,char* name,DWORD AuthCode1,DWORD AuthCode2,DWORD AuthCode3,DWORD AuthCode4);
+void GJConnectAccountSend(int aIndex, char* account, char* password, char* IpAddress);
+void GJDisconnectAccountSend(int aIndex, char* account, char* IpAddress);
+void GJMapServerMoveSend(int aIndex, WORD NextServerCode, WORD map, BYTE x, BYTE y);
+void GJMapServerMoveAuthSend(int aIndex, char* account, char* name, DWORD AuthCode1, DWORD AuthCode2, DWORD AuthCode3, DWORD AuthCode4);
 void GJAccountLevelSend(int aIndex);
 void GJMapServerMoveCancelSend(int aIndex);
-void GJAccountLevelSaveSend(int aIndex,int AccountLevel,int AccountExpireTime);
+void GJAccountLevelSaveSend(int aIndex, int AccountLevel, int AccountExpireTime);
 void GJServerUserInfoSend();
-
-struct PMSG_CUSTOM_SETTINGS_SEND
-{
-	PSWMSG_HEAD header; // C1:F3:FC
-	WORD TransformationRings[8][16];
-};
-
-struct PMSG_DISCORD_UPDATE_SEND
-{
-	PSBMSG_HEAD header; // C1:F3:FF
-	int total;
-};
-
-void GCCustomSettings(int aIndex);
-void JGTotalUpdate(SDHP_JOIN_SERVER_TOTAL_RECV* lpMsg);
+void GJPostMessageSend(const char* message);

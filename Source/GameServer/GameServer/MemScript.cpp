@@ -30,7 +30,7 @@ CMemScript::~CMemScript() // OK
 	this->m_size = 0;
 }
 
-bool CMemScript::SetBuffer(char* path) // OK
+bool CMemScript::SetBuffer(const char* path) // OK
 {
 	strcpy_s(this->m_path,path);
 

@@ -14,7 +14,7 @@ CMessage gMessage;
 
 CMessage::CMessage() // OK
 {
-	memset(this->m_DefaultMessage,0,sizeof(this->m_DefaultMessage));
+	memset(this->m_DefaultMessage, 0, sizeof(this->m_DefaultMessage));
 
 	this->m_MessageInfo.clear();
 }
@@ -28,13 +28,13 @@ void CMessage::Load(char* path) // OK
 {
 	CMemScript* lpMemScript = new CMemScript;
 
-	if(lpMemScript == 0)
+	if (lpMemScript == 0)
 	{
-		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR,path);
+		ErrorMessageBox(MEM_SCRIPT_ALLOC_ERROR, path);
 		return;
 	}
 
-	if(lpMemScript->SetBuffer(path) == 0)
+	if (lpMemScript->SetBuffer(path) == 0)
 	{
 		ErrorMessageBox(lpMemScript->GetLastError());
 		delete lpMemScript;
@@ -45,14 +45,14 @@ void CMessage::Load(char* path) // OK
 
 	try
 	{
-		while(true)
+		while (true)
 		{
-			if(lpMemScript->GetToken() == TOKEN_END)
+			if (lpMemScript->GetToken() == TOKEN_END)
 			{
 				break;
 			}
 
-			if(strcmp("end",lpMemScript->GetString()) == 0)
+			if (strcmp("end", lpMemScript->GetString()) == 0)
 			{
 				break;
 			}
@@ -61,12 +61,12 @@ void CMessage::Load(char* path) // OK
 
 			info.Index = lpMemScript->GetNumber();
 
-			strcpy_s(info.Message,lpMemScript->GetAsString());
+			strcpy_s(info.Message, lpMemScript->GetAsString());
 
 			this->m_MessageInfo[info.Index] = info;
 		}
 	}
-	catch(...)
+	catch (...)
 	{
 		ErrorMessageBox(lpMemScript->GetLastError());
 	}
@@ -78,9 +78,9 @@ char* CMessage::GetMessage(int index) // OK
 {
 	auto it = this->m_MessageInfo.find(index);
 
-	if(it == this->m_MessageInfo.end())
+	if (it == this->m_MessageInfo.end())
 	{
-		wsprintf(this->m_DefaultMessage,"Could not find message %d!",index);
+		wsprintf(this->m_DefaultMessage, "Could not find message %d!", index);
 		return this->m_DefaultMessage;
 	}
 	else

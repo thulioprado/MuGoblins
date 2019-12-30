@@ -69,7 +69,7 @@ void JoinServerTotalProc() // OK
 {
 	SDHP_JOIN_SERVER_TOTAL_SEND pMsg;
 
-	pMsg.header.set(0xFF, sizeof(pMsg));
+	pMsg.header.set(0x31, sizeof(pMsg));
 	pMsg.total = gAccountManager.GetAccountCount();
 
 	for (int i = 0; i < MAX_SERVER; ++i)

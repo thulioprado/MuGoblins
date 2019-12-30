@@ -73,6 +73,7 @@ public:
 	static void ConfirmToSell();
 	static void RenderizingInventory();
 	static void RenderizingShop();
+	static int TestEffect(int Unk1, DWORD Unk2, DWORD Unk3, float* Color, DWORD Unk4, float Unk5, DWORD Unk6);
 	
 public:
 	WORD TransformationRings[8][16];

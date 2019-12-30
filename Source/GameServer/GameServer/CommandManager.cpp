@@ -6,6 +6,7 @@
 #include "CommandManager.h"
 #include "BonusManager.h"
 #include "DSProtocol.h"
+#include "JSProtocol.h"
 #include "GameMain.h"
 #include "GameMaster.h"
 #include "Guild.h"
@@ -19,7 +20,6 @@
 #include "Protocol.h"
 #include "Quest.h"
 #include "QuestReward.h"
-#include "ResetTable.h"
 #include "ServerInfo.h"
 #include "Util.h"
 
@@ -28,7 +28,7 @@ CCommandManager gCommandManager;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CCommandManager::CCommandManager() // OK
+CCommandManager::CCommandManager() : m_CommandLabels() // OK
 {
 
 }
@@ -40,74 +40,38 @@ CCommandManager::~CCommandManager() // OK
 
 void CCommandManager::Init() // OK
 {
-	for (int n = 0; n < MAX_COMMAND; n++)
-	{
-		this->m_CommandInfo[n].code = -1;
-	}
-
-	this->Add(gMessage.GetMessage(32), COMMAND_MOVE);
-	this->Add(gMessage.GetMessage(33), COMMAND_POST);
-	this->Add(gMessage.GetMessage(34), COMMAND_ADD_POINT1);
-	this->Add(gMessage.GetMessage(35), COMMAND_ADD_POINT2);
-	this->Add(gMessage.GetMessage(36), COMMAND_ADD_POINT3);
-	this->Add(gMessage.GetMessage(37), COMMAND_ADD_POINT4);
-	this->Add(gMessage.GetMessage(38), COMMAND_ADD_POINT5);
-	this->Add(gMessage.GetMessage(39), COMMAND_PK_CLEAR);
-	this->Add(gMessage.GetMessage(40), COMMAND_MONEY);
-	this->Add(gMessage.GetMessage(41), COMMAND_CHANGE);
-	this->Add(gMessage.GetMessage(42), COMMAND_WARE);
-	this->Add(gMessage.GetMessage(43), COMMAND_RESET);
-	this->Add(gMessage.GetMessage(44), COMMAND_GM_MOVE);
-	this->Add(gMessage.GetMessage(45), COMMAND_GM_POST);
-	this->Add(gMessage.GetMessage(46), COMMAND_TRACK);
-	this->Add(gMessage.GetMessage(47), COMMAND_TRACE);
-	this->Add(gMessage.GetMessage(48), COMMAND_DISCONNECT);
-	this->Add(gMessage.GetMessage(49), COMMAND_FIREWORKS);
-	this->Add(gMessage.GetMessage(50), COMMAND_MAKE);
-	this->Add(gMessage.GetMessage(51), COMMAND_SKIN);
-	this->Add(gMessage.GetMessage(52), COMMAND_SET_MONEY);
-	this->Add(gMessage.GetMessage(53), COMMAND_NOTICE);
-	this->Add(gMessage.GetMessage(54), COMMAND_MASTER_RESET);
-	this->Add(gMessage.GetMessage(55), COMMAND_GUILD_WAR);
-	this->Add(gMessage.GetMessage(56), COMMAND_BATTLE_SOCCER);
-	this->Add(gMessage.GetMessage(57), COMMAND_REQUEST);
-	this->Add(gMessage.GetMessage(58), COMMAND_HIDE);
+	this->Add(COMMAND_MOVE, gMessage.GetMessage(32));
+	this->Add(COMMAND_POST, gMessage.GetMessage(33));
+	this->Add(COMMAND_ADD_POINT1, gMessage.GetMessage(34));
+	this->Add(COMMAND_ADD_POINT2, gMessage.GetMessage(35));
+	this->Add(COMMAND_ADD_POINT3, gMessage.GetMessage(36));
+	this->Add(COMMAND_ADD_POINT4, gMessage.GetMessage(37));
+	this->Add(COMMAND_ADD_POINT5, gMessage.GetMessage(38));
+	this->Add(COMMAND_PK_CLEAR, gMessage.GetMessage(39));
+	this->Add(COMMAND_MONEY, gMessage.GetMessage(40));
+	this->Add(COMMAND_CHANGE, gMessage.GetMessage(41));
+	this->Add(COMMAND_WARE, gMessage.GetMessage(42));
+	this->Add(COMMAND_RESET, gMessage.GetMessage(43));
+	this->Add(COMMAND_GM_MOVE, gMessage.GetMessage(44));
+	this->Add(COMMAND_GM_POST, gMessage.GetMessage(45));
+	this->Add(COMMAND_TRACK, gMessage.GetMessage(46));
+	this->Add(COMMAND_TRACE, gMessage.GetMessage(47));
+	this->Add(COMMAND_DISCONNECT, gMessage.GetMessage(48));
+	this->Add(COMMAND_FIREWORKS, gMessage.GetMessage(49));
+	this->Add(COMMAND_MAKE, gMessage.GetMessage(50));
+	this->Add(COMMAND_SKIN, gMessage.GetMessage(51));
+	this->Add(COMMAND_SET_MONEY, gMessage.GetMessage(52));
+	this->Add(COMMAND_NOTICE, gMessage.GetMessage(53));
+	this->Add(COMMAND_MASTER_RESET, gMessage.GetMessage(54));
+	this->Add(COMMAND_GUILD_WAR, gMessage.GetMessage(55));
+	this->Add(COMMAND_BATTLE_SOCCER, gMessage.GetMessage(56));
+	this->Add(COMMAND_REQUEST, gMessage.GetMessage(57));
+	this->Add(COMMAND_HIDE, gMessage.GetMessage(58));
 }
 
-void CCommandManager::MainProc() // OK
+void CCommandManager::Add(BYTE code, char* label) // OK
 {
-	for (int n = OBJECT_START_USER; n < MAX_OBJECT; n++)
-	{
-		if (gObjIsConnectedGP(n) == 0)
-		{
-			continue;
-		}
-
-		if (gObj[n].AutoAddPointCount > 0)
-		{
-			this->CommandAddPointAutoProc(&gObj[n]);
-		}
-
-		if (gObj[n].AutoResetEnable != 0)
-		{
-			this->CommandResetAutoProc(&gObj[n]);
-		}
-	}
-}
-
-void CCommandManager::Add(char* label, int code) // OK
-{
-	for (int n = 0; n < MAX_COMMAND; n++)
-	{
-		if (this->m_CommandInfo[n].code != -1)
-		{
-			continue;
-		}
-
-		this->m_CommandInfo[n].code = code;
-		strcpy_s(this->m_CommandInfo[n].label, label);
-		break;
-	}
+	this->m_CommandLabels[code].push_back(label);
 }
 
 long CCommandManager::GetNumber(char* arg, int pos) // OK
@@ -164,20 +128,18 @@ void CCommandManager::GetString(char* arg, char* out, int size, int pos) // OK
 
 long CCommandManager::GetCommandCode(char* label) // OK
 {
-	for (int n = 0; n < MAX_COMMAND; n++)
+	for (const auto& labels : this->m_CommandLabels)
 	{
-		if (this->m_CommandInfo[n].code == -1)
+		for (const auto& command : labels.second)
 		{
-			continue;
-		}
-
-		if (_stricmp(label, this->m_CommandInfo[n].label) == 0)
-		{
-			return this->m_CommandInfo[n].code;
+			if (_stricmp(command.c_str(), label) == 0)
+			{
+				return labels.first;
+			}
 		}
 	}
 
-	return 0;
+	return -1;
 }
 
 bool CCommandManager::ManagementCore(LPOBJ lpObj, char* message) // OK
@@ -300,26 +262,9 @@ void CCommandManager::CommandMove(LPOBJ lpObj, char* arg) // OK
 
 void CCommandManager::CommandPost(LPOBJ lpObj, char* arg) // OK
 {
-	if (gServerInfo.m_CommandPostSwitch == 0)
-	{
-		return;
-	}
-
-	if (gServerInfo.m_CommandPostEnable[lpObj->AccountLevel] == 0)
-	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage(64));
-		return;
-	}
-
 	if (lpObj->Level < gServerInfo.m_CommandPostLevel[lpObj->AccountLevel])
 	{
 		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage(65), gServerInfo.m_CommandPostLevel[lpObj->AccountLevel]);
-		return;
-	}
-
-	if (lpObj->Reset < gServerInfo.m_CommandPostReset[lpObj->AccountLevel])
-	{
-		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage(66), gServerInfo.m_CommandPostReset[lpObj->AccountLevel]);
 		return;
 	}
 
@@ -338,43 +283,13 @@ void CCommandManager::CommandPost(LPOBJ lpObj, char* arg) // OK
 	}
 
 	lpObj->PostTime = GetTickCount();
-
 	lpObj->Money -= gServerInfo.m_CommandPostMoney[lpObj->AccountLevel];
 
-	GCMoneySend(lpObj->Index, lpObj->Money);
+	char text[80];
+	wsprintf(text, "%s: %s", lpObj->Name, arg);
+	GJPostMessageSend(text);
 
-	if (gServerInfo.m_CommandPostType == 0)
-	{
-		PostMessage1(lpObj->Name, gMessage.GetMessage(69), arg);
-	}
-	else if (gServerInfo.m_CommandPostType == 1)
-	{
-		PostMessage2(lpObj->Name, gMessage.GetMessage(69), arg);
-	}
-	else if (gServerInfo.m_CommandPostType == 2)
-	{
-		PostMessage3(lpObj->Name, gMessage.GetMessage(69), arg);
-	}
-	else if (gServerInfo.m_CommandPostType == 3)
-	{
-		PostMessage4(lpObj->Name, gMessage.GetMessage(69), arg);
-	}
-	else if (gServerInfo.m_CommandPostType == 4)
-	{
-		GDGlobalPostSend(gMapServerManager.GetMapServerGroup(), 0, lpObj->Name, arg);
-	}
-	else if (gServerInfo.m_CommandPostType == 5)
-	{
-		GDGlobalPostSend(gMapServerManager.GetMapServerGroup(), 1, lpObj->Name, arg);
-	}
-	else if (gServerInfo.m_CommandPostType == 6)
-	{
-		GDGlobalPostSend(gMapServerManager.GetMapServerGroup(), 2, lpObj->Name, arg);
-	}
-	else if (gServerInfo.m_CommandPostType == 7)
-	{
-		GDGlobalPostSend(gMapServerManager.GetMapServerGroup(), 3, lpObj->Name, arg);
-	}
+	GCMoneySend(lpObj->Index, lpObj->Money);
 
 	gLog.Output(LOG_COMMAND, "[CommandPost][%s][%s] - (Message: %s)", lpObj->Account, lpObj->Name, arg);
 }
@@ -684,7 +599,7 @@ void CCommandManager::CommandWare(LPOBJ lpObj, char* arg) // OK
 
 void CCommandManager::CommandReset(LPOBJ lpObj, char* arg) // OK
 {
-	if (gServerInfo.m_CommandResetSwitch == 0)
+	/*if (gServerInfo.m_CommandResetSwitch == 0)
 	{
 		return;
 	}
@@ -756,12 +671,12 @@ void CCommandManager::CommandReset(LPOBJ lpObj, char* arg) // OK
 
 	memcpy(pMsg.name, lpObj->Name, sizeof(pMsg.name));
 
-	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
+	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);*/
 }
 
 void CCommandManager::CommandResetAuto(LPOBJ lpObj, char* arg) // OK
 {
-	if (gServerInfo.m_CommandResetAutoEnable[lpObj->AccountLevel] == 0)
+	/*if (gServerInfo.m_CommandResetAutoEnable[lpObj->AccountLevel] == 0)
 	{
 		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage(89));
 		return;
@@ -798,7 +713,7 @@ void CCommandManager::CommandResetAuto(LPOBJ lpObj, char* arg) // OK
 		lpObj->AutoResetStats[4] = 0;
 
 		gNotice.GCNoticeSend(lpObj->Index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage(117));
-	}
+	}*/
 }
 
 void CCommandManager::CommandGMMove(LPOBJ lpObj, char* arg) // OK
@@ -1321,7 +1236,7 @@ void CCommandManager::CommandAddPointAutoProc(LPOBJ lpObj) // OK
 
 void CCommandManager::CommandResetAutoProc(LPOBJ lpObj) // OK
 {
-	if (lpObj->Interface.use != 0 || lpObj->State == OBJECT_DELCMD || lpObj->DieRegen != 0 || lpObj->Teleport != 0 || lpObj->PShopOpen != 0 || lpObj->SkillSummonPartyTime != 0)
+	/*if (lpObj->Interface.use != 0 || lpObj->State == OBJECT_DELCMD || lpObj->DieRegen != 0 || lpObj->Teleport != 0 || lpObj->PShopOpen != 0 || lpObj->SkillSummonPartyTime != 0)
 	{
 		return;
 	}
@@ -1367,7 +1282,7 @@ void CCommandManager::CommandResetAutoProc(LPOBJ lpObj) // OK
 
 	memcpy(pMsg.name, lpObj->Name, sizeof(pMsg.name));
 
-	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
+	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);*/
 }
 
 void CCommandManager::DGCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg) // OK
@@ -1459,7 +1374,7 @@ void CCommandManager::DGCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg) // OK
 		gObjectManager.CharacterCalcAttribute(lpObj->Index);
 	}
 
-	if (gServerInfo.m_CommandResetType == 1)
+	/*if (gServerInfo.m_CommandResetType == 1)
 	{
 		int point = gResetTable.GetResetPoint(lpObj);
 
@@ -1480,7 +1395,7 @@ void CCommandManager::DGCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg) // OK
 		lpObj->Vitality = gDefaultClassInfo.m_DefaultClassInfo[lpObj->Class].Vitality;
 		lpObj->Energy = gDefaultClassInfo.m_DefaultClassInfo[lpObj->Class].Energy;
 		lpObj->Leadership = gDefaultClassInfo.m_DefaultClassInfo[lpObj->Class].Leadership;
-	}
+	}*/
 
 	if (gServerInfo.m_CommandMasterResetSwitch != 0 && gServerInfo.m_CommandMasterResetType == 1)
 	{
@@ -1652,14 +1567,14 @@ void CCommandManager::DGCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* l
 		lpObj->Leadership = gDefaultClassInfo.m_DefaultClassInfo[lpObj->Class].Leadership;
 	}
 
-	if (gServerInfo.m_CommandResetSwitch != 0 && gServerInfo.m_CommandResetType == 1)
+	/*if (gServerInfo.m_CommandResetSwitch != 0 && gServerInfo.m_CommandResetType == 1)
 	{
 		int point = gResetTable.GetResetPoint(lpObj);
 
 		point = (point * gServerInfo.m_CommandResetPointRate[lpObj->Class]) / 100;
 
 		lpObj->LevelUpPoint += point;
-	}
+	}*/
 
 	gObjectManager.CharacterCalcAttribute(lpObj->Index);
 

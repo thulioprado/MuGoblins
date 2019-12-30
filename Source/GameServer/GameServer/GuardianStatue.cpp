@@ -96,7 +96,7 @@ void CGuardianStatue::GuardianStatueAct(int aIndex) // OK
 
 							if( bIsMaxLife != FALSE )
 							{
-								GCLifeSend(tObjNum, 0xFF, (int)gObj[tObjNum].Life, gObj[tObjNum].Shield);
+								GCLifeSend(tObjNum, 0xFF, (int)gObj[tObjNum].Life);
 							}
 
 							if( bIsMaxMana != FALSE || bIsMaxBP != FALSE )

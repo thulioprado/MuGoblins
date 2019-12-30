@@ -1469,4 +1469,25 @@ struct PMSG_LOCK_SEND
 	BYTE lock;
 };
 
+struct PMSG_CUSTOM_SETTINGS_SEND
+{
+	PSWMSG_HEAD header; // C1:F3:FC
+	WORD TransformationRings[8][16];
+};
+
+struct PMSG_DISCORD_UPDATE_SEND
+{
+	PSBMSG_HEAD header; // C1:F3:FF
+	int total;
+};
+
+struct PMSG_POST_MESSAGE_SEND
+{
+	PSBMSG_HEAD header;
+	char message[80];
+};
+
 void GCLockSend(int aIndex, BYTE lock);
+void GCCustomSettings(int aIndex);
+void GCDiscordUpdate(int total);
+void GCPostMessageSend(const char* message);

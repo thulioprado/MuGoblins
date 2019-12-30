@@ -43,20 +43,13 @@ void CServerDisplayer::Init(HWND hWnd) // OK
 	this->m_hwnd = hWnd;
 
 	gLog.AddLog(1,"LOG");
-
 	gLog.AddLog(gServerInfo.m_WriteChatLog,"CHAT_LOG");
-
 	gLog.AddLog(gServerInfo.m_WriteCommandLog,"COMMAND_LOG");
-
 	gLog.AddLog(gServerInfo.m_WriteTradeLog,"TRADE_LOG");
-
 	gLog.AddLog(gServerInfo.m_WriteConnectLog,"CONNECT_LOG");
-
 	gLog.AddLog(gServerInfo.m_WriteHackLog,"HACK_LOG");
-
-	gLog.AddLog(gServerInfo.m_WriteCashShopLog,"CASH_SHOP_LOG");
-
 	gLog.AddLog(gServerInfo.m_WriteChaosMixLog,"CHAOS_MIX_LOG");
+	gLog.AddLog(gServerInfo.m_WriteCashShopLog, "SCRIPT_LOG");
 }
 
 void CServerDisplayer::Run() // OK

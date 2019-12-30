@@ -305,7 +305,7 @@ void CLifeStone::LifeStoneAct(int aIndex) // OK
 
 								if(iRecoverLife != FALSE)
 								{
-									GCLifeSend(tObjNum,0xFF,(int)gObj[tObjNum].Life,gObj[tObjNum].Shield);
+									GCLifeSend(tObjNum,0xFF,(int)gObj[tObjNum].Life);
 								}
 
 								if( (iRecoverMana != FALSE) || (iRecoverBP != FALSE) )

@@ -102,6 +102,7 @@ struct ViewportCustom
 {
 	PrismEffect PrismWeapon[2];
 	PrismEffect PrismArmor[2];
+	BYTE Sign;
 };
 
 class CViewport

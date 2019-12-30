@@ -313,7 +313,6 @@ void CItemOption::InsertOption(LPOBJ lpObj,CItem* lpItem,bool flag) // OK
 				break;
 			case ITEM_OPTION_ADD_EXPERIENCE_RATE:
 				lpObj->ExperienceRate += value;
-				lpObj->MasterExperienceRate += value;
 				break;
 			case ITEM_OPTION_ADD_COMBO_EXPERIENCE_RATE:
 				break;

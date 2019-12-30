@@ -3754,3 +3754,46 @@ void GCLockSend(int aIndex, BYTE lock)
 	pMsg.lock = lock;
 	DataSend(aIndex, (LPBYTE)&pMsg, sizeof(pMsg));
 }
+
+void GCCustomSettings(int aIndex)
+{
+	PMSG_CUSTOM_SETTINGS_SEND pMsg;
+	pMsg.header.set(0xF3, 0xFC, sizeof(pMsg));
+	memcpy(pMsg.TransformationRings, gServerInfo.m_TransformationRing, sizeof(pMsg.TransformationRings));
+
+	DataSend(aIndex, (LPBYTE)(&pMsg), sizeof(pMsg));
+}
+
+void GCDiscordUpdate(int total)
+{
+	PMSG_DISCORD_UPDATE_SEND pMsg;
+	pMsg.header.set(0xF3, 0xFF, sizeof(pMsg));
+	pMsg.total = total;
+
+	for (int i = OBJECT_START_USER; i < MAX_OBJECT; ++i)
+	{
+		if (gObjIsConnected(i) == FALSE)
+		{
+			continue;
+		}
+
+		DataSend(i, (LPBYTE)&pMsg, sizeof(pMsg));
+	}
+}
+
+void GCPostMessageSend(const char* message)
+{
+	PMSG_POST_MESSAGE_SEND pMsg;
+	pMsg.header.set(0xF3, 0xFB, sizeof(pMsg));
+	strcpy_s(pMsg.message, message);
+
+	for (int i = OBJECT_START_USER; i < MAX_OBJECT; ++i)
+	{
+		if (gObjIsConnected(i) == FALSE)
+		{
+			continue;
+		}
+
+		DataSend(i, (LPBYTE)&pMsg, sizeof(pMsg));
+	}
+}

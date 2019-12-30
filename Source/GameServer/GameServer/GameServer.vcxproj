@@ -89,6 +89,7 @@
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GAMESERVER_TYPE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,6 +111,7 @@
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GAMESERVER_TYPE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -133,6 +135,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;GAMESERVER_TYPE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,6 +153,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;GAMESERVER_TYPE=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,7 +165,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="GameServer.ico" />
-    <None Include="ReadMe.txt" />
     <None Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -193,7 +196,6 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="ESProtocol.h" />
-    <ClInclude Include="ExperienceTable.h" />
     <ClInclude Include="Filter.h" />
     <ClInclude Include="Fruit.h" />
     <ClInclude Include="GameMain.h" />
@@ -278,7 +280,6 @@
     <ClInclude Include="QueueTimer.h" />
     <ClInclude Include="RandomManager.h" />
     <ClInclude Include="Reconnect.h" />
-    <ClInclude Include="ResetTable.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ScheduleManager.h" />
     <ClInclude Include="SerialCheck.h" />
@@ -331,7 +332,6 @@
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="ESProtocol.cpp" />
-    <ClCompile Include="ExperienceTable.cpp" />
     <ClCompile Include="Filter.cpp" />
     <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="GameMain.cpp" />
@@ -416,7 +416,6 @@
     <ClCompile Include="QueueTimer.cpp" />
     <ClCompile Include="RandomManager.cpp" />
     <ClCompile Include="Reconnect.cpp" />
-    <ClCompile Include="ResetTable.cpp" />
     <ClCompile Include="ScheduleManager.cpp" />
     <ClCompile Include="SerialCheck.cpp" />
     <ClCompile Include="ServerDisplayer.cpp" />

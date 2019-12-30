@@ -94,13 +94,6 @@ void gObjEventRunProc() // OK
 
 	gCastleSiegeWeapon.MainProc();
 	gChaosCastle.MainProc();
-
-	#if(GAMESERVER_TYPE==1)
-
-	gCrywolf.MainProc();
-
-	#endif
-
 	gDevilSquare.MainProc();
 	gInvasionManager.MainProc();
 }
@@ -148,16 +141,9 @@ void gObjFirstProc() // OK
 
 	gObjSecondProc();
 
-	gCommandManager.MainProc();
-
 	gDuel.CheckDuelUser();
-
 	gEffectManager.MainProc();
-
-	gNotice.MainProc();
-
 	gReconnect.MainProc();
-
 	gCastleSiegeSync.AdjustTributeMoney();
 
 	#if(GAMESERVER_TYPE==1)
@@ -239,20 +225,6 @@ void gObjAccountLevelProc() // OK
 	}
 }
 
-void gObjMathAuthenticatorProc() // OK
-{
-	#if(GAMESERVER_UPDATE>=701)
-
-	for(int n=OBJECT_START_USER;n < MAX_OBJECT;n++)
-	{
-		if(gObjIsConnectedGP(n) != 0)
-		{
-			GCMathAuthenticatorSend(n);
-		}
-	}
-
-	#endif
-}
 //**************************************************************************//
 // OBJECT BASE FUNCTIONS ***************************************************//
 //**************************************************************************//
@@ -619,7 +591,6 @@ void gObjCharZeroSet(int aIndex) // OK
 	lpObj->LastAutomataRuntime = 0;
 	lpObj->LastAutomataDelay = 0;
 	lpObj->AccumulatedCrownAccessTime = 0;
-	lpObj->CrywolfMVPScore = 0;
 	lpObj->LastCheckTick = 0;
 
 	for(int n=0;n < MAX_MONSTER_SEND_MSG;n++)
@@ -707,18 +678,14 @@ void gObjClearSpecialOption(LPOBJ lpObj) // OK
 	lpObj->ResistExcellentDamageRate = 0;
 	lpObj->ResistStunRate = 0;
 	lpObj->ExperienceRate = 100;
-	lpObj->MasterExperienceRate = 100;
 	lpObj->ItemDropRate = 100;
 	lpObj->MoneyAmountDropRate = 100;
 	lpObj->HPRecovery = 0;
 	lpObj->MPRecovery = 0;
 	lpObj->BPRecovery = 2;
-	lpObj->SDRecovery = 0;
 	lpObj->HPRecoveryRate = 0;
 	lpObj->MPRecoveryRate = 0;
 	lpObj->BPRecoveryRate = 0;
-	lpObj->SDRecoveryRate = 0;
-	lpObj->SDRecoveryType = 0;
 	lpObj->MPConsumptionRate = 100;
 	lpObj->BPConsumptionRate = 100;
 	lpObj->ShieldGaugeRate = gServerInfo.m_ShieldGaugeRate;
@@ -736,7 +703,6 @@ void gObjClearSpecialOption(LPOBJ lpObj) // OK
 	lpObj->HuntHP = 0;
 	lpObj->HuntMP = 0;
 	lpObj->HuntBP = 0;
-	lpObj->HuntSD = 0;
 	lpObj->WeaponDurabilityRate = 100;
 	lpObj->ArmorDurabilityRate = 100;
 	lpObj->WingDurabilityRate = 100;
@@ -2448,9 +2414,8 @@ void gObjSecondProc()
 					gCannonTower.CannonTowerAct(lpObj->Index);
 					continue;
 				}
-
-				gCrywolf.CrywolfMonsterAct(lpObj->Index);
 				#endif
+
 				if(lpObj->MonsterDeleteTime != 0 && GetTickCount() >= lpObj->MonsterDeleteTime)
 				{
 					gObjDel(lpObj->Index);
@@ -2459,12 +2424,7 @@ void gObjSecondProc()
 			}
 			if(lpObj->Type == OBJECT_NPC)
 			{
-				#if(GAMESERVER_TYPE==1)
-				if( (lpObj->Class < 204)?FALSE:(lpObj->Class > 209)?FALSE:TRUE)
-				{
-					gCrywolf.CrywolfNpcAct(lpObj->Index);
-				}
-				
+				#if(GAMESERVER_TYPE==1)				
 				if(lpObj->Class == 216)
 				{
 					gCastleSiegeCrown.CastleSiegeCrownAct(lpObj->Index);
@@ -2752,25 +2712,6 @@ BOOL gObjBackSpring(LPOBJ lpObj,LPOBJ lpTarget) // OK
 			return FALSE;
 		}
 	}
-	
-	if(gCrywolf.GetCrywolfState() == 4 || gCrywolf.GetCrywolfState() == 3)
-	{
-		if(lpObj->Type == OBJECT_USER)
-		{
-			for(int i=205;i<=209;i++)
-			{
-				int iAltarIndex = gCrywolfAltar.GetAltarUserIndex(i);
-				
-				if(iAltarIndex != -1)
-				{
-					if(iAltarIndex == lpObj->Index)
-					{
-						return FALSE;
-					}
-				}
-			}
-		}
-	}
 
 	if(lpObj->Class >= 204 && lpObj->Class <= 209)
 	{
@@ -2942,25 +2883,6 @@ BOOL gObjBackSpring2(LPOBJ lpObj, LPOBJ lpTargetObj, int count)
 		if(lpObj->Inventory[8].m_Index == GET_ITEM(13,4))
 		{
 			return FALSE;
-		}
-	}
-	
-	if(gCrywolf.GetCrywolfState() == 4 || gCrywolf.GetCrywolfState() == 3)
-	{
-		if(lpObj->Type == OBJECT_USER)
-		{
-			for(int i=205;i<=209;i++)
-			{
-				int iAltarIndex = gCrywolfAltar.GetAltarUserIndex(i);
-				
-				if(iAltarIndex != -1)
-				{
-					if(iAltarIndex == lpObj->Index)
-					{
-						return FALSE;
-					}
-				}
-			}
 		}
 	}
 	

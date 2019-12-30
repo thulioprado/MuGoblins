@@ -67,6 +67,9 @@
     <Filter Include="Source\Camera">
       <UniqueIdentifier>{b874d815-ccbc-4645-b9c4-0a661d145ad4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Sign">
+      <UniqueIdentifier>{f2b1d3fd-e414-4409-be69-0895d878e531}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -128,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Sign.cpp">
+      <Filter>Source\Sign</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Sign.h">
+      <Filter>Source\Sign</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

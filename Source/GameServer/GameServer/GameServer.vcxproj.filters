@@ -13,9 +13,20 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="CommandManager">
+      <UniqueIdentifier>{9aaa0480-604b-4834-b8a5-2ee8678fead6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSProtocol">
+      <UniqueIdentifier>{0ccc572c-3733-438d-b0e9-f4f26976d210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JSProtocol">
+      <UniqueIdentifier>{fc5e8cdf-e16d-4f26-9d46-f99e91ebb909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{17a25f03-1b9b-43f8-b3d5-e09439d23666}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
     <None Include="small.ico">
       <Filter>Resource Files</Filter>
     </None>
@@ -66,9 +77,6 @@
     <ClInclude Include="Trade.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ResetTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ServerInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -76,9 +84,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Duel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ExperienceTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Filter.h">
@@ -145,9 +150,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JewelMix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="JSProtocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Kalima.h">
@@ -282,9 +284,6 @@
     <ClInclude Include="Warehouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CommandManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ESProtocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -307,9 +306,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PersonalShop.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Protocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Quest.h">
@@ -340,9 +336,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameMain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DSProtocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectManager.h">
@@ -432,6 +425,18 @@
     <ClInclude Include="Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CommandManager.h">
+      <Filter>CommandManager</Filter>
+    </ClInclude>
+    <ClInclude Include="JSProtocol.h">
+      <Filter>JSProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="DSProtocol.h">
+      <Filter>DSProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -476,16 +481,10 @@
     <ClCompile Include="ServerInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResetTable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DefaultClassInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Duel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ExperienceTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Filter.cpp">
@@ -552,9 +551,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JewelMix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="JSProtocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Kalima.cpp">
@@ -689,9 +685,6 @@
     <ClCompile Include="Warehouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CommandManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ESProtocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -708,9 +701,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PersonalShop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Protocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Quest.cpp">
@@ -741,9 +731,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DSProtocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ObjectManager.cpp">
@@ -838,6 +825,18 @@
     </ClCompile>
     <ClCompile Include="Math.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandManager.cpp">
+      <Filter>CommandManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DSProtocol.cpp">
+      <Filter>DSProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include="JSProtocol.cpp">
+      <Filter>JSProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include="Protocol.cpp">
+      <Filter>Protocol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #include "Library.h"
 #include "Model.h"
 #include "Item.h"
+#include "Sign.h"
 
 CModel::CModel()
 {
@@ -26,6 +27,7 @@ void CModel::LoadModels()
 	pLoadModels();
 
 	Item.LoadModels();
+	Sign.LoadModels();
 }
 
 CModel Model;

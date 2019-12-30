@@ -25,7 +25,7 @@ class CMemScript
 public:
 	CMemScript();
 	virtual ~CMemScript();
-	bool SetBuffer(char* path);
+	bool SetBuffer(const char* path);
 	bool GetBuffer(char* buff,DWORD* size);
 	char GetChar();
 	void UnGetChar(char ch);

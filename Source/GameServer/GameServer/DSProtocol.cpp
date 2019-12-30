@@ -84,9 +84,6 @@ void DataServerProtocolCore(BYTE head, BYTE* lpMsg, int size) // OK
 					break;
 			}
 			break;
-		case 0x20:
-			DGGlobalPostRecv((SDHP_GLOBAL_POST_RECV*)lpMsg);
-			break;
 		case 0x21:
 			DGGlobalNoticeRecv((SDHP_GLOBAL_NOTICE_RECV*)lpMsg);
 			break;
@@ -811,30 +808,6 @@ void DGPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg) // OK
 	}
 }
 
-void DGGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg) // OK
-{
-	if (gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
-	{
-		return;
-	}
-
-	switch (lpMsg->type)
-	{
-		case 0:
-			PostMessage1(lpMsg->name, gMessage.GetMessage(69), lpMsg->message);
-			break;
-		case 1:
-			PostMessage2(lpMsg->name, gMessage.GetMessage(69), lpMsg->message);
-			break;
-		case 2:
-			PostMessage3(lpMsg->name, gMessage.GetMessage(69), lpMsg->message);
-			break;
-		case 3:
-			PostMessage4(lpMsg->name, gMessage.GetMessage(69), lpMsg->message);
-			break;
-	}
-}
-
 void DGGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg) // OK
 {
 	if (gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
@@ -1144,23 +1117,6 @@ void GDCrywolfInfoSend(int MapServerGroup) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
 }
 
-void GDGlobalPostSend(int MapServerGroup, BYTE type, char* name, char* message) // OK
-{
-	SDHP_GLOBAL_POST_SEND pMsg;
-
-	pMsg.header.set(0x20, sizeof(pMsg));
-
-	pMsg.MapServerGroup = MapServerGroup;
-
-	pMsg.type = type;
-
-	memcpy(pMsg.name, name, sizeof(pMsg.name));
-
-	memcpy(pMsg.message, message, sizeof(pMsg.message));
-
-	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
-}
-
 void GDGlobalNoticeSend(int MapServerGroup, BYTE type, BYTE count, BYTE opacity, WORD delay, DWORD color, BYTE speed, char* message) // OK
 {
 	SDHP_GLOBAL_NOTICE_SEND pMsg;
@@ -1168,17 +1124,11 @@ void GDGlobalNoticeSend(int MapServerGroup, BYTE type, BYTE count, BYTE opacity,
 	pMsg.header.set(0x21, sizeof(pMsg));
 
 	pMsg.MapServerGroup = MapServerGroup;
-
 	pMsg.type = type;
-
 	pMsg.count = count;
-
 	pMsg.opacity = opacity;
-
 	pMsg.delay = delay;
-
 	pMsg.color = color;
-
 	pMsg.speed = speed;
 
 	memcpy(pMsg.message, message, sizeof(pMsg.message));

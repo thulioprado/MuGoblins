@@ -201,6 +201,12 @@ struct SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV
 	char account[11];
 };
 
+struct SDHP_POST_MESSAGE_RECV
+{
+	PBMSG_HEAD header;
+	char message[80];
+};
+
 //**********************************************//
 //********** JoinServer -> GameServer **********//
 //**********************************************//
@@ -283,6 +289,12 @@ struct SDHP_ACCOUNT_ALREADY_CONNECTED_SEND
 	char account[11];
 };
 
+struct SDHP_POST_MESSAGE_SEND
+{
+	PBMSG_HEAD header;
+	char message[80];
+};
+
 //**********************************************//
 //**********************************************//
 //**********************************************//
@@ -298,5 +310,6 @@ void GJMapServerMoveCancelRecv(SDHP_MAP_SERVER_MOVE_CANCEL_RECV* lpMsg,int index
 void GJAccountLevelSaveRecv(SDHP_ACCOUNT_LEVEL_SAVE_RECV* lpMsg,int index);
 void GJServerUserInfoRecv(SDHP_SERVER_USER_INFO_RECV* lpMsg,int index);
 void GJExternalDisconnectAccountRecv(SDHP_EXTERNAL_DISCONNECT_ACCOUNT_RECV* lpMsg,int index);
+void GJPostMessageRecv(SDHP_POST_MESSAGE_RECV* lpMsg, int index);
 void JGExternalDisconnectAccountSend(int GameServerCode,int UserIndex,char* account);
 void JGAccountAlreadyConnectedSend(int GameServerCode,int UserIndex,char* account);

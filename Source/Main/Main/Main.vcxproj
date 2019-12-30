@@ -168,6 +168,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Protocol.cpp" />
     <ClCompile Include="Resolution.cpp" />
+    <ClCompile Include="Sign.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Viewport.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Registry.h" />
     <ClInclude Include="Resolution.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Sign.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Viewport.h" />
     <ClInclude Include="Window.h" />

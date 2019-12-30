@@ -3,6 +3,7 @@
 #include "Monster.h"
 #include "Viewport.h"
 #include "Player.h"
+#include "Message.h"
 
 BYTE SecondWeaponFixVal;
 char DescriptionText[60][100];
@@ -831,6 +832,10 @@ void CItem::Load()
 	Memory::Jump(0x5CD82C, this->ConfirmToSell);
 	Memory::Jump(0x5E5CC4, this->RenderizingInventory);
 	Memory::Jump(0x5E5D0B, this->RenderizingShop);
+
+	Memory::Call(0x506DAE, this->TestEffect);
+	Memory::Call(0x506DFA, this->TestEffect);
+	Memory::Call(0x506E46, this->TestEffect);
 }
 
 void CItem::LoadModels()
@@ -847,9 +852,10 @@ void CItem::LoadModels()
 	pLoadModel(GET_ITEM_MODEL(13, 38), "Data\\Item\\", "Ring", 1);
 
 	//
-	// Anel de Prisma
+	// Anel de prisma
 	//
 	pLoadModel(GET_ITEM_MODEL(13, 39), "Data\\Item\\", "Ring", 3);
+	pLoadModel(GET_ITEM_MODEL(13, 40), "Data\\Item\\", "Ring", 3);
 
 	//
 	// Tintas e Neutralizadores
@@ -876,9 +882,10 @@ void CItem::LoadTextures()
 	pLoadTexture(GET_ITEM_MODEL(13, 38), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 
 	//
-	// Anel de Prisma
+	// Anel de prisma
 	//
 	pLoadTexture(GET_ITEM_MODEL(13, 39), "Item\\", GL_REPEAT, GL_NEAREST, 1);
+	pLoadTexture(GET_ITEM_MODEL(13, 40), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 
 	//
 	// Tintas e Neutralizadores
@@ -908,7 +915,7 @@ bool CItem::GetModelPosition(DWORD Index)
 	//
 	// Anel de Prisma
 	//
-	if (Index == GET_ITEM_MODEL(13, 39))
+	if (Index == GET_ITEM_MODEL(13, 39) || Index == GET_ITEM_MODEL(13, 40))
 	{
 		pModelPositionX = 270.f;
 		pModelPositionY = -10.f;
@@ -996,25 +1003,47 @@ void CItem::SetDescription(ItemInfo* Item)
 					BYTE B = (BYTE)(this->InterpolateValue((float)(Blue[0]), (float)(Blue[1]), Timer));
 
 					this->SetNameColor(RGBA(R, G, B, 255), RGBA(255, 255, 255, 255));
+					this->AddLine();
+					this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(4));
+					this->AddDescription(RGBA(Custom->Prism[0].Red * 0x11, Custom->Prism[0].Green * 0x11, Custom->Prism[0].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[0].Red, Custom->Prism[0].Green, Custom->Prism[0].Blue);
+					this->AddDescription(RGBA(Custom->Prism[1].Red * 0x11, Custom->Prism[1].Green * 0x11, Custom->Prism[1].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[1].Red, Custom->Prism[1].Green, Custom->Prism[1].Blue);
 				}
 				else if (Red[0] != 0 || Green[0] != 0 || Blue[0] != 0)
 				{
 					this->SetNameColor(RGBA(Red[0], Green[0], Blue[0], 255), RGBA(255, 255, 255, 255));
+					this->AddLine();
+					this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(3));
+					this->AddDescription(RGBA(Custom->Prism[0].Red * 0x11, Custom->Prism[0].Green * 0x11, Custom->Prism[0].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[0].Red, Custom->Prism[0].Green, Custom->Prism[0].Blue);
 				}
 				else if (Red[1] != 0 || Green[1] != 0 || Blue[1] != 0)
 				{
 					this->SetNameColor(RGBA(Red[1], Green[1], Blue[1], 255), RGBA(255, 255, 255, 255));
+					this->AddLine();
+					this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(3));
+					this->AddDescription(RGBA(Custom->Prism[1].Red * 0x11, Custom->Prism[1].Green * 0x11, Custom->Prism[1].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[1].Red, Custom->Prism[1].Green, Custom->Prism[1].Blue);
 				}
 				else
 				{
+					DWORD slot = pCursorSlot;
+					DWORD target = pCursorInterface;
+
 					this->SetNameColor(RGBA(0, 0, 0, 255), RGBA(255, 255, 255, 255));
 				}
 
-				this->AddLine();
-				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), "Cores:");
-				this->AddDescription(RGBA(Custom->Prism[0].Red * 0x11, Custom->Prism[0].Green * 0x11, Custom->Prism[0].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[0].Red, Custom->Prism[0].Green, Custom->Prism[0].Blue);
-				this->AddDescription(RGBA(Custom->Prism[1].Red * 0x11, Custom->Prism[1].Green * 0x11, Custom->Prism[1].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[1].Red, Custom->Prism[1].Green, Custom->Prism[1].Blue);
-
+				break;
+			}
+			case GET_ITEM(14, 32): // Tinta Vermelha
+			case GET_ITEM(14, 33): // Tinta Verde
+			case GET_ITEM(14, 34): // Tinta Azul
+			{
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(5));
+				break;
+			}
+			case GET_ITEM(14, 35): // Neutralizador de Tinta Vermelha
+			case GET_ITEM(14, 36): // Neutralizador de Tinta Verde
+			case GET_ITEM(14, 37): // Neutralizador de Tinta Azul
+			{
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(6));
 				break;
 			}
 		}
@@ -2158,5 +2187,10 @@ void __declspec(naked) CItem::RenderizingShop()
 	}
 }
 
+int CItem::TestEffect(int Index, DWORD Unk1, DWORD Unk2, float* Color, DWORD Count, float Size, DWORD Unk3)
+{
+	Item.ApplyPrismEffect((GlowColor*)(Color), Player.PrismArmor, Player.Index);
+	return pShowEffect2(Index, Unk1, Unk2, Color, Count, Size, Unk3);
+}
 
 CItem Item;

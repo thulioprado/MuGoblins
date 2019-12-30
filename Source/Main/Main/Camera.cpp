@@ -36,26 +36,26 @@ void CCamera::Zoom(int Direction)
 	{
 		if (Direction > 0)
 		{
-			if (pCameraZoom > 20.f)
+			if (pCameraZoom > 19.f)
 			{
 				pCameraZoom -= 2.f;
 			}
 
-			if (pCameraZoom < 20.f)
+			if (pCameraZoom < 19.f)
 			{
-				pCameraZoom = 20.f;
+				pCameraZoom = 19.f;
 			}
 		}
 		else if (Direction < 0)
 		{
-			if (pCameraZoom < 58.f)
+			if (pCameraZoom < 59.f)
 			{
 				pCameraZoom += 2.f;
 			}
 
-			if (pCameraZoom > 58.f)
+			if (pCameraZoom > 59.f)
 			{
-				pCameraZoom = 58.f;
+				pCameraZoom = 59.f;
 			}
 		}
 

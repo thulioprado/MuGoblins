@@ -57,6 +57,7 @@ struct CharacterList
 {
 	PrismEffect PrismWeapon[2];
 	PrismEffect PrismArmor[2];
+	BYTE Sign;
 };
 
 struct PrismInfo
@@ -139,6 +140,7 @@ public:
 	DWORD Resets;
 	PrismEffect PrismWeapon[2];
 	PrismEffect PrismArmor[2];
+	BYTE Sign;
 
 	CustomItemInfo Inventory[INVENTORY_SIZE];
 	CustomItemInfo TempSource[WAREHOUSE_SIZE];

@@ -362,53 +362,6 @@ struct EFFECT_OPTION
 	int DivMaxSD;
 };
 
-struct PENTAGRAM_OPTION
-{
-	int MulPentagramDamage;
-	int MulPentagramDefense;
-	int AddElementalCriticalDamageRate;
-	int AddElementalDefenseTransferRate;
-	int AddElementalAttackTransferRate;
-	int MulElementalDefenseSuccessRate;
-	int MulElementalAttackSuccessRate;
-};
-
-struct PENTAGRAM_JEWEL_OPTION
-{
-	int AddElementalDamage;
-	int AddElementalDamagePvP;
-	int AddElementalDamagePvM;
-	int AddElementalDamageRange;
-	int AddElementalDamageMelee;
-	int MulElementalDamagePvP;
-	int MulElementalDamagePvM;
-	int MulElementalDamageVsFire;
-	int MulElementalDamageVsWater;
-	int MulElementalDamageVsEarth;
-	int MulElementalDamageVsWind;
-	int MulElementalDamageVsDark;
-	int AddElementalDefense;
-	int AddElementalDefensePvP;
-	int AddElementalDefensePvM;
-	int AddElementalDefenseRange;
-	int AddElementalDefenseMelee;
-	int MulElementalDefenseVsFire;
-	int MulElementalDefenseVsWater;
-	int MulElementalDefenseVsEarth;
-	int MulElementalDefenseVsWind;
-	int MulElementalDefenseVsDark;
-	int MulElementalAttackSuccessRate;
-	int MulElementalDefenseSuccessRate;
-	int AddElementalDamageReductionPvP;
-	int AddElementalDamageReductionPvM;
-	int AddElementalSlowRate;
-	int AddElementalDebuffRate;
-	int AddElementalCriticalDamageRatePvP;
-	int AddElementalCriticalDamageRatePvM;
-	int AddElementalExcellentDamageRatePvP;
-	int AddElementalExcellentDamageRatePvM;
-};
-
 struct ACTION_STATE
 {
 	DWORD Rest:1;
@@ -460,7 +413,7 @@ struct OBJECTSTRUCT
 	char LoginMessageCount;
 	char CloseCount;
 	char CloseType;
-	BOOL EnableDelCharacter;
+	bool EnableDelCharacter;
 	struct PER_SOCKET_CONTEXT* PerSocketContext;
 	SOCKET Socket;
 	char IpAddr[16];
@@ -657,7 +610,6 @@ struct OBJECTSTRUCT
 	int ChaosMoney;
 	int ChaosSuccessRate;
 	int ChaosLock;
-
 	DWORD Option;
 	int ChaosCastleBlowTime;
 	int DuelUserReserved;
@@ -754,18 +706,14 @@ struct OBJECTSTRUCT
 	int ResistExcellentDamageRate;
 	int ResistStunRate;
 	int ExperienceRate;
-	int MasterExperienceRate;
 	int ItemDropRate;
 	int MoneyAmountDropRate;
 	int HPRecovery;
 	int MPRecovery;
 	int BPRecovery;
-	int SDRecovery;
 	int HPRecoveryRate;
 	int MPRecoveryRate;
 	int BPRecoveryRate;
-	int SDRecoveryRate;
-	int SDRecoveryType;
 	int HPRecoveryCount;
 	int MPRecoveryCount;
 	int BPRecoveryCount;
@@ -784,7 +732,6 @@ struct OBJECTSTRUCT
 	int HuntHP;
 	int HuntMP;
 	int HuntBP;
-	int HuntSD;
 	int WeaponDurabilityRate;
 	int ArmorDurabilityRate;
 	int WingDurabilityRate;
@@ -861,7 +808,6 @@ struct OBJECTSTRUCT
 	CMonsterAIAgro Agro;
 	int LastAutomataRuntime;
 	int LastAutomataDelay;
-	int CrywolfMVPScore;
 	DWORD LastCheckTick;
 	SKILL_OPTION_DATA SkillOptionData;
 };
@@ -905,7 +851,6 @@ void gObjFirstProc();
 void gObjCloseProc();
 void gObjCountProc();
 void gObjAccountLevelProc();
-void gObjMathAuthenticatorProc();
 //**************************************************************************//
 // OBJECT BASE FUNCTIONS ***************************************************//
 //**************************************************************************//
