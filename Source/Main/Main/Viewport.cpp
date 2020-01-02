@@ -2,6 +2,7 @@
 #include "Viewport.h"
 #include "Player.h"
 #include "Item.h"
+#include "Prism.h"
 
 CViewport::CViewport() : Renderizing(null), Custom()
 {
@@ -89,8 +90,11 @@ void CViewport::AddCustom(WORD Index, LPBYTE CharSet)
 {
 	if (Index == Player.Index)
 	{
-		Item.ApplyPrismValue(Player.PrismArmor, CharSet[18], CharSet[19], CharSet[20]);
-		Item.ApplyPrismValue(Player.PrismWeapon, CharSet[21], CharSet[22], CharSet[23]);
+		Prism.GetValue(Player.PrismArmor.Color, CharSet[18], CharSet[19], CharSet[20]);
+		Prism.GetValue(Player.PrismWeapon.Color, CharSet[21], CharSet[22], CharSet[23]);
+
+		Player.PrismArmor.Speed = ((char)(CharSet[24]) * -1) * 33;
+		Player.PrismWeapon.Speed = ((char)(CharSet[25]) * -1) * 33;
 	}
 	else
 	{
@@ -103,8 +107,11 @@ void CViewport::AddCustom(WORD Index, LPBYTE CharSet)
 
 		if (Info)
 		{
-			Item.ApplyPrismValue(Info->PrismArmor, CharSet[18], CharSet[19], CharSet[20]);
-			Item.ApplyPrismValue(Info->PrismWeapon, CharSet[21], CharSet[22], CharSet[23]);
+			Prism.GetValue(Info->PrismArmor.Color, CharSet[18], CharSet[19], CharSet[20]);
+			Prism.GetValue(Info->PrismWeapon.Color, CharSet[21], CharSet[22], CharSet[23]);
+
+			Info->PrismArmor.Speed = ((char)(CharSet[24]) * -1) * 33;
+			Info->PrismWeapon.Speed = ((char)(CharSet[25]) * -1) * 33;
 		}
 	}
 }

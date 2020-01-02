@@ -22,3 +22,7 @@ typedef unsigned __int64 QWORD;
 #include "Memory.h"
 #include "Registry.h"
 #include "Defines.h"
+
+extern DWORD TickCount;
+
+void XorConvert(LPBYTE buff, int size);

@@ -129,16 +129,46 @@ void CPlayer::SetInventory(BYTE Slot, LPBYTE ItemInfo)
 
 	if (ItemInfo)
 	{
-		this->Inventory[Slot].Prism[0].Red = GET_NIBBLE_X(ItemInfo[0]);
-		this->Inventory[Slot].Prism[1].Red = GET_NIBBLE_Y(ItemInfo[0]);
-		this->Inventory[Slot].Prism[0].Green = GET_NIBBLE_X(ItemInfo[1]);
-		this->Inventory[Slot].Prism[1].Green = GET_NIBBLE_Y(ItemInfo[1]);
-		this->Inventory[Slot].Prism[0].Blue = GET_NIBBLE_X(ItemInfo[2]);
-		this->Inventory[Slot].Prism[1].Blue = GET_NIBBLE_Y(ItemInfo[2]);
+		auto Index = ItemInfo[0] + ((ItemInfo[3] & 0x80) * 2) + ((ItemInfo[5] & 0xF0) * 32);
+
+		switch (Index)
+		{
+			case GET_ITEM(13, 39):
+			case GET_ITEM(13, 40):
+			{
+				this->Inventory[Slot].Prism.Type = (Index == GET_ITEM(13, 39)) ? 0 : 1;
+				this->Inventory[Slot].Prism.Color[0].Red = GET_NIBBLE_X(ItemInfo[6]) * 0x11;
+				this->Inventory[Slot].Prism.Color[1].Red = GET_NIBBLE_Y(ItemInfo[6]) * 0x11;
+				this->Inventory[Slot].Prism.Color[0].Green = GET_NIBBLE_X(ItemInfo[7]) * 0x11;
+				this->Inventory[Slot].Prism.Color[1].Green = GET_NIBBLE_Y(ItemInfo[7]) * 0x11;
+				this->Inventory[Slot].Prism.Color[0].Blue = GET_NIBBLE_X(ItemInfo[8]) * 0x11;
+				this->Inventory[Slot].Prism.Color[1].Blue = GET_NIBBLE_Y(ItemInfo[8]) * 0x11;
+				this->Inventory[Slot].Prism.Speed[0] = 0;
+				this->Inventory[Slot].Prism.Speed[1] = 0;
+
+				break;
+			}
+			case GET_ITEM(13, 41):
+			{
+				this->Inventory[Slot].Prism.Type = 2;
+				this->Inventory[Slot].Prism.Speed[0] = (char)(ItemInfo[6]);
+				this->Inventory[Slot].Prism.Speed[1] = (char)(ItemInfo[7]);
+
+				memset(this->Inventory[Slot].Prism.Color, 0, sizeof(this->Inventory[Slot].Prism.Color));
+
+				break;
+			}
+			default:
+			{
+				memset(&this->Inventory[Slot].Prism, 0, sizeof(this->Inventory[Slot].Prism));
+
+				break;
+			}
+		}
 	}
 	else
 	{
-		memset(this->Inventory[Slot].Prism, 0, sizeof(this->Inventory[Slot].Prism));
+		memset(&this->Inventory[Slot].Prism, 0, sizeof(this->Inventory[Slot].Prism));
 	}
 }
 
@@ -151,16 +181,46 @@ void CPlayer::SetTempSource(BYTE Slot, LPBYTE ItemInfo)
 
 	if (ItemInfo)
 	{
-		this->TempSource[Slot].Prism[0].Red = GET_NIBBLE_X(ItemInfo[0]);
-		this->TempSource[Slot].Prism[1].Red = GET_NIBBLE_Y(ItemInfo[0]);
-		this->TempSource[Slot].Prism[0].Green = GET_NIBBLE_X(ItemInfo[1]);
-		this->TempSource[Slot].Prism[1].Green = GET_NIBBLE_Y(ItemInfo[1]);
-		this->TempSource[Slot].Prism[0].Blue = GET_NIBBLE_X(ItemInfo[2]);
-		this->TempSource[Slot].Prism[1].Blue = GET_NIBBLE_Y(ItemInfo[2]);
+		auto Index = ItemInfo[0] + ((ItemInfo[3] & 0x80) * 2) + ((ItemInfo[5] & 0xF0) * 32);
+
+		switch (Index)
+		{
+			case GET_ITEM(13, 39):
+			case GET_ITEM(13, 40):
+			{
+				this->TempSource[Slot].Prism.Type = (Index == GET_ITEM(13, 39)) ? 0 : 1;
+				this->TempSource[Slot].Prism.Color[0].Red = GET_NIBBLE_X(ItemInfo[6]) * 0x11;
+				this->TempSource[Slot].Prism.Color[1].Red = GET_NIBBLE_Y(ItemInfo[6]) * 0x11;
+				this->TempSource[Slot].Prism.Color[0].Green = GET_NIBBLE_X(ItemInfo[7]) * 0x11;
+				this->TempSource[Slot].Prism.Color[1].Green = GET_NIBBLE_Y(ItemInfo[7]) * 0x11;
+				this->TempSource[Slot].Prism.Color[0].Blue = GET_NIBBLE_X(ItemInfo[8]) * 0x11;
+				this->TempSource[Slot].Prism.Color[1].Blue = GET_NIBBLE_Y(ItemInfo[8]) * 0x11;
+				this->TempSource[Slot].Prism.Speed[0] = 0;
+				this->TempSource[Slot].Prism.Speed[1] = 0;
+
+				break;
+			}
+			case GET_ITEM(13, 41):
+			{
+				this->TempSource[Slot].Prism.Type = 2;
+				this->TempSource[Slot].Prism.Speed[0] = (char)(ItemInfo[6]);
+				this->TempSource[Slot].Prism.Speed[1] = (char)(ItemInfo[7]);
+
+				memset(this->TempSource[Slot].Prism.Color, 0, sizeof(this->TempSource[Slot].Prism.Color));
+
+				break;
+			}
+			default:
+			{
+				memset(&this->TempSource[Slot].Prism, 0, sizeof(this->TempSource[Slot].Prism));
+
+				break;
+			}
+		}
 	}
 	else
 	{
-		memset(this->TempSource[Slot].Prism, 0, sizeof(this->TempSource[Slot].Prism));
+		memset(&this->TempSource[Slot].Prism, 0, sizeof(this->TempSource[Slot].Prism));
 	}
 }
 
@@ -173,16 +233,46 @@ void CPlayer::SetTempTarget(BYTE Slot, LPBYTE ItemInfo)
 
 	if (ItemInfo)
 	{
-		this->TempTarget[Slot].Prism[0].Red = GET_NIBBLE_X(ItemInfo[0]);
-		this->TempTarget[Slot].Prism[1].Red = GET_NIBBLE_Y(ItemInfo[0]);
-		this->TempTarget[Slot].Prism[0].Green = GET_NIBBLE_X(ItemInfo[1]);
-		this->TempTarget[Slot].Prism[1].Green = GET_NIBBLE_Y(ItemInfo[1]);
-		this->TempTarget[Slot].Prism[0].Blue = GET_NIBBLE_X(ItemInfo[2]);
-		this->TempTarget[Slot].Prism[1].Blue = GET_NIBBLE_Y(ItemInfo[2]);
+		auto Index = ItemInfo[0] + ((ItemInfo[3] & 0x80) * 2) + ((ItemInfo[5] & 0xF0) * 32);
+
+		switch (Index)
+		{
+			case GET_ITEM(13, 39):
+			case GET_ITEM(13, 40):
+			{
+				this->TempTarget[Slot].Prism.Type = (Index == GET_ITEM(13, 39)) ? 0 : 1;
+				this->TempTarget[Slot].Prism.Color[0].Red = GET_NIBBLE_X(ItemInfo[6]) * 0x11;
+				this->TempTarget[Slot].Prism.Color[1].Red = GET_NIBBLE_Y(ItemInfo[6]) * 0x11;
+				this->TempTarget[Slot].Prism.Color[0].Green = GET_NIBBLE_X(ItemInfo[7]) * 0x11;
+				this->TempTarget[Slot].Prism.Color[1].Green = GET_NIBBLE_Y(ItemInfo[7]) * 0x11;
+				this->TempTarget[Slot].Prism.Color[0].Blue = GET_NIBBLE_X(ItemInfo[8]) * 0x11;
+				this->TempTarget[Slot].Prism.Color[1].Blue = GET_NIBBLE_Y(ItemInfo[8]) * 0x11;
+				this->TempTarget[Slot].Prism.Speed[0] = 0;
+				this->TempTarget[Slot].Prism.Speed[1] = 0;
+
+				break;
+			}
+			case GET_ITEM(13, 41):
+			{
+				this->TempTarget[Slot].Prism.Type = 2;
+				this->TempTarget[Slot].Prism.Speed[0] = (char)(ItemInfo[6]);
+				this->TempTarget[Slot].Prism.Speed[1] = (char)(ItemInfo[7]);
+
+				memset(this->TempTarget[Slot].Prism.Color, 0, sizeof(this->TempTarget[Slot].Prism.Color));
+
+				break;
+			}
+			default:
+			{
+				memset(&this->TempTarget[Slot].Prism, 0, sizeof(this->TempTarget[Slot].Prism));
+
+				break;
+			}
+		}
 	}
 	else
 	{
-		memset(this->TempTarget[Slot].Prism, 0, sizeof(this->TempTarget[Slot].Prism));
+		memset(&this->TempTarget[Slot].Prism, 0, sizeof(this->TempTarget[Slot].Prism));
 	}
 }
 

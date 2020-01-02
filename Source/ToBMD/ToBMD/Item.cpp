@@ -9,7 +9,7 @@ CItem::~CItem()
 {
 }
 
-void CItem::Convert(const char* From, const char* To)
+void CItem::Convert(const char* From, const char* To, const char* To2)
 {
 	CMemScript* lpMemScript = new CMemScript;
 
@@ -26,10 +26,14 @@ void CItem::Convert(const char* From, const char* To)
 		return;
 	}
 
-	BMD Bmd[8192];
+	auto Bmd = std::make_unique<BMD[]>(8192);
+	auto ExBmd = std::make_unique<ExtraBMD[]>(8192);
 	WORD Index;
-	
-	memset(&Bmd, 0, sizeof(Bmd));
+	int BmdSize = sizeof(BMD[8192]);
+	int ExBmdSize = sizeof(ExtraBMD[8192]);
+
+	memset(Bmd.get(), 0, BmdSize);
+	memset(ExBmd.get(), 0, ExBmdSize);
 
 	try
 	{
@@ -72,7 +76,10 @@ void CItem::Convert(const char* From, const char* To)
 				lpMemScript->GetAsNumber();
 				lpMemScript->GetAsNumber();
 
-				strcpy_s(Bmd[Index].Name, lpMemScript->GetAsString());
+				strcpy_s(ExBmd[Index].Name, lpMemScript->GetAsString());
+				strncpy_s(Bmd[Index].Name, ExBmd[Index].Name, sizeof(Bmd[Index].Name) - 1);
+				
+				Bmd[Index].Name[29] = 0;
 
 				if (Group >= 0 && Group <= 5)
 				{
@@ -95,25 +102,23 @@ void CItem::Convert(const char* From, const char* To)
 				else if (Group >= 6 && Group <= 11)
 				{
 					Bmd[Index].Level = lpMemScript->GetAsNumber();
+					ExBmd[Index].Defense = lpMemScript->GetAsNumber();
+					Bmd[Index].Defense = (BYTE)(ExBmd[Index].Defense);
 
 					if (Group == 6)
 					{
-						Bmd[Index].Defense = lpMemScript->GetAsNumber();
 						Bmd[Index].DefenseSuccessRate = lpMemScript->GetAsNumber();
 					}
 					else if (Group >= 7 && Group <= 9)
 					{
-						Bmd[Index].Defense = lpMemScript->GetAsNumber();
 						Bmd[Index].MagicDefense = lpMemScript->GetAsNumber();
 					}
 					else if (Group == 10)
 					{
-						Bmd[Index].Defense = lpMemScript->GetAsNumber();
 						Bmd[Index].AttackSpeed = lpMemScript->GetAsNumber();
 					}
 					else if (Group == 11)
 					{
-						Bmd[Index].Defense = lpMemScript->GetAsNumber();
 						Bmd[Index].WalkSpeed = lpMemScript->GetAsNumber();
 					}
 
@@ -128,7 +133,8 @@ void CItem::Convert(const char* From, const char* To)
 				else if (Group == 12)
 				{
 					Bmd[Index].Level = lpMemScript->GetAsNumber();
-					Bmd[Index].Defense = lpMemScript->GetAsNumber();
+					ExBmd[Index].Defense = lpMemScript->GetAsNumber();
+					Bmd[Index].Defense = (BYTE)(ExBmd[Index].Defense);
 					Bmd[Index].Durability = lpMemScript->GetAsNumber();
 					Bmd[Index].RequireLevel = lpMemScript->GetAsNumber();
 					Bmd[Index].RequireEnergy = lpMemScript->GetAsNumber();
@@ -187,9 +193,11 @@ void CItem::Convert(const char* From, const char* To)
 
 	delete lpMemScript;
 
+
 	for (int i = 0; i < 8192; ++i)
 	{
 		XorConvert((LPBYTE)(&Bmd[i]), sizeof(BMD));
+		XorConvert((LPBYTE)(&ExBmd[i]), sizeof(ExtraBMD));
 	}
 
 	FILE* File;
@@ -200,8 +208,16 @@ void CItem::Convert(const char* From, const char* To)
 	{
 		DWORD CRC = 0;
 
-		fwrite(Bmd, sizeof(Bmd), 1, File);
+		fwrite(Bmd.get(), BmdSize, 1, File);
 		fwrite(&CRC, sizeof(CRC), 1, File);
+		fclose(File);
+	}
+
+	fopen_s(&File, To2, "wb");
+
+	if (File)
+	{
+		fwrite(ExBmd.get(), ExBmdSize, 1, File);
 		fclose(File);
 	}
 }

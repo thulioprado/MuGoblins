@@ -10,6 +10,7 @@ void __declspec(naked) CPU()
 		PUSH 1;
 		CALL DWORD PTR DS : [0x6A7148];
 		CALL DWORD PTR DS : [0x6A7144];
+		MOV TickCount, EAX;
 		JMP Back;
 	}
 }
@@ -78,8 +79,8 @@ bool Patch()
 	//
 	// Conexão
 	//
-	Memory::Change<WORD>(0x6C41BC, 3000);							// ConnectServer Porta
-	Memory::Change<const char*>(0x6B6694, "127.0.0.1");				// ConnectServer IP
+	Memory::Change<WORD>(0x6C41BC, 44405);							// ConnectServer Porta
+	Memory::Change<const char*>(0x6B6694, "25.42.153.247");			// ConnectServer IP
 	Memory::Change<const char*>(0x6B7248, "2274:");					// Version
 	Memory::Change<const char*>(0x6B7250, "TbYehR2hFUPBKgZj");		// Serial
 	Memory::Change<BYTE>(0x4E0F1B, 0xEB);							// Liberar conexão com ip local

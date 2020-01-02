@@ -39,6 +39,22 @@ const char* CMessage::Get(int Index) const
             return "Usado no Anel de Prisma para aumentar um canal de cor.";
         case 6:
             return "Usado no Anel de Prisma para diminuir um canal de cor.";
+        case 7:
+            return "Usado no Colar de Prisma para aumentar a velocidade do efeito do Anel de Prisma.";
+        case 8:
+            return "Usado no Colar de Prisma para diminuir a velocidade do efeito do Anel de Prisma.";
+        case 9:
+            return "Armadura";
+        case 10:
+            return "Arma";
+        case 11:
+            return "Velocidade de transição [Armadura]: +%d";
+        case 12:
+            return "Velocidade de transição [Armadura]: %d";
+        case 13:
+            return "Velocidade de transição [Arma]: +%d";
+        case 14:
+            return "Velocidade de transição [Arma]: %d";
 	}
 
 	return "";

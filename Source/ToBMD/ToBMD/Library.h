@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory>
 #include "MemScript.h"
 
 #define MAX_CLASS					5

@@ -113,6 +113,7 @@ struct PMSG_ITEM_MOVE_SEND
 	BYTE TargetFlag;
 	BYTE TargetSlot;
 	BYTE ItemInfo[MAX_ITEM_INFO];
+	bool PrismUpdate;
 };
 
 struct PMSG_ITEM_CHANGE_SEND
@@ -198,7 +199,7 @@ struct ITEM_INFO
 	int HaveSerial;
 	int HaveOption;
 	int DropItem;
-	chr Name[32];
+	char Name[50];
 	int Level;
 	int DamageMin;
 	int DamageMax;

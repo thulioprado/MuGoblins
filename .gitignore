@@ -36,3 +36,9 @@ Source/*/*/Debug
 Source/*/*/ReleaseCS
 Source/*/*/DebugCS
 Source/*/*/enc_temp_folder
+
+#
+# Tools
+#
+Tools/*/*.pdb
+Tools/*/*.ilk

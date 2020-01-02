@@ -261,7 +261,7 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 		info.CharSet[0] += (lpInfo->Class / 16) * 32;
 
 		WORD TempInventory[12];
-		BYTE PrismValue[2][3] = {{0, 0, 0}, {0, 0, 0}};
+		BYTE PrismValue[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
 
 		for (int i = 0; i < 12; i++)
 		{
@@ -276,6 +276,19 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 					TempInventory[i] = (lpInfo->Inventory[0 + (i * 8)] + ((lpInfo->Inventory[2 + (i * 8)] & 0x80) * 2) + ((lpInfo->Inventory[4 + (i * 8)] & 0xF0) * 32));
 				}
 			}
+			else if (i == 9)
+			{
+				if (lpInfo->Inventory[0 + (i * 8)] == 0xFF && (lpInfo->Inventory[2 + (i * 8)] & 0x80) == 0x80 && (lpInfo->Inventory[4 + (i * 8)] & 0xF0) == 0xF0)
+				{
+					TempInventory[i] = 0xFFFF;
+				}
+				else
+				{
+					TempInventory[i] = (lpInfo->Inventory[0 + (i * 8)] + ((lpInfo->Inventory[2 + (i * 8)] & 0x80) * 2) + ((lpInfo->Inventory[4 + (i * 8)] & 0xF0) * 32));
+					PrismValue[i - 9][0] = lpInfo->Inventory[5 + (i * 8)];
+					PrismValue[i - 9][1] = lpInfo->Inventory[6 + (i * 8)];
+				}
+			}
 			else if (i == 10 || i == 11)
 			{
 				if (lpInfo->Inventory[0 + (i * 8)] == 0xFF && (lpInfo->Inventory[2 + (i * 8)] & 0x80) == 0x80 && (lpInfo->Inventory[4 + (i * 8)] & 0xF0) == 0xF0)
@@ -285,9 +298,9 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 				else
 				{
 					TempInventory[i] = (lpInfo->Inventory[0 + (i * 8)] + ((lpInfo->Inventory[2 + (i * 8)] & 0x80) * 2) + ((lpInfo->Inventory[4 + (i * 8)] & 0xF0) * 32));
-					PrismValue[i - 10][0] = lpInfo->Inventory[5 + (i * 8)];
-					PrismValue[i - 10][1] = lpInfo->Inventory[6 + (i * 8)];
-					PrismValue[i - 10][2] = lpInfo->Inventory[7 + (i * 8)];
+					PrismValue[i - 9][0] = lpInfo->Inventory[5 + (i * 8)];
+					PrismValue[i - 9][1] = lpInfo->Inventory[6 + (i * 8)];
+					PrismValue[i - 9][2] = lpInfo->Inventory[7 + (i * 8)];
 				}
 			}
 			else
@@ -453,25 +466,29 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 		if (TempInventory[10] == GET_ITEM(13, 39))
 		{
 			PrismArmor = true;
-			memcpy(&info.CharSet[18], PrismValue[0], 3);
-		}
-		else if (TempInventory[10] == GET_ITEM(13, 40))
-		{
-			PrismWeapon = true;
-			memcpy(&info.CharSet[21], PrismValue[0], 3);
-		}
-
-		if (!PrismArmor && TempInventory[11] == GET_ITEM(13, 39))
-		{
-			PrismArmor = true;
 			memcpy(&info.CharSet[18], PrismValue[1], 3);
 		}
-		else if (!PrismWeapon && TempInventory[11] == GET_ITEM(13, 40))
+		else if (TempInventory[10] == GET_ITEM(13, 40))
 		{
 			PrismWeapon = true;
 			memcpy(&info.CharSet[21], PrismValue[1], 3);
 		}
 
+		if (!PrismArmor && TempInventory[11] == GET_ITEM(13, 39))
+		{
+			PrismArmor = true;
+			memcpy(&info.CharSet[18], PrismValue[2], 3);
+		}
+		else if (!PrismWeapon && TempInventory[11] == GET_ITEM(13, 40))
+		{
+			PrismWeapon = true;
+			memcpy(&info.CharSet[21], PrismValue[2], 3);
+		}
+
+		if (TempInventory[9] == GET_ITEM(13, 41))
+		{
+			memcpy(&info.CharSet[24], PrismValue[0], 2);
+		}
 
 	#pragma endregion
 
@@ -996,7 +1013,7 @@ void GDCreateItemSend(int aIndex, BYTE map, BYTE x, BYTE y, int index, BYTE leve
 	pMsg.SetOption = SetOption;
 	pMsg.Duration = duration;
 
-	if (index == GET_ITEM(13, 39) || index == GET_ITEM(13, 40))
+	if (index >= GET_ITEM(13, 39) && index <= GET_ITEM(13, 41))
 	{
 		memcpy(pMsg.Prism, prism, sizeof(pMsg.Prism));
 	}

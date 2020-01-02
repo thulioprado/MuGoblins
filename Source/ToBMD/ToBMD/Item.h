@@ -38,12 +38,20 @@ private:
 		BYTE Unk3;
 	};
 
+#pragma pack(push, 1)
+	struct ExtraBMD
+	{
+		char Name[50];
+		WORD Defense;
+	};
+#pragma pack(pop)
+
 public:
 	CItem();
 	~CItem();
 
 public:
-	void Convert(const char* From, const char* To);
+	void Convert(const char* From, const char* To, const char* To2);
 };
 
 extern CItem Item;

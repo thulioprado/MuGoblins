@@ -70,6 +70,9 @@
     <Filter Include="Source\Sign">
       <UniqueIdentifier>{f2b1d3fd-e414-4409-be69-0895d878e531}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Item\Prism">
+      <UniqueIdentifier>{db4b3095-836a-47be-9046-b34804191529}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -134,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="Sign.cpp">
       <Filter>Source\Sign</Filter>
+    </ClCompile>
+    <ClCompile Include="Prism.cpp">
+      <Filter>Source\Item\Prism</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="Sign.h">
       <Filter>Source\Sign</Filter>
+    </ClInclude>
+    <ClInclude Include="Prism.h">
+      <Filter>Source\Item\Prism</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

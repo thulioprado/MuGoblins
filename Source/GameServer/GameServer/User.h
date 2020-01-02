@@ -47,7 +47,7 @@
 #define GET_MAX_WORD_VALUE(x) (((x)>65000)?65000:((WORD)(x)))
 #define CHECK_RANGE(x,y) (((x)<0)?0:((x)>=(y))?0:1)
 
-#define CHAR_SET_SIZE  24
+#define CHAR_SET_SIZE  26
 
 enum eObjectConnectState
 {

@@ -55,21 +55,28 @@ struct PlayerObject
 
 struct CharacterList
 {
-	PrismEffect PrismWeapon[2];
-	PrismEffect PrismArmor[2];
+	PrismColor PrismWeapon;
+	PrismColor PrismArmor;
 	BYTE Sign;
 };
 
-struct PrismInfo
+struct PrismColorByte
 {
 	BYTE Red;
 	BYTE Green;
 	BYTE Blue;
 };
 
+struct PrismInfo
+{
+	BYTE Type;
+	PrismColorByte Color[2];
+	char Speed[2];
+};
+
 struct CustomItemInfo
 {
-	PrismInfo Prism[2];
+	PrismInfo Prism;
 };
 
 class CPlayer
@@ -138,8 +145,8 @@ public:
 	QWORD PreviousNextExperience;
 	DWORD PercentExperience;
 	DWORD Resets;
-	PrismEffect PrismWeapon[2];
-	PrismEffect PrismArmor[2];
+	PrismColor PrismWeapon;
+	PrismColor PrismArmor;
 	BYTE Sign;
 
 	CustomItemInfo Inventory[INVENTORY_SIZE];

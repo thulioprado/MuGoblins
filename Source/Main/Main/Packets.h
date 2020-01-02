@@ -183,6 +183,7 @@ struct PMSG_ITEM_MOVE_RECV
 	BYTE TargetFlag;
 	BYTE TargetSlot;
 	BYTE ItemInfo[MAX_ITEM_INFO];
+	bool PrismUpdate;
 };
 
 struct PMSG_ITEM_MOVE_RECV2

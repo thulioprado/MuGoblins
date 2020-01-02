@@ -1461,6 +1461,14 @@ void CObjectManager::CharacterMakePreviewCharSet(int aIndex) // OK
 			memcpy(&lpObj->CharSet[21], lpObj->Inventory[11].m_Prism, sizeof(lpObj->Inventory[10].m_Prism));
 		}
 	}
+
+	if (lpObj->Inventory[9].IsItem())
+	{
+		if (lpObj->Inventory[9].m_Index == GET_ITEM(13, 41))
+		{
+			memcpy(&lpObj->CharSet[24], lpObj->Inventory[9].m_Prism, sizeof(lpObj->Inventory[9].m_Prism) - 1);
+		}
+	}
 }
 
 bool CObjectManager::CharacterUseScroll(LPOBJ lpObj, CItem* lpItem) // OK
@@ -1990,6 +1998,90 @@ bool CObjectManager::CharacterUseInkOrNeutralizer(LPOBJ lpObj, int SourceSlot, i
 			}
 
 			lpTarget->m_Prism[2] = SET_BYTE(--Blue[0], Blue[1]);
+
+			break;
+		}
+	}
+
+	return 1;
+}
+
+bool CObjectManager::CharacterUseEnergy(LPOBJ lpObj, int SourceSlot, int TargetSlot)
+{
+	if (INVENTORY_FULL_RANGE(SourceSlot) == 0)
+	{
+		return 0;
+	}
+
+	if (INVENTORY_FULL_RANGE(TargetSlot) == 0)
+	{
+		return 0;
+	}
+
+	if (lpObj->Inventory[SourceSlot].IsItem() == 0)
+	{
+		return 0;
+	}
+
+	if (lpObj->Inventory[TargetSlot].IsItem() == 0)
+	{
+		return 0;
+	}
+
+	CItem* lpSource = &lpObj->Inventory[SourceSlot];
+	CItem* lpTarget = &lpObj->Inventory[TargetSlot];
+
+	if (lpTarget->m_Index != GET_ITEM(13, 41))
+	{
+		return 0;
+	}
+
+	char Solar = (char)(lpTarget->m_Prism[0]);
+	char Lunar = (char)(lpTarget->m_Prism[1]);
+
+	switch (lpSource->m_Index)
+	{
+		case GET_ITEM(14, 38):
+		{
+			if (Solar >= 15)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[0] = (BYTE)(++Solar);
+
+			break;
+		}
+		case GET_ITEM(14, 39):
+		{
+			if (Solar <= -15)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[0] = (BYTE)(--Solar);
+
+			break;
+		}
+		case GET_ITEM(14, 40):
+		{
+			if (Lunar >= 15)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[1] = (BYTE)(++Lunar);
+
+			break;
+		}
+		case GET_ITEM(14, 41):
+		{
+			if (Lunar <= -15)
+			{
+				return 0;
+			}
+
+			lpTarget->m_Prism[1] = (BYTE)(--Lunar);
 
 			break;
 		}

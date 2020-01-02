@@ -100,8 +100,8 @@ struct ViewportInfo
 
 struct ViewportCustom
 {
-	PrismEffect PrismWeapon[2];
-	PrismEffect PrismArmor[2];
+	PrismColor PrismWeapon;
+	PrismColor PrismArmor;
 	BYTE Sign;
 };
 

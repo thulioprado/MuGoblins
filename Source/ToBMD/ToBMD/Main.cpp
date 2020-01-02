@@ -6,7 +6,7 @@
 
 int main()
 {
-	Item.Convert(SERVER_DATA_PATH "Item\\Item.txt", CLIENT_DATA_PATH "Local\\Item.bmd");
+	Item.Convert(SERVER_DATA_PATH "Item\\Item.txt", CLIENT_DATA_PATH "Local\\Item.bmd", CLIENT_DATA_PATH "Local\\Item.bmdx");
 
-	return 1;
+	return 0;
 }

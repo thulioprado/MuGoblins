@@ -6,6 +6,7 @@
 #include "Item.h"
 #include "Viewport.h"
 #include "Camera.h"
+#include "Prism.h"
 
 CProtocol::CProtocol()
 {
@@ -305,7 +306,7 @@ int CProtocol::ItemGet(int Index, PMSG_ITEM_GET_RECV* Data)
 {
 	if (Data->result < 0xFD)
 	{
-		Player.SetInventory(Data->result, &Data->ItemInfo[6]);
+		Player.SetInventory(Data->result, Data->ItemInfo);
 	}
 
 	PMSG_ITEM_GET_RECV2 pMsg;
@@ -327,23 +328,47 @@ int CProtocol::ItemMove(int Index, PMSG_ITEM_MOVE_RECV* Data)
 			{
 				Player.SetInventory(Data->SourceSlot, null);
 
-				if (Data->SourceSlot == 10 || Data->SourceSlot == 11)	// Movendo do slot de anel
+				if (Data->PrismUpdate && (Data->SourceSlot == 10 || Data->SourceSlot == 11))	// Movendo do slot de anel
 				{
-					int ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
+					auto ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
 
 					switch (ItemIndex)
 					{
 						case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
 						{
-							Item.ApplyPrismValue(Player.PrismArmor, 0, 0, 0);
+							Prism.GetValue(Player.PrismArmor.Color, 0, 0, 0);
 							break;
 						}
 						case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
 						{
-							Item.ApplyPrismValue(Player.PrismWeapon, 0, 0, 0);
+							Prism.GetValue(Player.PrismWeapon.Color, 0, 0, 0);
 							break;
 						}
 					}
+				}
+				else if (!Data->PrismUpdate && (Data->SourceSlot == 10 || Data->SourceSlot == 11))
+				{
+					auto PrismInfo = Player.Inventory[((Data->SourceSlot == 10) ? 11 : 10)].Prism;
+					auto ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
+
+					switch (ItemIndex)
+					{
+						case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+						{
+							Prism.GetValue(Player.PrismArmor.Color, SET_BYTE(PrismInfo.Color[0].Red, PrismInfo.Color[1].Red), SET_BYTE(PrismInfo.Color[0].Green, PrismInfo.Color[1].Green), SET_BYTE(PrismInfo.Color[0].Blue, PrismInfo.Color[1].Blue));
+							break;
+						}
+						case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+						{
+							Prism.GetValue(Player.PrismWeapon.Color, SET_BYTE(PrismInfo.Color[0].Red, PrismInfo.Color[1].Red), SET_BYTE(PrismInfo.Color[0].Green, PrismInfo.Color[1].Green), SET_BYTE(PrismInfo.Color[0].Blue, PrismInfo.Color[1].Blue));
+							break;
+						}
+					}
+				}
+				else if (Data->SourceSlot == 9)
+				{
+					Player.PrismArmor.Speed = 0;
+					Player.PrismWeapon.Speed = 0;
 				}
 
 				break;
@@ -363,22 +388,36 @@ int CProtocol::ItemMove(int Index, PMSG_ITEM_MOVE_RECV* Data)
 			case TargetFlag::Inventory:
 			case TargetFlag::PersonalShop:
 			{
-				Player.SetInventory(Data->TargetSlot, &Data->ItemInfo[6]);
+				Player.SetInventory(Data->TargetSlot, Data->ItemInfo);
 
-				if (Data->TargetSlot == 10 || Data->TargetSlot == 11)	// Movendo para slot de anel
+				if (Data->PrismUpdate && (Data->TargetSlot == 10 || Data->TargetSlot == 11))	// Movendo para slot de anel
 				{
-					int ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
+					auto ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
 
 					switch (ItemIndex)
 					{
 						case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
 						{
-							Item.ApplyPrismValue(Player.PrismArmor, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
+							Prism.GetValue(Player.PrismArmor.Color, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
 							break;
 						}
 						case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
 						{
-							Item.ApplyPrismValue(Player.PrismWeapon, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
+							Prism.GetValue(Player.PrismWeapon.Color, Data->ItemInfo[6], Data->ItemInfo[7], Data->ItemInfo[8]);
+							break;
+						}
+					}
+				}
+				else if (Data->TargetSlot == 9)
+				{
+					auto ItemIndex = Data->ItemInfo[0] + ((Data->ItemInfo[3] & 0x80) * 2) + ((Data->ItemInfo[5] & 0xF0) * 32);
+
+					switch (ItemIndex)
+					{
+						case GET_ITEM(13, 41):	// Colar de Prisma
+						{
+							Player.PrismArmor.Speed = ((char)(Data->ItemInfo[6]) * -1) * 33;
+							Player.PrismWeapon.Speed = ((char)(Data->ItemInfo[7]) * -1) * 33;
 							break;
 						}
 					}
@@ -391,7 +430,7 @@ int CProtocol::ItemMove(int Index, PMSG_ITEM_MOVE_RECV* Data)
 			case TargetFlag::ChaosMachine:
 			case TargetFlag::Trainer:
 			{
-				Player.SetTempSource(Data->TargetSlot, &Data->ItemInfo[6]);
+				Player.SetTempSource(Data->TargetSlot, Data->ItemInfo);
 				break;
 			}
 		}
@@ -517,7 +556,7 @@ int CProtocol::ShopItemList(int Index, LPBYTE Data)
 	{
 		Item = (PMSG_SHOP_ITEM_LIST*)(&Data[Size]);
 
-		Player.SetTempSource(Item->slot, &Item->ItemInfo[6]);
+		Player.SetTempSource(Item->slot, Item->ItemInfo);
 
 		pItem.slot = Item->slot;
 
@@ -538,7 +577,7 @@ int CProtocol::ShopItemList(int Index, LPBYTE Data)
 
 int CProtocol::ItemBuy(int Index, PMSG_ITEM_BUY_RECV* Data)
 {
-	Player.SetInventory(Data->result, &Data->ItemInfo[6]);
+	Player.SetInventory(Data->result, Data->ItemInfo);
 
 	PMSG_ITEM_BUY_RECV2 pMsg;
 	pMsg.header.set(0x32, sizeof(pMsg));
@@ -562,7 +601,7 @@ int CProtocol::TradeItemAdd(int Index, PMSG_TRADE_ITEM_ADD_RECV* Data)
 	pMsg.slot = Data->slot;
 	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
 
-	Player.SetTempTarget(Data->slot, &Data->ItemInfo[6]);
+	Player.SetTempTarget(Data->slot, Data->ItemInfo);
 
 	return pProtocolCore(0x39, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
@@ -594,7 +633,7 @@ int CProtocol::PersonalShopItemList(int Index, LPBYTE Data)
 	{
 		Item = (PMSG_PSHOP_ITEM_LIST*)(&Data[Size]);
 
-		Player.SetTempTarget(Item->slot, &Item->ItemInfo[6]);
+		Player.SetTempTarget(Item->slot, Item->ItemInfo);
 
 		pItem.slot = Item->slot;
 		pItem.value = Item->value;
@@ -618,7 +657,7 @@ int CProtocol::PersonalShopItemBuy(int Index, PMSG_PSHOP_ITEM_BUY_RECV* Data)
 {
 	if (Data->slot < INVENTORY_SIZE)
 	{
-		Player.SetInventory(Data->slot, &Data->ItemInfo[6]);
+		Player.SetInventory(Data->slot, Data->ItemInfo);
 	}
 
 	PMSG_PSHOP_ITEM_BUY_RECV2 pMsg;
@@ -738,7 +777,7 @@ int CProtocol::ChaosMix(int Index, PMSG_CHAOS_MIX_RECV* Data)
 
 	if (Data->result == 1 || Data->result == 100)
 	{
-		Player.SetTempSource(0, &Data->ItemInfo[6]);
+		Player.SetTempSource(0, Data->ItemInfo);
 	}
 
 	return pProtocolCore(0x86, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
@@ -856,8 +895,11 @@ int CProtocol::CharacterList(int Index, LPBYTE Data)
 		Size += sizeof(PMSG_CHARACTER_LIST);
 		NewSize += sizeof(pCharacter);
 
-		Item.ApplyPrismValue(Player.CharacterList[i].PrismArmor, Character->CharSet[18], Character->CharSet[19], Character->CharSet[20]);
-		Item.ApplyPrismValue(Player.CharacterList[i].PrismWeapon, Character->CharSet[21], Character->CharSet[22], Character->CharSet[23]);
+		Prism.GetValue(Player.CharacterList[i].PrismArmor.Color, Character->CharSet[18], Character->CharSet[19], Character->CharSet[20]);
+		Prism.GetValue(Player.CharacterList[i].PrismWeapon.Color, Character->CharSet[21], Character->CharSet[22], Character->CharSet[23]);
+
+		Player.CharacterList[i].PrismArmor.Speed = ((char)(Character->CharSet[24]) * -1) * 33;
+		Player.CharacterList[i].PrismWeapon.Speed = ((char)(Character->CharSet[25]) * -1) * 33;
 	}
 
 	pMsg.header.size = (BYTE)(NewSize);
@@ -884,8 +926,8 @@ int CProtocol::CharacterInfo(int Index, PMSG_CHARACTER_INFO_RECV* Data)
 	Player.MaxBP = Data->MaxBP;
 	Player.LevelUpPoints = Data->LevelUpPoint;
 
-	Item.ApplyPrismValue(Player.PrismArmor, 0, 0, 0);
-	Item.ApplyPrismValue(Player.PrismWeapon, 0, 0, 0);
+	Prism.GetValue(Player.PrismArmor.Color, 0, 0, 0);
+	Prism.GetValue(Player.PrismWeapon.Color, 0, 0, 0);
 
 	auto Current = double(Player.Experience) - double(Player.PreviousNextExperience);
 	auto Total = double(Player.NextExperience) - double(Player.PreviousNextExperience);
@@ -1068,26 +1110,48 @@ int CProtocol::ItemList(int Index, LPBYTE Data)
 	{
 		Item = (PMSG_ITEM_LIST*)(&Data[Size]);
 
-		Player.SetInventory(Item->slot, &Item->ItemInfo[6]);
+		Player.SetInventory(Item->slot, Item->ItemInfo);
 
 		pItem.slot = Item->slot;
 
-		if (Item->slot == 10 || Item->slot == 11)	// Aneis
+		switch (Item->slot)
 		{
-			ItemIndex = Item->ItemInfo[0] + ((Item->ItemInfo[3] & 0x80) * 2) + ((Item->ItemInfo[5] & 0xF0) * 32);
-
-			switch (ItemIndex)
+			case 9:		// Colar
 			{
-				case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+				ItemIndex = Item->ItemInfo[0] + ((Item->ItemInfo[3] & 0x80) * 2) + ((Item->ItemInfo[5] & 0xF0) * 32);
+
+				switch (ItemIndex)
 				{
-					::Item.ApplyPrismValue(Player.PrismArmor, Item->ItemInfo[6], Item->ItemInfo[7], Item->ItemInfo[8]);
-					break;
+					case GET_ITEM(13, 41):	// Colar de Prisma
+					{
+						Player.PrismArmor.Speed = ((char)(Item->ItemInfo[6]) * -1) * 33;
+						Player.PrismWeapon.Speed = ((char)(Item->ItemInfo[7]) * -1) * 33;
+						break;
+					}
 				}
-				case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+
+				break;
+			}
+			case 10:	// Aneis
+			case 11:
+			{
+				ItemIndex = Item->ItemInfo[0] + ((Item->ItemInfo[3] & 0x80) * 2) + ((Item->ItemInfo[5] & 0xF0) * 32);
+
+				switch (ItemIndex)
 				{
-					::Item.ApplyPrismValue(Player.PrismWeapon, Item->ItemInfo[6], Item->ItemInfo[7], Item->ItemInfo[8]);
-					break;
+					case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
+					{
+						Prism.GetValue(Player.PrismArmor.Color, Item->ItemInfo[6], Item->ItemInfo[7], Item->ItemInfo[8]);
+						break;
+					}
+					case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
+					{
+						Prism.GetValue(Player.PrismWeapon.Color, Item->ItemInfo[6], Item->ItemInfo[7], Item->ItemInfo[8]);
+						break;
+					}
 				}
+
+				break;
 			}
 		}
 
@@ -1127,7 +1191,7 @@ int CProtocol::ItemModify(int Index, PMSG_ITEM_MODIFY_RECV* Data)
 	pMsg.slot = Data->slot;
 	memcpy(pMsg.ItemInfo, Data->ItemInfo, sizeof(pMsg.ItemInfo));
 
-	Player.SetInventory(Data->slot, &Data->ItemInfo[6]);
+	Player.SetInventory(Data->slot, Data->ItemInfo);
 
 	return pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }

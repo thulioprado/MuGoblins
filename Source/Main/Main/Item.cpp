@@ -4,6 +4,7 @@
 #include "Viewport.h"
 #include "Player.h"
 #include "Message.h"
+#include "Prism.h"
 
 BYTE SecondWeaponFixVal;
 char DescriptionText[60][100];
@@ -11,7 +12,7 @@ DWORD DescriptionColor[60];
 DWORD DescriptionType[60];
 DWORD DescriptionCustomColor[2][60];
 
-CItem::CItem() : TransformationRings{}, TransformationRingFormat("%s [%s]"), ModelSize(0.f), ApplyPrismGlow(true)
+CItem::CItem() : ExBmd(), TransformationRings{}, TransformationRingFormat("%s [%s]"), ModelSize(0.f), ApplyPrismGlow(true)
 {
 	memset(this->TransformationRings, 0, sizeof(this->TransformationRings));
 
@@ -42,6 +43,34 @@ void CItem::Load()
 	///
 	/// Parece que o main cria janelas internas (windows)
 	/// e os valores dos textbox são os titulos delas
+
+	//
+	// Leitura de informações corretas de itens
+	//
+	this->ExBmd = std::make_unique<ItemInfoEx[]>(8192);
+
+	if (!this->ExBmd)
+	{
+		MessageBox(NULL, "Insufficient memory.", "Error", MB_OK | MB_ICONERROR);
+		ExitProcess(0);
+	}
+
+	FILE* File;
+	fopen_s(&File, ".\\Data\\Local\\Item.bmdx", "rb");
+
+	if (!File)
+	{
+		MessageBox(NULL, "Item.bmdx not found.", "Error", MB_OK | MB_ICONERROR);
+		ExitProcess(0);
+	}
+
+	fread((char*)(this->ExBmd.get()), sizeof(ItemInfoEx[8192]), 1, File);
+	fclose(File);
+	
+	for (int i = 0; i < 8192; ++i)
+	{
+		XorConvert((LPBYTE)(&this->ExBmd[i]), sizeof(ItemInfoEx));
+	}
 
 	//
 	// Aumento de limite de descrições nos itens
@@ -852,13 +881,14 @@ void CItem::LoadModels()
 	pLoadModel(GET_ITEM_MODEL(13, 38), "Data\\Item\\", "Ring", 1);
 
 	//
-	// Anel de prisma
+	// Kit de prisma
 	//
 	pLoadModel(GET_ITEM_MODEL(13, 39), "Data\\Item\\", "Ring", 3);
 	pLoadModel(GET_ITEM_MODEL(13, 40), "Data\\Item\\", "Ring", 3);
+	pLoadModel(GET_ITEM_MODEL(13, 41), "Data\\Item\\", "Necklace", 3);
 
 	//
-	// Tintas e Neutralizadores
+	// Tintas, Neutralizadores e Energias
 	//
 	pLoadModel(GET_ITEM_MODEL(14, 32), "Data\\Item\\", "pipe_r", -1);
 	pLoadModel(GET_ITEM_MODEL(14, 33), "Data\\Item\\", "pipe_g", -1);
@@ -866,6 +896,8 @@ void CItem::LoadModels()
 	pLoadModel(GET_ITEM_MODEL(14, 35), "Data\\Item\\", "pipe_r", -1);
 	pLoadModel(GET_ITEM_MODEL(14, 36), "Data\\Item\\", "pipe_g", -1);
 	pLoadModel(GET_ITEM_MODEL(14, 37), "Data\\Item\\", "pipe_b", -1);
+	pLoadModel(GET_ITEM_MODEL(14, 38), "Data\\Item\\", "pipe_g", -1);
+	pLoadModel(GET_ITEM_MODEL(14, 39), "Data\\Item\\", "pipe_g", -1);
 }
 
 void CItem::LoadTextures()
@@ -882,13 +914,14 @@ void CItem::LoadTextures()
 	pLoadTexture(GET_ITEM_MODEL(13, 38), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 
 	//
-	// Anel de prisma
+	// Kit de prisma
 	//
 	pLoadTexture(GET_ITEM_MODEL(13, 39), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 	pLoadTexture(GET_ITEM_MODEL(13, 40), "Item\\", GL_REPEAT, GL_NEAREST, 1);
+	pLoadTexture(GET_ITEM_MODEL(13, 41), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 
 	//
-	// Tintas e Neutralizadores
+	// Tintas, Neutralizadores e Energias
 	//
 	pLoadTexture(GET_ITEM_MODEL(14, 32), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 	pLoadTexture(GET_ITEM_MODEL(14, 33), "Item\\", GL_REPEAT, GL_NEAREST, 1);
@@ -896,6 +929,8 @@ void CItem::LoadTextures()
 	pLoadTexture(GET_ITEM_MODEL(14, 35), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 	pLoadTexture(GET_ITEM_MODEL(14, 36), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 	pLoadTexture(GET_ITEM_MODEL(14, 37), "Item\\", GL_REPEAT, GL_NEAREST, 1);
+	pLoadTexture(GET_ITEM_MODEL(14, 38), "Item\\", GL_REPEAT, GL_NEAREST, 1);
+	pLoadTexture(GET_ITEM_MODEL(14, 39), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 }
 
 bool CItem::GetModelPosition(DWORD Index)
@@ -924,6 +959,18 @@ bool CItem::GetModelPosition(DWORD Index)
 		return true;
 	}
 
+	//
+	// Colar de Prisma
+	//
+	if (Index == GET_ITEM_MODEL(13, 41))
+	{
+		pModelPositionX = 270.f;
+		pModelPositionY = 0.f;
+		pModelPositionZ = 0.f;
+
+		return true;
+	}
+
 	return false;
 }
 
@@ -933,6 +980,13 @@ bool CItem::GetModelSize(DWORD Index)
 		(Index == GET_ITEM_MODEL(13, 39) || Index == GET_ITEM_MODEL(13, 40)))												// Aneis de prisma
 	{
 		this->ModelSize = 0.0025f;
+
+		return true;
+	}
+
+	if (Index == GET_ITEM_MODEL(13, 41))	// Colar de prisma
+	{
+		this->ModelSize = 0.0013f;
 
 		return true;
 	}
@@ -984,50 +1038,151 @@ void CItem::SetDescription(ItemInfo* Item)
 
 	if (Custom)
 	{
+		if ((Item->Index <= GET_ITEM(12, 6) && Item->Index != GET_ITEM(4, 7) && Item->Index != GET_ITEM(4, 15)) ||
+			(Item->Index >= GET_ITEM(13, 8) && Item->Index <= GET_ITEM(13, 9)) ||
+			(Item->Index >= GET_ITEM(13, 11) && Item->Index <= GET_ITEM(13, 12)) ||
+			(Item->Index >= GET_ITEM(13, 21) && Item->Index <= GET_ITEM(13, 28)) ||
+			Item->Index == GET_ITEM(13, 30) ||
+			(Item->Index >= GET_ITEM(13, 39) && Item->Index <= GET_ITEM(13, 41)))
+		{
+			char Name[100];
+			BYTE Level = (Item->Code & 0x78) >> 3;
+
+			switch (Item->Index)
+			{
+				case GET_ITEM(13, 39):
+				{
+					if (Level > 0)
+					{
+						if (Item->NewOption)
+						{
+							wsprintf(Name, "%s %s +%d [%s]", (char*)(0x76CF434), this->ExBmd[Item->Index].Name, Level, Message.Get(9));
+							this->SetNameColor(0, 0, Name);
+						}
+						else
+						{
+							this->SetNameColor(0, 0, this->ExBmd[Item->Index].Name);
+						}
+					}
+					else
+					{
+						if (Item->NewOption)
+						{
+							wsprintf(Name, "%s %s [%s]", (char*)(0x76CF434), this->ExBmd[Item->Index].Name, Message.Get(9));
+							this->SetNameColor(0, 0, Name);
+						}
+						else
+						{
+							this->SetNameColor(0, 0, ExBmd[Item->Index].Name);
+						}
+					}
+
+					break;
+				}
+				case GET_ITEM(13, 40):
+				{
+					if (Level > 0)
+					{
+						if (Item->NewOption)
+						{
+							wsprintf(Name, "%s %s +%d [%s]", (char*)(0x76CF434), this->ExBmd[Item->Index].Name, Level, Message.Get(10));
+							this->SetNameColor(0, 0, Name);
+						}
+						else
+						{
+							this->SetNameColor(0, 0, this->ExBmd[Item->Index].Name);
+						}
+					}
+					else
+					{
+						if (Item->NewOption)
+						{
+							wsprintf(Name, "%s %s [%s]", (char*)(0x76CF434), this->ExBmd[Item->Index].Name, Message.Get(10));
+							this->SetNameColor(0, 0, Name);
+						}
+						else
+						{
+							this->SetNameColor(0, 0, ExBmd[Item->Index].Name);
+						}
+					}
+
+					break;
+				}
+				default:
+				{
+					if (Level > 0)
+					{
+						if (Item->NewOption)
+						{
+							wsprintf(Name, "%s %s +%d", (char*)(0x76CF434), this->ExBmd[Item->Index].Name, Level);
+							this->SetNameColor(0, 0, Name);
+						}
+						else
+						{
+							this->SetNameColor(0, 0, this->ExBmd[Item->Index].Name);
+						}
+					}
+					else
+					{
+						if (Item->NewOption)
+						{
+							wsprintf(Name, "%s %s", (char*)(0x76CF434), ExBmd[Item->Index].Name);
+							this->SetNameColor(0, 0, Name);
+						}
+						else
+						{
+							this->SetNameColor(0, 0, ExBmd[Item->Index].Name);
+						}
+					}
+
+					break;
+				}
+			}
+		}
+
 		switch (Item->Index)
 		{
 			case GET_ITEM(13, 39):	// Anel de Prisma [Armadura]
 			case GET_ITEM(13, 40):	// Anel de Prisma [Arma]
 			{
-				BYTE Red[] = {(BYTE)(Custom->Prism[0].Red * 0x11), (BYTE)(Custom->Prism[1].Red * 0x11)};
-				BYTE Green[] = {(BYTE)(Custom->Prism[0].Green * 0x11), (BYTE)(Custom->Prism[1].Green * 0x11)};
-				BYTE Blue[] = {(BYTE)(Custom->Prism[0].Blue * 0x11), (BYTE)(Custom->Prism[1].Blue * 0x11)};
-				
-				if ((Red[0] != 0 || Green[0] != 0 || Blue[0] != 0) &&
-					(Red[1] != 0 || Green[1] != 0 || Blue[1] != 0))
+				if ((Custom->Prism.Color[0].Red != 0 || Custom->Prism.Color[0].Green != 0 || Custom->Prism.Color[0].Blue != 0) &&
+					(Custom->Prism.Color[1].Red != 0 || Custom->Prism.Color[1].Green != 0 || Custom->Prism.Color[1].Blue != 0))
 				{
-					float Timer = (1.0f + sin(GetTickCount() / 500.0f)) * 0.5f;
-
-					BYTE R = (BYTE)(this->InterpolateValue((float)(Red[0]), (float)(Red[1]), Timer));
-					BYTE G = (BYTE)(this->InterpolateValue((float)(Green[0]), (float)(Green[1]), Timer));
-					BYTE B = (BYTE)(this->InterpolateValue((float)(Blue[0]), (float)(Blue[1]), Timer));
-
-					this->SetNameColor(RGBA(R, G, B, 255), RGBA(255, 255, 255, 255));
 					this->AddLine();
 					this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(4));
-					this->AddDescription(RGBA(Custom->Prism[0].Red * 0x11, Custom->Prism[0].Green * 0x11, Custom->Prism[0].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[0].Red, Custom->Prism[0].Green, Custom->Prism[0].Blue);
-					this->AddDescription(RGBA(Custom->Prism[1].Red * 0x11, Custom->Prism[1].Green * 0x11, Custom->Prism[1].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[1].Red, Custom->Prism[1].Green, Custom->Prism[1].Blue);
+					this->AddDescription(RGBA(Custom->Prism.Color[0].Red, Custom->Prism.Color[0].Green, Custom->Prism.Color[0].Blue, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", (Custom->Prism.Color[0].Red / 0x11), (Custom->Prism.Color[0].Green / 0x11), (Custom->Prism.Color[0].Blue / 0x11));
+					this->AddDescription(RGBA(Custom->Prism.Color[1].Red, Custom->Prism.Color[1].Green, Custom->Prism.Color[1].Blue, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", (Custom->Prism.Color[1].Red / 0x11), (Custom->Prism.Color[1].Green / 0x11), (Custom->Prism.Color[1].Blue / 0x11));
 				}
-				else if (Red[0] != 0 || Green[0] != 0 || Blue[0] != 0)
+				else if (Custom->Prism.Color[0].Red != 0 || Custom->Prism.Color[0].Green != 0 || Custom->Prism.Color[0].Blue != 0)
 				{
-					this->SetNameColor(RGBA(Red[0], Green[0], Blue[0], 255), RGBA(255, 255, 255, 255));
 					this->AddLine();
 					this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(3));
-					this->AddDescription(RGBA(Custom->Prism[0].Red * 0x11, Custom->Prism[0].Green * 0x11, Custom->Prism[0].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[0].Red, Custom->Prism[0].Green, Custom->Prism[0].Blue);
+					this->AddDescription(RGBA(Custom->Prism.Color[0].Red, Custom->Prism.Color[0].Green, Custom->Prism.Color[0].Blue, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", (Custom->Prism.Color[0].Red / 0x11), (Custom->Prism.Color[0].Green / 0x11), (Custom->Prism.Color[0].Blue / 0x11));
 				}
-				else if (Red[1] != 0 || Green[1] != 0 || Blue[1] != 0)
+				else if (Custom->Prism.Color[1].Red != 0 || Custom->Prism.Color[1].Green != 0 || Custom->Prism.Color[1].Blue != 0)
 				{
-					this->SetNameColor(RGBA(Red[1], Green[1], Blue[1], 255), RGBA(255, 255, 255, 255));
 					this->AddLine();
 					this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(3));
-					this->AddDescription(RGBA(Custom->Prism[1].Red * 0x11, Custom->Prism[1].Green * 0x11, Custom->Prism[1].Blue * 0x11, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", Custom->Prism[1].Red, Custom->Prism[1].Green, Custom->Prism[1].Blue);
+					this->AddDescription(RGBA(Custom->Prism.Color[1].Red, Custom->Prism.Color[1].Green, Custom->Prism.Color[1].Blue, 255), RGBA(255, 255, 255, 255), "R[+%02d]   G[+%02d]   B[+%02d]", (Custom->Prism.Color[1].Red / 0x11), (Custom->Prism.Color[1].Green / 0x11), (Custom->Prism.Color[1].Blue / 0x11));
 				}
-				else
-				{
-					DWORD slot = pCursorSlot;
-					DWORD target = pCursorInterface;
 
-					this->SetNameColor(RGBA(0, 0, 0, 255), RGBA(255, 255, 255, 255));
+				break;
+			}
+			case GET_ITEM(13, 41): // Colar de Prisma
+			{
+				if (Custom->Prism.Speed[0] != 0 || Custom->Prism.Speed[1] != 0)
+				{
+					this->AddLine();
+				}
+
+				if (Custom->Prism.Speed[0] != 0)
+				{
+					this->AddDescription(RGBA(0, 0, 0, 0), RGBA(230, 230, 0, 255), Message.Get((Custom->Prism.Speed[0] > 0) ? 11 : 12), Custom->Prism.Speed[0]);
+				}
+
+				if (Custom->Prism.Speed[1] != 0)
+				{
+					this->AddDescription(RGBA(0, 0, 0, 0), RGBA(0, 235, 235, 255), Message.Get((Custom->Prism.Speed[1] > 0) ? 13 : 14), Custom->Prism.Speed[1]);
 				}
 
 				break;
@@ -1039,18 +1194,28 @@ void CItem::SetDescription(ItemInfo* Item)
 				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(5));
 				break;
 			}
-			case GET_ITEM(14, 35): // Neutralizador de Tinta Vermelha
-			case GET_ITEM(14, 36): // Neutralizador de Tinta Verde
-			case GET_ITEM(14, 37): // Neutralizador de Tinta Azul
+			case GET_ITEM(14, 35): // Neutralizador Vermelho
+			case GET_ITEM(14, 36): // Neutralizador Verde
+			case GET_ITEM(14, 37): // Neutralizador Azul
 			{
 				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(6));
+				break;
+			}
+			case GET_ITEM(14, 38): // Energia Positiva
+			{
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(7));
+				break;
+			}
+			case GET_ITEM(14, 39): // Energia Negativa
+			{
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(8));
 				break;
 			}
 		}
 	}
 }
 
-void CItem::SetNameColor(DWORD Background, DWORD Foreground)
+void CItem::SetNameColor(DWORD Background, DWORD Foreground, const char* Name)
 {
 	int Line = 1;
 
@@ -1078,10 +1243,18 @@ void CItem::SetNameColor(DWORD Background, DWORD Foreground)
 		}
 	}
 
-	DescriptionColor[Line] = 100;
-	DescriptionType[Line] = 2;
-	DescriptionCustomColor[0][Line] = Background;
-	DescriptionCustomColor[1][Line] = Foreground;
+	if (Name)
+	{
+		strcpy_s(DescriptionText[Line], Name);
+	}
+	  	 
+	if (Background != 0 || Foreground != 0)
+	{
+		DescriptionColor[Line] = 100;
+		DescriptionType[Line] = 2;
+		DescriptionCustomColor[0][Line] = Background;
+		DescriptionCustomColor[1][Line] = Foreground;
+	}
 }
 
 void CItem::AddLine()
@@ -1113,69 +1286,6 @@ void CItem::AddDescription(DWORD Background, DWORD Foreground, const char* Forma
 	va_end(Arguments);
 
 	++pCurrentMessage;
-}
-
-float CItem::InterpolateValue(float Start, float End, float Timer)
-{
-	return Start + (End - Start) * Timer;
-}
-
-bool CItem::Equals(float A, float B)
-{
-	return fabs(A - B) < 0.001f;
-}
-
-bool CItem::InterpolateColors(GlowColor* Color, float Timer, float R1, float G1, float B1, float R2, float G2, float B2)
-{
-	Color->Red = this->InterpolateValue(R1, R2, Timer);
-	Color->Green = this->InterpolateValue(G1, G2, Timer);
-	Color->Blue = this->InterpolateValue(B1, B2, Timer);
-
-	return Equals(Color->Red, R2) && Equals(Color->Green, G2) && Equals(Color->Blue, B2);
-}
-
-bool CItem::ApplyPrismEffect(GlowColor* Color, PrismEffect* Prism, int Index)
-{
-	int Rand = (Index * 18765 + 44162) % RAND_MAX;
-	float Timer = (1.0f + sin((GetTickCount() + (Rand % 750)) / (750.f + (float)(Rand % 50)))) * 0.5f;
-
-	if ((Prism[0].Red != 0.f || Prism[0].Green != 0.f || Prism[0].Blue != 0.f) && 
-		(Prism[1].Red != 0.f || Prism[1].Green != 0.f || Prism[1].Blue != 0.f))
-	{
-		this->InterpolateColors(Color, Timer, Prism[0].Red, Prism[0].Green, Prism[0].Blue, Prism[1].Red, Prism[1].Green, Prism[1].Blue);
-	}
-	else if (Prism[0].Red != 0.f || Prism[0].Green != 0.f || Prism[0].Blue != 0.f)
-	{
-		Color->Red = Prism[0].Red;
-		Color->Green = Prism[0].Green;
-		Color->Blue = Prism[0].Blue;
-	}
-	else if (Prism[1].Red != 0.f || Prism[1].Green != 0.f || Prism[1].Blue != 0.f)
-	{
-		Color->Red = Prism[1].Red;
-		Color->Green = Prism[1].Green;
-		Color->Blue = Prism[1].Blue;
-	}
-	else
-	{
-		return false;
-	}
-
-	return true;
-}
-
-void CItem::ApplyPrismValue(PrismEffect* Prism, BYTE Red, BYTE Green, BYTE Blue)
-{
-	BYTE RedValue[] = {GET_NIBBLE_X(Red), GET_NIBBLE_Y(Red)};
-	BYTE GreenValue[] = {GET_NIBBLE_X(Green), GET_NIBBLE_Y(Green)};
-	BYTE BlueValue[] = {GET_NIBBLE_X(Blue), GET_NIBBLE_Y(Blue)};
-
-	Prism[0].Red = float(RedValue[0] * 0x11) / 255.f;
-	Prism[1].Red = float(RedValue[1] * 0x11) / 255.f;
-	Prism[0].Green = float(GreenValue[0] * 0x11) / 255.f;
-	Prism[1].Green = float(GreenValue[1] * 0x11) / 255.f;
-	Prism[0].Blue = float(BlueValue[0] * 0x11) / 255.f;
-	Prism[1].Blue = float(BlueValue[1] * 0x11) / 255.f;
 }
 
 void __declspec(naked) CItem::SetModelPosition()
@@ -1364,7 +1474,8 @@ void __declspec(naked) CItem::EnableGlow()
 	}
 
 	if ((Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38))) ||	// Aneis de transformação
-		(Index >= GET_ITEM_MODEL(14, 32) && Index <= GET_ITEM_MODEL(14, 34)))											// Tintas
+		(Index >= GET_ITEM_MODEL(14, 32) && Index <= GET_ITEM_MODEL(14, 34)) ||											// Tintas
+		(Index == GET_ITEM_MODEL(14, 38)))																				// Energia Positiva
 	{
 		__asm
 		{
@@ -1373,7 +1484,8 @@ void __declspec(naked) CItem::EnableGlow()
 		}
 	}
 
-	if (Index >= GET_ITEM_MODEL(14, 35) && Index <= GET_ITEM_MODEL(14, 37))	// Neutralizadores
+	if ((Index >= GET_ITEM_MODEL(14, 35) && Index <= GET_ITEM_MODEL(14, 37)) ||		// Neutralizadores
+		(Index == GET_ITEM_MODEL(14, 39)))											// Energia Negativa
 	{
 		__asm
 		{
@@ -1394,29 +1506,49 @@ void __declspec(naked) CItem::EnableGlow()
 	}
 }
 
-void CItem::SetGlow(int ItemModel, float Alpha, DWORD Unk2, GlowColor* Color, DWORD Unk3)
+void CItem::SetGlow(int ItemModel, float Alpha, DWORD Unk2, FloatColor* Color, DWORD Unk3)
 {
 	switch (ItemModel)
 	{
-		case GET_ITEM_MODEL(14, 32):	// Tinta Vermelha
+		case GET_ITEM_MODEL(13, 39):	// Anel de Prisma
+		case GET_ITEM_MODEL(13, 40):	// Anel de Prisma
+		case GET_ITEM_MODEL(13, 41):	// Colar de Prisma
 		{
-			Color->Red = 0.1f;
+			Color->Red = Prism.InterpolateValue(0.6f, 1.f, ((1.0f + sin(TickCount / 500.f)) * 0.5f));
+			Color->Green = 0.f;
+			Color->Blue = Prism.InterpolateValue(1.0f, 0.f, ((1.0f + sin(TickCount / 500.f)) * 0.5f));
+			return;
+		}
+		case GET_ITEM_MODEL(14, 32):	// Tinta Vermelha
+		case GET_ITEM_MODEL(14, 35):	// Neutralizador Vermelho
+		{
+			Color->Red = 0.2f;
 			Color->Green = 0.0f;
 			Color->Blue = 0.0f;
 			return;
 		}
 		case GET_ITEM_MODEL(14, 33):	// Tinta Verde
+		case GET_ITEM_MODEL(14, 36):	// Neutralizador Verde
 		{
 			Color->Red = 0.0f;
-			Color->Green = 0.1f;
+			Color->Green = 0.2f;
 			Color->Blue = 0.0f;
 			return;
 		}
 		case GET_ITEM_MODEL(14, 34):	// Tinta Azul
+		case GET_ITEM_MODEL(14, 37):	// Neutralizador Azul
 		{
 			Color->Red = 0.0f;
 			Color->Green = 0.0f;
-			Color->Blue = 0.1f;
+			Color->Blue = 0.2f;
+			return;
+		}
+		case GET_ITEM_MODEL(14, 38):	// Energia Positiva
+		case GET_ITEM_MODEL(14, 39):	// Energia Negativa
+		{
+			Color->Red = 1.0f;
+			Color->Green = 1.0f;
+			Color->Blue = 0.0f;
 			return;
 		}
 	}
@@ -1427,14 +1559,14 @@ void CItem::SetGlow(int ItemModel, float Alpha, DWORD Unk2, GlowColor* Color, DW
 		{
 			if (Viewport.Renderizing->Armor == ItemModel || Viewport.Renderizing->Helm == ItemModel || Viewport.Renderizing->Gloves == ItemModel || Viewport.Renderizing->Pants == ItemModel || Viewport.Renderizing->Boots == ItemModel)
 			{
-				if (Item.ApplyPrismEffect(Color, Player.PrismArmor, Player.Index))
+				if (Prism.GetEffect(Color, Player.PrismArmor.Color, Player.Index, Player.PrismArmor.Speed))
 				{
 					return;
 				}
 			}
 			else if (Viewport.Renderizing->LeftWeapon == ItemModel || Viewport.Renderizing->RightWeapon == ItemModel)
 			{
-				if (Item.ApplyPrismEffect(Color, Player.PrismWeapon, Player.Index))
+				if (Prism.GetEffect(Color, Player.PrismWeapon.Color, Player.Index, Player.PrismWeapon.Speed))
 				{
 					return;
 				}
@@ -1446,14 +1578,14 @@ void CItem::SetGlow(int ItemModel, float Alpha, DWORD Unk2, GlowColor* Color, DW
 			{
 				if (Viewport.Renderizing->Armor == ItemModel || Viewport.Renderizing->Helm == ItemModel || Viewport.Renderizing->Gloves == ItemModel || Viewport.Renderizing->Pants == ItemModel || Viewport.Renderizing->Boots == ItemModel)
 				{
-					if (Item.ApplyPrismEffect(Color, Player.CharacterList[Viewport.Renderizing->Index].PrismArmor, Viewport.Renderizing->Index))
+					if (Prism.GetEffect(Color, Player.CharacterList[Viewport.Renderizing->Index].PrismArmor.Color, Viewport.Renderizing->Index, Player.CharacterList[Viewport.Renderizing->Index].PrismArmor.Speed))
 					{
 						return;
 					}
 				}
 				else if (Viewport.Renderizing->LeftWeapon == ItemModel || Viewport.Renderizing->RightWeapon == ItemModel)
 				{
-					if (Item.ApplyPrismEffect(Color, Player.CharacterList[Viewport.Renderizing->Index].PrismWeapon, Viewport.Renderizing->Index))
+					if (Prism.GetEffect(Color, Player.CharacterList[Viewport.Renderizing->Index].PrismWeapon.Color, Viewport.Renderizing->Index, Player.CharacterList[Viewport.Renderizing->Index].PrismWeapon.Speed))
 					{
 						return;
 					}
@@ -1467,14 +1599,14 @@ void CItem::SetGlow(int ItemModel, float Alpha, DWORD Unk2, GlowColor* Color, DW
 				{
 					if (Viewport.Renderizing->Armor == ItemModel || Viewport.Renderizing->Helm == ItemModel || Viewport.Renderizing->Gloves == ItemModel || Viewport.Renderizing->Pants == ItemModel || Viewport.Renderizing->Boots == ItemModel)
 					{
-						if (Item.ApplyPrismEffect(Color, Target->PrismArmor, Viewport.Renderizing->Index))
+						if (Prism.GetEffect(Color, Target->PrismArmor.Color, Viewport.Renderizing->Index, Target->PrismArmor.Speed))
 						{
 							return;
 						}
 					}
 					else if (Viewport.Renderizing->LeftWeapon == ItemModel || Viewport.Renderizing->RightWeapon == ItemModel)
 					{
-						if (Item.ApplyPrismEffect(Color, Target->PrismWeapon, Viewport.Renderizing->Index))
+						if (Prism.GetEffect(Color, Target->PrismWeapon.Color, Viewport.Renderizing->Index, Target->PrismWeapon.Speed))
 						{
 							return;
 						}
@@ -1498,7 +1630,7 @@ void __declspec(naked) CItem::AllowExcellentOptions()
 		PUSHAD;
 	}
 
-	if (Index == GET_ITEM(13, 39) || Index == GET_ITEM(13, 40)) // Aneis de prisma
+	if (Index >= GET_ITEM(13, 39) && Index <= GET_ITEM(13, 41)) // Kit de prisma
 	{
 		__asm
 		{
@@ -1530,8 +1662,7 @@ void __declspec(naked) CItem::AllowInsertItem()
 		PUSHAD;
 	}
 
-	if ((Index >= GET_ITEM(14, 32) && Index <= GET_ITEM(14, 34)) ||		// Tintas
-		(Index >= GET_ITEM(14, 35) && Index <= GET_ITEM(14, 37)))		// Neutralizadores
+	if (Index >= GET_ITEM(14, 32) && Index <= GET_ITEM(14, 41))	// Tintas, Neutralizadores e Energias
 	{
 		__asm
 		{
@@ -1571,8 +1702,7 @@ void __declspec(naked) CItem::AllowInsertItemGreenSlot()
 		PUSHAD;
 	}
 
-	if ((Index >= GET_ITEM(14, 32) && Index <= GET_ITEM(14, 34)) ||		// Tintas
-		(Index >= GET_ITEM(14, 35) && Index <= GET_ITEM(14, 37)))		// Neutralizadores
+	if (Index >= GET_ITEM(14, 32) && Index <= GET_ITEM(14, 41))	// Tintas, Neutralizadores e Energias
 	{
 		__asm
 		{
@@ -2189,7 +2319,7 @@ void __declspec(naked) CItem::RenderizingShop()
 
 int CItem::TestEffect(int Index, DWORD Unk1, DWORD Unk2, float* Color, DWORD Count, float Size, DWORD Unk3)
 {
-	Item.ApplyPrismEffect((GlowColor*)(Color), Player.PrismArmor, Player.Index);
+	Prism.GetEffect((FloatColor*)(Color), Player.PrismArmor.Color, Player.Index, Player.PrismArmor.Speed);
 	return pShowEffect2(Index, Unk1, Unk2, Color, Count, Size, Unk3);
 }
 

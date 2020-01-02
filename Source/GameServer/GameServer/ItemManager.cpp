@@ -769,6 +769,19 @@ bool CItemManager::CheckItemMoveToChaos(LPOBJ lpObj, CItem* lpItem, BYTE TargetF
 		}
 	}
 
+	if (lpItem->m_Index == GET_ITEM(13, 41))
+	{
+		if (lpItem->m_Prism[0] == 0)
+		{
+			return 0;
+		}
+
+		if (lpItem->m_Prism[1] != 0)
+		{
+			return 0;
+		}
+	}
+
 	return 1;
 }
 
@@ -1569,7 +1582,7 @@ void CItemManager::ItemByteConvert(BYTE* lpMsg, CItem item) // OK
 	lpMsg[5] |= ((item.m_IsPeriodicItem & 1) << 1);
 	lpMsg[5] |= ((item.m_IsExpiredItem & 1) << 2);*/
 
-	if (item.m_Index == GET_ITEM(13, 39) || item.m_Index == GET_ITEM(13, 40))
+	if (item.m_Index >= GET_ITEM(13, 39) && item.m_Index <= GET_ITEM(13, 41))
 	{
 		lpMsg[6] = item.m_Prism[0];
 		lpMsg[7] = item.m_Prism[1];
@@ -1618,7 +1631,7 @@ void CItemManager::DBItemByteConvert(BYTE* lpMsg, CItem* lpItem) // OK
 	lpMsg[9] |= ((lpItem->m_IsPeriodicItem & 1) << 1);
 	lpMsg[9] |= ((lpItem->m_IsExpiredItem & 1) << 2);*/
 
-	if (lpItem->m_Index == GET_ITEM(13, 39) || lpItem->m_Index == GET_ITEM(13, 40))
+	if (lpItem->m_Index >= GET_ITEM(13, 39) && lpItem->m_Index <= GET_ITEM(13, 41))
 	{
 		lpMsg[10] = lpItem->m_Prism[0];
 		lpMsg[11] = lpItem->m_Prism[1];
@@ -1663,7 +1676,7 @@ bool CItemManager::ConvertItemByte(CItem* lpItem, BYTE* lpMsg) // OK
 		memcpy(lpItem->m_SocketOption, &lpMsg[11], MAX_SOCKET_OPTION);
 	}*/
 
-	if (lpItem->m_Index == GET_ITEM(13, 39) || lpItem->m_Index == GET_ITEM(13, 40))
+	if (lpItem->m_Index >= GET_ITEM(13, 39) && lpItem->m_Index <= GET_ITEM(13, 41))
 	{
 		memcpy(lpItem->m_Prism, &lpMsg[10], sizeof(lpItem->m_Prism));
 	}
@@ -2956,6 +2969,7 @@ void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex) // OK
 	pMsg.SourceSlot = lpMsg->SourceSlot;
 	pMsg.TargetFlag = lpMsg->TargetFlag;
 	pMsg.TargetSlot = lpMsg->TargetSlot;
+	pMsg.PrismUpdate = true;
 
 	memset(pMsg.ItemInfo, 0xFF, sizeof(pMsg.ItemInfo));
 
@@ -3011,6 +3025,8 @@ void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex) // OK
 			return;
 		}
 	}
+
+	short Rings[] = {lpObj->Inventory[10].m_Index, lpObj->Inventory[11].m_Index};
 
 	if (lpMsg->SourceFlag == 0 && lpMsg->TargetFlag == 0) // Inventory -> Inventory
 	{
@@ -3101,6 +3117,32 @@ void CItemManager::CGItemMoveRecv(PMSG_ITEM_MOVE_RECV* lpMsg, int aIndex) // OK
 		if ((pMsg.result = this->MoveItemToPersonalShopFromPersonalShop(lpObj, lpMsg->SourceSlot, lpMsg->TargetSlot, lpMsg->TargetFlag)) != 0xFF)
 		{
 			this->ItemByteConvert(pMsg.ItemInfo, lpObj->Inventory[lpMsg->TargetSlot]);
+		}
+	}
+
+	if (lpMsg->TargetFlag == 0)
+	{
+		if (lpMsg->TargetSlot == 10 || lpMsg->TargetSlot == 11)
+		{
+			if ((lpObj->Inventory[10].m_Index == GET_ITEM(13, 39) || lpObj->Inventory[10].m_Index == GET_ITEM(13, 40)) ||
+				(lpObj->Inventory[11].m_Index == GET_ITEM(13, 39) || lpObj->Inventory[11].m_Index == GET_ITEM(13, 40)))
+			{
+				if (lpObj->Inventory[10].m_Index == lpObj->Inventory[11].m_Index)
+				{
+					pMsg.PrismUpdate = false;
+				}
+			}
+		}
+		else
+		{
+			if ((Rings[0] == GET_ITEM(13, 39) || Rings[0] == GET_ITEM(13, 40)) ||
+				(Rings[1] == GET_ITEM(13, 39) || Rings[1] == GET_ITEM(13, 40)))
+			{
+				if (Rings[0] == Rings[1])
+				{
+					pMsg.PrismUpdate = false;
+				}
+			}
 		}
 	}
 
@@ -3275,6 +3317,15 @@ void CItemManager::CGItemUseRecv(PMSG_ITEM_USE_RECV* lpMsg, int aIndex) // OK
 	else if (lpItem->m_Index >= GET_ITEM(14, 32) && lpItem->m_Index <= GET_ITEM(14, 37)) // Tintas e Neutralizadores
 	{
 		if (gObjectManager.CharacterUseInkOrNeutralizer(lpObj, lpMsg->SourceSlot, lpMsg->TargetSlot) != 0)
+		{
+			this->InventoryDelItem(aIndex, lpMsg->SourceSlot);
+			this->GCItemDeleteSend(aIndex, lpMsg->SourceSlot, 1);
+			this->GCItemModifySend(aIndex, lpMsg->TargetSlot);
+		}
+	}
+	else if (lpItem->m_Index >= GET_ITEM(14, 38) && lpItem->m_Index <= GET_ITEM(14, 41)) // Energias
+	{
+		if (gObjectManager.CharacterUseEnergy(lpObj, lpMsg->SourceSlot, lpMsg->TargetSlot) != 0)
 		{
 			this->InventoryDelItem(aIndex, lpMsg->SourceSlot);
 			this->GCItemDeleteSend(aIndex, lpMsg->SourceSlot, 1);

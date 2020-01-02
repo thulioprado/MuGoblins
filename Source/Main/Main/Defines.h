@@ -3,7 +3,7 @@
 //
 // Brilho/Cores
 //
-struct GlowColor
+struct FloatColor
 {
 	float Red;
 	float Green;
@@ -11,13 +11,12 @@ struct GlowColor
 };
 
 //
-// Prisma
+// Prism
 //
-struct PrismEffect
+struct PrismColor
 {
-	float Red;
-	float Green;
-	float Blue;
+	FloatColor Color[2];
+	int Speed;
 };
 
 //
@@ -147,7 +146,7 @@ struct PrismEffect
 #define pSerialPacketDecrypt()				((BYTE(__thiscall*)(void*, const char*))(0x409340))((void*)(0x57500B0), (const char*)(0x57548F3))
 #define pSimpleModulusEncrypt(a, b, c)		((int(__thiscall*)(void*, void*, void*, int))(0x674DC0))((void*)(0x5754800), a, b, c)
 #define pSimpleModulusDecrypt(a, b, c)		((int(__thiscall*)(void*, void*, void*, int))(0x674E30))((void*)(0x5754848), a, b, c)
-#define pSetGlow							((void(*)(int, float, DWORD, GlowColor*, DWORD))(0x5F6220))
+#define pSetGlow							((void(*)(int, float, DWORD, FloatColor*, DWORD))(0x5F6220))
 #define pShowMessage						((char(*)(const char*, const char*, int))(0x549630))
 #define pRenderizeMonster					((ViewportInfo*(*)(int, DWORD, int, int))(0x434E60))
 #define pRenderizeModel						((ViewportInfo*(*)(int, int, DWORD, int, int))(0x509410))
@@ -199,7 +198,7 @@ struct PrismEffect
 // 
 // Outros
 //
-#define CHAR_SET_SIZE						24
+#define CHAR_SET_SIZE						26
 #define CHAR_SET_SIZE_MAIN					18
 #define INVENTORY_SIZE						108
 #define TRADE_SIZE							32

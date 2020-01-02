@@ -22,6 +22,12 @@ struct ItemInfo
 	BYTE NewOption;			    // 1B
 	BYTE SetOption;			    // 1C
 };
+
+struct ItemInfoEx
+{
+	char Name[50];
+	WORD Defense;
+};
 #pragma pack(pop)
 
 class CItem
@@ -37,14 +43,9 @@ public:
 	bool GetModelPosition(DWORD Index);
 	bool GetModelSize(DWORD Index);
 	void SetDescription(ItemInfo* Item);
-	void SetNameColor(DWORD Background, DWORD Foreground);
+	void SetNameColor(DWORD Background, DWORD Foreground, const char* Name = null);
 	void AddLine();
 	void AddDescription(DWORD Background, DWORD Foreground, const char* Format, ...);
-	float InterpolateValue(float Start, float End, float Timer);
-	bool Equals(float A, float B);
-	bool InterpolateColors(GlowColor* Color, float Timer, float R1, float G1, float B1, float R2, float G2, float B2);
-	bool ApplyPrismEffect(GlowColor* Color, struct PrismEffect* Prism, int Index);
-	void ApplyPrismValue(struct PrismEffect* Prism, BYTE Red, BYTE Green, BYTE Blue);
 
 public:
 	static void SetModelPosition();
@@ -53,7 +54,7 @@ public:
 	static void SetDescriptionColor1();
 	static void SetDescriptionColor2();
 	static void EnableGlow();
-	static void SetGlow(int ItemModel, float Alpha, DWORD Unk2, GlowColor* Color, DWORD Unk3);
+	static void SetGlow(int ItemModel, float Alpha, DWORD Unk2, FloatColor* Color, DWORD Unk3);
 	static void AllowExcellentOptions();
 	static void AllowInsertItem();
 	static void AllowInsertItemGreenSlot();
@@ -76,6 +77,7 @@ public:
 	static int TestEffect(int Unk1, DWORD Unk2, DWORD Unk3, float* Color, DWORD Unk4, float Unk5, DWORD Unk6);
 	
 public:
+	std::unique_ptr<ItemInfoEx[]> ExBmd;
 	WORD TransformationRings[8][16];
 	const char* TransformationRingFormat;
 	float ModelSize;
