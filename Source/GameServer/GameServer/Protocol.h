@@ -636,7 +636,7 @@ struct PMSG_CLOSE_CLIENT_SEND
 
 struct PMSG_CHARACTER_LIST_SEND
 {
-	PSBMSG_HEAD header; // C1:F3:00
+	PSWMSG_HEAD header; // C2:F3:00
 	BYTE ClassCode;
 	BYTE MoveCnt;
 	BYTE count;
@@ -1487,7 +1487,30 @@ struct PMSG_POST_MESSAGE_SEND
 	char message[80];
 };
 
+struct PMSG_CHARACTER_UPDATE_SEND
+{
+	PSWMSG_HEAD header;
+	WORD Level;
+	DWORD LevelUpPoint;
+	WORD Strength;
+	WORD Dexterity;
+	WORD Vitality;
+	WORD Energy;
+	WORD Leadership;
+	DWORD HP;
+	DWORD MaxHP;
+	DWORD MP;
+	DWORD MaxMP;
+	DWORD BP;
+	DWORD MaxBP;
+	WORD FruitAddPoint;
+	WORD MaxFruitAddPoint;
+	WORD FruitSubPoint;
+	WORD MaxFruitSubPoint;
+};
+
 void GCLockSend(int aIndex, BYTE lock);
 void GCCustomSettings(int aIndex);
 void GCDiscordUpdate(int total);
 void GCPostMessageSend(const char* message);
+void GCCharacterUpdate(int aIndex);

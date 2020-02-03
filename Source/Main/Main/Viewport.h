@@ -14,7 +14,8 @@ struct ViewportInfo
 	BYTE Unknown1[0xB];			// 1
 	float Size;					// C
 	Angle Angle1;				// 10
-	BYTE Unknown2[0x48];		// 1C
+	Angle EffectAngle;			// 1C
+	BYTE Unknown2[0x3C];		// 28
 	DWORD UnkValue64;			// 64
 	BYTE Unknown3[0x10];		// 68
 	DWORD ViewSkillState;		// 78
@@ -128,7 +129,7 @@ public:
 	ViewportInfo* Renderizing;
 
 private:
-	std::unordered_map<WORD, ViewportCustom> Custom;
+	ViewportCustom Custom[MAX_OBJECT];
 };
 
 extern CViewport Viewport;

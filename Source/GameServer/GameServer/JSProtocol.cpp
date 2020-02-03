@@ -89,13 +89,15 @@ void JGConnectAccountRecv(SDHP_CONNECT_ACCOUNT_RECV* lpMsg) // OK
 	}
 
 	gObj[lpMsg->index].Connected = OBJECT_LOGGED;
-
-	memcpy(gObj[lpMsg->index].Account, lpMsg->account, sizeof(gObj[lpMsg->index].Account));
-
-	memcpy(gObj[lpMsg->index].PersonalCode, lpMsg->PersonalCode, sizeof(gObj[lpMsg->index].PersonalCode));
-
 	gObj[lpMsg->index].AccountLevel = lpMsg->AccountLevel;
 
+	if (gObj[lpMsg->index].AccountLevel >= MAX_ACCOUNT_LEVEL)
+	{
+		gObj[lpMsg->index].AccountLevel = 0;
+	}
+
+	memcpy(gObj[lpMsg->index].Account, lpMsg->account, sizeof(gObj[lpMsg->index].Account));
+	memcpy(gObj[lpMsg->index].PersonalCode, lpMsg->PersonalCode, sizeof(gObj[lpMsg->index].PersonalCode));
 	memcpy(gObj[lpMsg->index].AccountExpireDate, lpMsg->AccountExpireDate, sizeof(gObj[lpMsg->index].AccountExpireDate));
 
 	GCConnectAccountSend(lpMsg->index, 1);
@@ -143,13 +145,9 @@ void JGMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg) // OK
 	}
 
 	pMsg.ServerCode = gMapServerManager.GetMapServerGroup();
-
 	pMsg.AuthCode1 = lpMsg->AuthCode1;
-
 	pMsg.AuthCode2 = lpMsg->AuthCode2;
-
 	pMsg.AuthCode3 = lpMsg->AuthCode3;
-
 	pMsg.AuthCode4 = lpMsg->AuthCode4;
 
 	DataSend(lpMsg->index, (BYTE*)&pMsg, pMsg.header.size);
@@ -157,7 +155,6 @@ void JGMapServerMoveRecv(SDHP_MAP_SERVER_MOVE_RECV* lpMsg) // OK
 	gObjectManager.CharacterGameClose(lpMsg->index);
 
 	gObj[lpMsg->index].MapServerMoveQuit = 1;
-
 	gObj[lpMsg->index].MapServerMoveQuitTickCount = GetTickCount();
 }
 
@@ -207,28 +204,27 @@ void JGMapServerMoveAuthRecv(SDHP_MAP_SERVER_MOVE_AUTH_RECV* lpMsg) // OK
 	}
 
 	gObj[lpMsg->index].Connected = OBJECT_LOGGED;
-
-	memcpy(gObj[lpMsg->index].Account, lpMsg->account, sizeof(gObj[lpMsg->index].Account));
-
-	memcpy(gObj[lpMsg->index].PersonalCode, lpMsg->PersonalCode, sizeof(gObj[lpMsg->index].PersonalCode));
-
 	gObj[lpMsg->index].AccountLevel = lpMsg->AccountLevel;
 
+	if (gObj[lpMsg->index].AccountLevel >= MAX_ACCOUNT_LEVEL)
+	{
+		gObj[lpMsg->index].AccountLevel = 0;
+	}
+
+	memcpy(gObj[lpMsg->index].Account, lpMsg->account, sizeof(gObj[lpMsg->index].Account));
+	memcpy(gObj[lpMsg->index].PersonalCode, lpMsg->PersonalCode, sizeof(gObj[lpMsg->index].PersonalCode));
 	memcpy(gObj[lpMsg->index].AccountExpireDate, lpMsg->AccountExpireDate, sizeof(gObj[lpMsg->index].AccountExpireDate));
 
 	GCMapServerMoveAuthSend(lpMsg->index, 1);
 
 	gObj[lpMsg->index].EnableDelCharacter = 0;
-
 	gObj[lpMsg->index].LastServerCode = lpMsg->LastServerCode;
-
 	gObj[lpMsg->index].DestMap = lpMsg->map;
-
 	gObj[lpMsg->index].DestX = lpMsg->x;
-
 	gObj[lpMsg->index].DestY = lpMsg->y;
 
 	GDCharacterInfoSend(lpMsg->index, lpMsg->name);
+	GCCustomSettings(lpMsg->index);
 
 	LogAdd(LOG_BLACK, "[ObjectManager][%d] AddAccountInfo (%s)", lpMsg->index, gObj[lpMsg->index].Account);
 }
@@ -250,14 +246,20 @@ void JGAccountLevelRecv(SDHP_ACCOUNT_LEVEL_RECV* lpMsg) // OK
 
 	if (gObj[lpMsg->index].AccountLevel == lpMsg->AccountLevel && strcmp(gObj[lpMsg->index].AccountExpireDate, lpMsg->AccountExpireDate) == 0)
 	{
-		gObj[lpMsg->index].AccountLevel = lpMsg->AccountLevel;
 		memcpy(gObj[lpMsg->index].AccountExpireDate, lpMsg->AccountExpireDate, sizeof(gObj[lpMsg->index].AccountExpireDate));
 	}
 	else
 	{
-		gObj[lpMsg->index].AccountLevel = lpMsg->AccountLevel;
 		memcpy(gObj[lpMsg->index].AccountExpireDate, lpMsg->AccountExpireDate, sizeof(gObj[lpMsg->index].AccountExpireDate));
-		gNotice.GCNoticeSend(lpMsg->index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage((248 + gObj[lpMsg->index].AccountLevel)), gObj[lpMsg->index].AccountExpireDate);
+		gNotice.GCNoticeSend(lpMsg->index, 1, 0, 0, 0, 0, 0, gMessage.GetMessage((248 + lpMsg->AccountLevel)), gObj[lpMsg->index].AccountExpireDate);
+	}
+
+
+	gObj[lpMsg->index].AccountLevel = lpMsg->AccountLevel;
+
+	if (gObj[lpMsg->index].AccountLevel >= MAX_ACCOUNT_LEVEL)
+	{
+		gObj[lpMsg->index].AccountLevel = 0;
 	}
 }
 
@@ -288,7 +290,6 @@ void GJServerInfoSend() // OK
 	pMsg.header.set(0x00, sizeof(pMsg));
 
 	pMsg.type = 1;
-
 	pMsg.ServerPort = (WORD)gServerInfo.m_ServerPort;
 
 	strcpy_s(pMsg.ServerName, gServerInfo.m_ServerName);
@@ -307,9 +308,7 @@ void GJConnectAccountSend(int aIndex, char* account, char* password, char* IpAdd
 	pMsg.index = aIndex;
 
 	memcpy(pMsg.account, account, sizeof(pMsg.account));
-
 	memcpy(pMsg.password, password, sizeof(pMsg.password));
-
 	memcpy(pMsg.IpAddress, IpAddress, sizeof(pMsg.IpAddress));
 
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
@@ -324,7 +323,6 @@ void GJDisconnectAccountSend(int aIndex, char* account, char* IpAddress) // OK
 	pMsg.index = aIndex;
 
 	memcpy(pMsg.account, account, sizeof(pMsg.account));
-
 	memcpy(pMsg.IpAddress, IpAddress, sizeof(pMsg.IpAddress));
 
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
@@ -339,17 +337,12 @@ void GJMapServerMoveSend(int aIndex, WORD NextServerCode, WORD map, BYTE x, BYTE
 	pMsg.index = aIndex;
 
 	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
-
 	memcpy(pMsg.name, gObj[aIndex].Name, sizeof(pMsg.name));
 
 	pMsg.GameServerCode = (WORD)gServerInfo.m_ServerCode;
-
 	pMsg.NextServerCode = NextServerCode;
-
 	pMsg.map = map;
-
 	pMsg.x = x;
-
 	pMsg.y = y;
 
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
@@ -364,17 +357,12 @@ void GJMapServerMoveAuthSend(int aIndex, char* account, char* name, DWORD AuthCo
 	pMsg.index = aIndex;
 
 	memcpy(pMsg.account, account, sizeof(pMsg.account));
-
 	memcpy(pMsg.name, name, sizeof(pMsg.name));
 
 	pMsg.LastServerCode = (WORD)gServerInfo.m_ServerCode;
-
 	pMsg.AuthCode1 = AuthCode1;
-
 	pMsg.AuthCode2 = AuthCode2;
-
 	pMsg.AuthCode3 = AuthCode3;
-
 	pMsg.AuthCode4 = AuthCode4;
 
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
@@ -417,7 +405,6 @@ void GJAccountLevelSaveSend(int aIndex, int AccountLevel, int AccountExpireTime)
 	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
 
 	pMsg.AccountLevel = AccountLevel;
-
 	pMsg.AccountExpireTime = AccountExpireTime;
 
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
@@ -430,7 +417,6 @@ void GJServerUserInfoSend() // OK
 	pMsg.header.set(0x20, sizeof(pMsg));
 
 	pMsg.CurUserCount = (WORD)gObjTotalUser;
-
 	pMsg.MaxUserCount = (WORD)gServerInfo.m_ServerMaxUserNumber;
 
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
@@ -440,7 +426,7 @@ void GJPostMessageSend(const char* message)
 {
 	SDHP_POST_MESSAGE_SEND pMsg;
 
-	pMsg.header.set(0x31, sizeof(pMsg));
+	pMsg.header.set(0x32, sizeof(pMsg));
 	strcpy_s(pMsg.message, message);
 
 	gJoinServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);

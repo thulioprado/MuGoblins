@@ -188,7 +188,6 @@
 47	1	"Valkyrie"
 48	1	"Lizard King"
 49	1	"Hydra"
-50	1	"Sea Worm"
 51	1	"Great Bahamut"
 52	1	"Silver Valkyrie"
 
@@ -349,3 +348,5 @@
 350	1	"Devin"
 351	1	"Illusion"
 400	1	"Rabbit"
+
+50	1	"Vikran"

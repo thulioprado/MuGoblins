@@ -55,6 +55,10 @@ const char* CMessage::Get(int Index) const
             return "Velocidade de transição [Arma]: +%d";
         case 14:
             return "Velocidade de transição [Arma]: %d";
+        case 15:
+            return "Influência na velocidade de efeito da armadura.";
+        case 16:
+            return "Influência na velocidade de efeito da arma.";
 	}
 
 	return "";

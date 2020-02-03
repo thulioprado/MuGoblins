@@ -44,6 +44,9 @@ void DataServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size) // OK
 				case 0x30:
 					gWarehouse.GDWarehouseItemSaveRecv((SDHP_WAREHOUSE_ITEM_SAVE_RECV*)lpMsg);
 					break;
+				case 0x02:
+					gWarehouse.GDWarehouseInfoRecv((SDHP_WAREHOUSE_INFO_RECV*)lpMsg, index);
+					break;
 			}
 			break;
 		case 0x07:
@@ -63,28 +66,11 @@ void DataServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size) // OK
 					break;
 			}
 			break;
-		case 0x0F:
-			switch (((lpMsg[0] == 0xC1) ? lpMsg[3] : lpMsg[4]))
-			{
-				case 0x00:
-					gCommandManager.GDCommandResetRecv((SDHP_COMMAND_RESET_RECV*)lpMsg, index);
-					break;
-				case 0x01:
-					gCommandManager.GDCommandMasterResetRecv((SDHP_COMMAND_MASTER_RESET_RECV*)lpMsg, index);
-					break;
-			}
-			break;
 		case 0x1E:
 			GDCrywolfSyncRecv((SDHP_CRYWOLF_SYNC_RECV*)lpMsg, index);
 			break;
 		case 0x1F:
 			GDCrywolfInfoRecv((SDHP_CRYWOLF_INFO_RECV*)lpMsg, index);
-			break;
-		case 0x20:
-			GDGlobalPostRecv((SDHP_GLOBAL_POST_RECV*)lpMsg, index);
-			break;
-		case 0x21:
-			GDGlobalNoticeRecv((SDHP_GLOBAL_NOTICE_RECV*)lpMsg, index);
 			break;
 		case 0x30:
 			GDCharacterInfoSaveRecv((SDHP_CHARACTER_INFO_SAVE_RECV*)lpMsg);
@@ -113,12 +99,6 @@ void DataServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size) // OK
 		case 0x3F:
 			GDRankingDevilSquareSaveRecv((SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV*)lpMsg);
 			break;
-		case 0x40:
-			GDRankingIllusionTempleSaveRecv((SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV*)lpMsg);
-			break;
-		case 0x42:
-			GDCreationCardSaveRecv((SDHP_CREATION_CARD_SAVE_RECV*)lpMsg);
-			break;
 		case 0x49:
 			GDCrywolfInfoSaveRecv((SDHP_CRYWOLF_INFO_SAVE_RECV*)lpMsg);
 			break;
@@ -133,9 +113,6 @@ void DataServerProtocolCore(int index, BYTE head, BYTE* lpMsg, int size) // OK
 			break;
 		case 0x71:
 			GDDisconnectCharacterRecv((SDHP_DISCONNECT_CHARACTER_RECV*)lpMsg, index);
-			break;
-		case 0x72:
-			GDGlobalWhisperRecv((SDHP_GLOBAL_WHISPER_RECV*)lpMsg, index);
 			break;
 		case 0x80:
 			switch (((lpMsg[0] == 0xC1) ? lpMsg[3] : lpMsg[4]))
@@ -308,21 +285,15 @@ void GDCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg, int index) // OK
 	memset(CharacterName, 0, sizeof(CharacterName));
 
 	gQueryManager.ExecQuery("SELECT * FROM AccountCharacter WHERE Id='%s'", lpMsg->account);
-
 	gQueryManager.Fetch();
 
 	pMsg.MoveCnt = (BYTE)gQueryManager.GetAsInteger("MoveCnt");
-
 	pMsg.ExtClass = (BYTE)gQueryManager.GetAsInteger("ExtClass");
 
 	gQueryManager.GetAsString("GameID1", CharacterName[0], sizeof(CharacterName[0]));
-
 	gQueryManager.GetAsString("GameID2", CharacterName[1], sizeof(CharacterName[1]));
-
 	gQueryManager.GetAsString("GameID3", CharacterName[2], sizeof(CharacterName[2]));
-
 	gQueryManager.GetAsString("GameID4", CharacterName[3], sizeof(CharacterName[3]));
-
 	gQueryManager.GetAsString("GameID5", CharacterName[4], sizeof(CharacterName[4]));
 
 	gQueryManager.Close();
@@ -331,7 +302,7 @@ void GDCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg, int index) // OK
 
 	SDHP_CHARACTER_LIST info;
 
-	for (int n = 0; n < 5; n++)
+	for (int n = 0; n < 5; ++n)
 	{
 		if (CharacterName[n][0] == 0)
 		{
@@ -349,7 +320,6 @@ void GDCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg, int index) // OK
 			memcpy(info.name, CharacterName[n], sizeof(info.name));
 
 			info.level = (WORD)gQueryManager.GetAsInteger("cLevel");
-
 			info.Class = (BYTE)gQueryManager.GetAsInteger("Class");
 
 			BYTE Inventory[12][16];
@@ -404,7 +374,7 @@ void GDCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg, int index) // OK
 			memcpy(&send[size], &info, sizeof(info));
 			size += sizeof(info);
 
-			pMsg.count++;
+			++pMsg.count;
 		}
 	}
 
@@ -801,54 +771,6 @@ void GDCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg, int index) // OK
 	gSocketManager.DataSend(index, (BYTE*)&pMsg, sizeof(pMsg));
 }
 
-void GDGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg, int index) // OK
-{
-	SDHP_GLOBAL_POST_SEND pMsg;
-
-	pMsg.header.set(0x20, sizeof(pMsg));
-
-	pMsg.MapServerGroup = lpMsg->MapServerGroup;
-
-	pMsg.type = lpMsg->type;
-
-	memcpy(pMsg.name, lpMsg->name, sizeof(pMsg.name));
-
-	memcpy(pMsg.message, lpMsg->message, sizeof(pMsg.message));
-
-	for (int n = 0; n < MAX_SERVER; n++)
-	{
-		if (gServerManager[n].CheckState() != 0)
-		{
-			gSocketManager.DataSend(n, (BYTE*)&pMsg, pMsg.header.size);
-		}
-	}
-}
-
-void GDGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg, int index) // OK
-{
-	SDHP_GLOBAL_NOTICE_SEND pMsg;
-
-	pMsg.header.set(0x21, sizeof(pMsg));
-
-	pMsg.MapServerGroup = lpMsg->MapServerGroup;
-	pMsg.type = lpMsg->type;
-	pMsg.count = lpMsg->count;
-	pMsg.opacity = lpMsg->opacity;
-	pMsg.delay = lpMsg->delay;
-	pMsg.color = lpMsg->color;
-	pMsg.speed = lpMsg->speed;
-
-	memcpy(pMsg.message, lpMsg->message, sizeof(pMsg.message));
-
-	for (int n = 0; n < MAX_SERVER; n++)
-	{
-		if (gServerManager[n].CheckState() != 0)
-		{
-			gSocketManager.DataSend(n, (BYTE*)&pMsg, pMsg.header.size);
-		}
-	}
-}
-
 void GDCharacterInfoSaveRecv(SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg) // OK
 {
 	char query[4096];
@@ -967,28 +889,6 @@ void GDRankingDevilSquareSaveRecv(SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV* lpMsg) //
 		gQueryManager.ExecQuery("UPDATE RankingDevilSquare SET Score=Score+%d WHERE Name='%s'", lpMsg->score, lpMsg->name);
 		gQueryManager.Close();
 	}
-}
-
-void GDRankingIllusionTempleSaveRecv(SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV* lpMsg) // OK
-{
-	if (gQueryManager.ExecQuery("SELECT Name FROM RankingIllusionTemple WHERE Name='%s'", lpMsg->name) == 0 || gQueryManager.Fetch() == SQL_NO_DATA)
-	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("INSERT INTO RankingIllusionTemple (Name,Score) VALUES ('%s',%d)", lpMsg->name, lpMsg->score);
-		gQueryManager.Close();
-	}
-	else
-	{
-		gQueryManager.Close();
-		gQueryManager.ExecQuery("UPDATE RankingIllusionTemple SET Score=Score+%d WHERE Name='%s'", lpMsg->score, lpMsg->name);
-		gQueryManager.Close();
-	}
-}
-
-void GDCreationCardSaveRecv(SDHP_CREATION_CARD_SAVE_RECV* lpMsg) // OK
-{
-	gQueryManager.ExecQuery("UPDATE AccountCharacter SET ExtClass=%d WHERE Id='%s'", lpMsg->ExtClass, lpMsg->account);
-	gQueryManager.Close();
 }
 
 void GDCrywolfInfoSaveRecv(SDHP_CRYWOLF_INFO_SAVE_RECV* lpMsg) // OK

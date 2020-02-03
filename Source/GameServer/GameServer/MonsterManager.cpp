@@ -122,10 +122,6 @@ void CMonsterManager::Load(char* path) // OK
 			info.Resistance[3] = lpMemScript->GetAsNumber();
 
 			this->SetInfo(info);
-
-			char temp[50];
-			sprintf_s(temp, "%d|", info.Index);
-			strcat_s(buffer, temp);
 		}
 	}
 	catch (...)

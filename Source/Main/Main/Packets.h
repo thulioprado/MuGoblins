@@ -468,6 +468,14 @@ struct PMSG_CONNECT_CLIENT_RECV
 
 struct PMSG_CHARACTER_LIST_RECV
 {
+	PSWMSG_HEAD header;
+	BYTE ClassCode;
+	BYTE MoveCnt;
+	BYTE count;
+};
+
+struct PMSG_CHARACTER_LIST_RECV2
+{
 	PSBMSG_HEAD header;
 	BYTE ClassCode;
 	BYTE MoveCnt;
@@ -688,6 +696,28 @@ struct PMSG_ITEM_MODIFY_RECV2
 	PSBMSG_HEAD header;
 	BYTE slot;
 	BYTE ItemInfo[MAX_ITEM_INFO_MAIN];
+};
+
+struct PMSG_CHARACTER_UPDATE_RECV
+{
+	PSWMSG_HEAD header;
+	WORD Level;
+	DWORD LevelUpPoint;
+	WORD Strength;
+	WORD Dexterity;
+	WORD Vitality;
+	WORD Energy;
+	WORD Leadership;
+	DWORD HP;
+	DWORD MaxHP;
+	DWORD MP;
+	DWORD MaxMP;
+	DWORD BP;
+	DWORD MaxBP;
+	WORD FruitAddPoint;
+	WORD MaxFruitAddPoint;
+	WORD FruitSubPoint;
+	WORD MaxFruitSubPoint;
 };
 
 struct PMSG_POST_MESSAGE_RECV

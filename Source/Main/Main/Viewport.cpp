@@ -76,14 +76,12 @@ ViewportInfo* CViewport::GetByName(char* Name)
 
 ViewportCustom* CViewport::GetCustom(WORD Index)
 {
-	auto it = this->Custom.find(Index);
-
-	if (it != this->Custom.end())
+	if (Index >= MAX_OBJECT)
 	{
-		return &it->second;
+		return nullptr;
 	}
 
-	return nullptr;
+	return &this->Custom[Index];
 }
 
 void CViewport::AddCustom(WORD Index, LPBYTE CharSet)
@@ -98,12 +96,7 @@ void CViewport::AddCustom(WORD Index, LPBYTE CharSet)
 	}
 	else
 	{
-		if (this->Custom.count(Index) < 1)
-		{
-			this->Custom[Index] = {};
-		}
-
-		auto Info = &this->Custom.at(Index);
+		auto Info = this->GetCustom(Index);
 
 		if (Info)
 		{

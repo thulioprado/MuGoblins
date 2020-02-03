@@ -68,6 +68,15 @@ struct SDHP_WAREHOUSE_FREE_RECV
 	char account[11];
 };
 
+struct SDHP_WAREHOUSE_INFO_RECV
+{
+	PSBMSG_HEAD header;
+	WORD index;
+	char account[11];
+	int WarehouseNumber;
+	int WarehouseTotal;
+};
+
 //**********************************************//
 //********** GameServer -> DataServer **********//
 //**********************************************//
@@ -77,7 +86,7 @@ struct SDHP_WAREHOUSE_ITEM_SEND
 	PSBMSG_HEAD header; // C1:05:00
 	WORD index;
 	char account[11];
-	UINT WarehouseNumber;
+	int WarehouseNumber;
 };
 
 struct SDHP_WAREHOUSE_ITEM_SAVE_SEND
@@ -88,7 +97,14 @@ struct SDHP_WAREHOUSE_ITEM_SAVE_SEND
 	BYTE WarehouseItem[WAREHOUSE_SIZE][16];
 	UINT WarehouseMoney;
 	UINT WarehousePassword;
-	UINT WarehouseNumber;
+	int WarehouseNumber;
+};
+
+struct SDHP_WAREHOUSE_INFO_SEND
+{
+	PSBMSG_HEAD header;
+	WORD index;
+	char account[11];
 };
 
 //**********************************************//
@@ -100,17 +116,19 @@ class CWarehouse
 public:
 	CWarehouse();
 	virtual ~CWarehouse();
-	int GetWarehouseTaxMoney(int level,int lock);
-	void CGWarehouseMoneyRecv(PMSG_WAREHOUSE_MONEY_RECV* lpMsg,int aIndex);
+	int GetWarehouseTaxMoney(int level, int lock);
+	void CGWarehouseMoneyRecv(PMSG_WAREHOUSE_MONEY_RECV* lpMsg, int aIndex);
 	void CGWarehouseClose(int aIndex);
-	void CGWarehousePasswordRecv(PMSG_WAREHOUSE_PASSWORD_RECV* lpMsg,int aIndex);
+	void CGWarehousePasswordRecv(PMSG_WAREHOUSE_PASSWORD_RECV* lpMsg, int aIndex);
 	void GCWarehouseListSend(LPOBJ lpObj);
-	void GCWarehouseMoneySend(int aIndex,BYTE result,int InventoryMoney,int WarehouseMoney);
-	void GCWarehouseStateSend(int aIndex,BYTE state);
+	void GCWarehouseMoneySend(int aIndex, BYTE result, int InventoryMoney, int WarehouseMoney);
+	void GCWarehouseStateSend(int aIndex, BYTE state);
 	void DGWarehouseItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg);
 	void DGWarehouseFreeRecv(SDHP_WAREHOUSE_FREE_RECV* lpMsg);
-	void GDWarehouseItemSend(int aIndex,char* account);
+	void GDWarehouseItemSend(int aIndex, char* account);
 	void GDWarehouseItemSaveSend(int aIndex);
+	void GDWarehouseInfoSend(int aIndex, char* account);
+	void DGWarehouseInfoRecv(SDHP_WAREHOUSE_INFO_RECV* lpMsg);
 };
 
 extern CWarehouse gWarehouse;

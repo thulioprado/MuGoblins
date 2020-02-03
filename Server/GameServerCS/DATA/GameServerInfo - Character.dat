@@ -9,8 +9,8 @@ IllusionTempleDamageRate = 50
 CastleSiegeDamageRate1 = 40
 CastleSiegeDamageRate2 = 0
 CastleSiegeDamageRate3 = 5
-GeneralDamageRatePvP = 100
-GeneralDamageRatePvM = 100
+GeneralDamageRatePvP = 1000
+GeneralDamageRatePvM = 1000
 ReflectDamageRatePvP = 100
 ReflectDamageRatePvM = 100
 

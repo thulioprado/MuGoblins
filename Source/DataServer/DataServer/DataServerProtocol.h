@@ -391,23 +391,6 @@ struct SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV
 	DWORD score;
 };
 
-struct SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV
-{
-	PBMSG_HEAD header; // C1:40
-	WORD index;
-	char account[11];
-	char name[11];
-	DWORD score;
-};
-
-struct SDHP_CREATION_CARD_SAVE_RECV
-{
-	PBMSG_HEAD header; // C1:42
-	WORD index;
-	char account[11];
-	BYTE ExtClass;
-};
-
 struct SDHP_CRYWOLF_INFO_SAVE_RECV
 {
 	PBMSG_HEAD header; // C1:49
@@ -710,8 +693,6 @@ void GDCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg,int index);
 void GDPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg,int index);
 void GDCrywolfSyncRecv(SDHP_CRYWOLF_SYNC_RECV* lpMsg,int index);
 void GDCrywolfInfoRecv(SDHP_CRYWOLF_INFO_RECV* lpMsg,int index);
-void GDGlobalPostRecv(SDHP_GLOBAL_POST_RECV* lpMsg,int index);
-void GDGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg,int index);
 void GDCharacterInfoSaveRecv(SDHP_CHARACTER_INFO_SAVE_RECV* lpMsg);
 void GDInventoryItemSaveRecv(SDHP_INVENTORY_ITEM_SAVE_RECV* lpMsg);
 void GDPetItemInfoSaveRecv(SDHP_PET_ITEM_INFO_SAVE_RECV* lpMsg);
@@ -721,8 +702,6 @@ void GDRankingDuelSaveRecv(SDHP_RANKING_DUEL_SAVE_RECV* lpMsg);
 void GDRankingBloodCastleSaveRecv(SDHP_RANKING_BLOOD_CASTLE_SAVE_RECV* lpMsg);
 void GDRankingChaosCastleSaveRecv(SDHP_RANKING_CHAOS_CASTLE_SAVE_RECV* lpMsg);
 void GDRankingDevilSquareSaveRecv(SDHP_RANKING_DEVIL_SQUARE_SAVE_RECV* lpMsg);
-void GDRankingIllusionTempleSaveRecv(SDHP_RANKING_ILLUSION_TEMPLE_SAVE_RECV* lpMsg);
-void GDCreationCardSaveRecv(SDHP_CREATION_CARD_SAVE_RECV* lpMsg);
 void GDCrywolfInfoSaveRecv(SDHP_CRYWOLF_INFO_SAVE_RECV* lpMsg);
 void GDCustomMonsterRewardSaveRecv(SDHP_CUSTOM_MONSTER_REWARD_SAVE_RECV* lpMsg);
 void GDRankingCustomArenaSaveRecv(SDHP_RANKING_CUSTOM_ARENA_SAVE_RECV* lpMsg);

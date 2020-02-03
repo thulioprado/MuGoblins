@@ -312,5 +312,9 @@
 488       "Server will shut down automatically in 3 minute(s)"
 489       "Server will shut down automatically in 5 minute(s)"
 490       "Game will start automatically in 10 seconds(s)"
-491       "%s won %d Jewel of Bless" 
+491       "%s won %d Jewel of Bless"
+492       "Mensagem global ativada."
+493       "Mensagem global desativada."
+494       "Para enviar, você deve ativar o recebimento de mensagens globais."
+495       "Agora você tem %d pontos disponíveis para distribuir."
 end

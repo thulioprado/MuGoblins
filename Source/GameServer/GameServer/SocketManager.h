@@ -72,7 +72,6 @@ public:
 	bool CreateCompletionPort();
 	bool CreateAcceptThread();
 	bool CreateWorkerThread();
-	bool CreateServerQueue();
 	bool DataRecv(int index,IO_MAIN_BUFFER* lpIoBuffer);
 	bool DataSend(int index,BYTE* lpMsg,int size);
 	void Disconnect(int index);
@@ -81,8 +80,7 @@ public:
 	static int CALLBACK ServerAcceptCondition(IN LPWSABUF lpCallerId,IN LPWSABUF lpCallerData,IN OUT LPQOS lpSQOS,IN OUT LPQOS lpGQOS,IN LPWSABUF lpCalleeId,OUT LPWSABUF lpCalleeData,OUT GROUP FAR* g,CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerAcceptThread(CSocketManager* lpSocketManager);
 	static DWORD WINAPI ServerWorkerThread(CSocketManager* lpSocketManager);
-	static DWORD WINAPI ServerQueueThread(CSocketManager* lpSocketManager);
-	DWORD GetQueueSize();
+
 private:
 	SOCKET m_listen;
 	HANDLE m_CompletionPort;
@@ -90,9 +88,6 @@ private:
 	HANDLE m_ServerAcceptThread;
 	HANDLE m_ServerWorkerThread[MAX_SERVER_WORKER_THREAD];
 	DWORD m_ServerWorkerThreadCount;
-	CQueue m_ServerQueue;
-	HANDLE m_ServerQueueSemaphore;
-	HANDLE m_ServerQueueThread;
 	CCriticalSection m_critical;
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #define MODEL_BASE			*(DWORD*)(0x5756AB8)
+#define MODEL_MONSTER		0x4000
 #define MODEL_SIGN			0x4064
 
 struct ModelInfo

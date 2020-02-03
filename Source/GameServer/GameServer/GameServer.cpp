@@ -190,9 +190,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 				case IDM_RELOAD_RELOADCHARACTER:
 					gServerInfo.ReadCharacterInfo();
 					break;
-				case IDM_RELOAD_RELOADCOMMAND:
-					gServerInfo.ReadCommandInfo();
-					break;
 				case IDM_RELOAD_RELOADCOMMON:
 					gServerInfo.ReadCommonInfo();
 					break;

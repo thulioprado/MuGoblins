@@ -45,6 +45,7 @@ private:
 	int ItemList(int Index, LPBYTE Data);
 	int ItemEquipment(int Index, PMSG_ITEM_EQUIPMENT_RECV* Data);
 	int ItemModify(int Index, PMSG_ITEM_MODIFY_RECV* Data);
+	int CharacterUpdate(int Index, PMSG_CHARACTER_UPDATE_RECV* Data);
 	int PostMessage(PMSG_POST_MESSAGE_RECV* Data);
 	int CustomSettings(PMSG_CUSTOM_SETTINGS_RECV* Data);
 	int LockMain(PMSG_LOCK_RECV* Data);

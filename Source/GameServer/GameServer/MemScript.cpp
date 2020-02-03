@@ -135,12 +135,6 @@ char CMemScript::CheckComment(char ch) // OK
 
 eTokenResult CMemScript::GetToken() // OK
 {
-	if((GetTickCount()-this->m_tick) > 1000)
-	{
-		this->SetLastError(4);
-		throw 1;
-	}
-
 	this->m_number = 0;
 
 	memset(this->m_string,0,sizeof(this->m_string));

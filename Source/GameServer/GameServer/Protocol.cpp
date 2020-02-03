@@ -585,7 +585,7 @@ void CGChatWhisperRecv(PMSG_CHAT_WHISPER_RECV* lpMsg, int aIndex) // OK
 
 	if (lpTarget == 0)
 	{
-		GDGlobalWhisperSend(aIndex, name, lpMsg->message);
+		//GDGlobalWhisperSend(aIndex, name, lpMsg->message);
 		return;
 	}
 
@@ -1296,18 +1296,6 @@ void CGCharacterCreateRecv(PMSG_CHARACTER_CREATE_RECV* lpMsg, int aIndex) // OK
 		return;
 	}
 	
-	if (lpMsg->Class == DB_CLASS_MG && (lpObj->ClassCode & 4) == 0)
-	{
-		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
-		return;
-	}
-
-	if (lpMsg->Class == DB_CLASS_DL && (lpObj->ClassCode & 2) == 0)
-	{
-		DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
-		return;
-	}
-
 	char name[11] = {0};
 
 	memcpy(name, lpMsg->name, sizeof(lpMsg->name));
@@ -3794,6 +3782,37 @@ void GCPostMessageSend(const char* message)
 			continue;
 		}
 
-		DataSend(i, (LPBYTE)&pMsg, sizeof(pMsg));
+		if (gObj[i].PostOn)
+		{
+			DataSend(i, (LPBYTE)&pMsg, sizeof(pMsg));
+		}
 	}
+}
+
+void GCCharacterUpdate(int aIndex)
+{
+	LPOBJ lpObj = &gObj[aIndex];
+
+	PMSG_CHARACTER_UPDATE_SEND pMsg;
+	pMsg.header.set(0xF3, 0xFA, sizeof(pMsg));
+
+	pMsg.Level = lpObj->Level;
+	pMsg.LevelUpPoint = lpObj->LevelUpPoint;
+	pMsg.Strength = lpObj->Strength;
+	pMsg.Dexterity = lpObj->Dexterity;
+	pMsg.Vitality = lpObj->Vitality;
+	pMsg.Energy = lpObj->Energy;
+	pMsg.Leadership = lpObj->Leadership;
+	pMsg.HP = lpObj->Life;
+	pMsg.MaxHP = (lpObj->MaxLife + lpObj->AddLife);
+	pMsg.MP = lpObj->Mana;
+	pMsg.MaxMP = (lpObj->MaxMana + lpObj->AddMana);
+	pMsg.BP = lpObj->BP;
+	pMsg.MaxBP = (lpObj->MaxBP + lpObj->AddBP);
+	pMsg.FruitAddPoint = lpObj->FruitAddPoint;
+	pMsg.MaxFruitAddPoint = gFruit.GetMaxFruitPoint(lpObj);
+	pMsg.FruitSubPoint = lpObj->FruitSubPoint;
+	pMsg.MaxFruitSubPoint = gFruit.GetMaxFruitPoint(lpObj);
+
+	DataSend(aIndex, (BYTE*)&pMsg, sizeof(pMsg));
 }

@@ -5,15 +5,15 @@ end
 
 1
 //State   StartDay   StartHour   StartMinute
-1	  0	     0	         0
-2	  1	     23	         59
-3	  2	     0	         0
-4	  3	     0	         0
-5	  4	     12	         0
-6	  4	     19	         0
-7	  6	     20	         0
-8	  6	     22	         0
-9	  7	     0	         0
+1	  0	     0	         0		// Tempo de registro inicial
+2	  1	     23	         59		// Tempo de registro final
+3	  2	     0	         0		// Tempo de registro de sign of lord inicial
+4	  3	     0	         0		// Tempo de registro de sign of lord final
+5	  4	     12	         0		// Exibe no NPC as guilds que vão atacar
+6	  5	     23	         59		// Inicio de quando o dono do castelo pode fortalecer suas estruturas 
+7	  6	     0	         0		// Quando inicia o evento
+8	  6	     0	         30		// Quando acaba o evento
+9	  7	     0	         0		// Final do ciclo
 end
 
 2

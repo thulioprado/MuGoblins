@@ -26,104 +26,104 @@ CWarehouse::~CWarehouse() // OK
 
 }
 
-int CWarehouse::GetWarehouseTaxMoney(int level,int lock) // OK
+int CWarehouse::GetWarehouseTaxMoney(int level, int lock) // OK
 {
-	int tax = (int)(((level*level)*0.1)*0.4);
+	int tax = (int)(((level * level) * 0.1) * 0.4);
 
-	if(lock != 0)
+	if (lock != 0)
 	{
-		tax += (level*2);
+		tax += (level * 2);
 	}
 
-	if(tax <= 0)
+	if (tax <= 0)
 	{
 		tax = 1;
 	}
 
-	if(tax >= 1000)
+	if (tax >= 1000)
 	{
-		tax = (tax/100)*100;
+		tax = (tax / 100) * 100;
 	}
-	else if(tax >= 100)
+	else if (tax >= 100)
 	{
-		tax = (tax/10)*10;
+		tax = (tax / 10) * 10;
 	}
 
 	return tax;
 }
 
-void CWarehouse::CGWarehouseMoneyRecv(PMSG_WAREHOUSE_MONEY_RECV* lpMsg,int aIndex) // OK
+void CWarehouse::CGWarehouseMoneyRecv(PMSG_WAREHOUSE_MONEY_RECV* lpMsg, int aIndex) // OK
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
-	if(gObjIsConnectedGP(aIndex) == 0)
-	{
-		return;
-	}
-	
-	if(lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state == 0)
+	if (gObjIsConnectedGP(aIndex) == 0)
 	{
 		return;
 	}
 
-	if(lpMsg->type != 0 && lpMsg->type != 1)
+	if (lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state == 0)
 	{
 		return;
 	}
 
-	if(lpMsg->type == 0)
+	if (lpMsg->type != 0 && lpMsg->type != 1)
 	{
-		if(lpMsg->money <= 0 || lpMsg->money > MAX_WAREHOUSE_MONEY)
+		return;
+	}
+
+	if (lpMsg->type == 0)
+	{
+		if (lpMsg->money <= 0 || lpMsg->money > MAX_WAREHOUSE_MONEY)
 		{
-			this->GCWarehouseMoneySend(aIndex,0,0,0);
+			this->GCWarehouseMoneySend(aIndex, 0, 0, 0);
 			return;
 		}
 
-		if((lpObj->WarehouseMoney+lpMsg->money) > MAX_WAREHOUSE_MONEY)
+		if ((lpObj->WarehouseMoney + lpMsg->money) > MAX_WAREHOUSE_MONEY)
 		{
-			this->GCWarehouseMoneySend(aIndex,0,0,0);
+			this->GCWarehouseMoneySend(aIndex, 0, 0, 0);
 			return;
 		}
 
-		if(lpMsg->money > lpObj->Money)
+		if (lpMsg->money > lpObj->Money)
 		{
-			this->GCWarehouseMoneySend(aIndex,0,0,0);
+			this->GCWarehouseMoneySend(aIndex, 0, 0, 0);
 			return;
 		}
 
 		lpObj->Money -= lpMsg->money;
 		lpObj->WarehouseMoney += lpMsg->money;
 	}
-	else if(lpMsg->type == 1)
+	else if (lpMsg->type == 1)
 	{
-		if(lpObj->WarehouseLock == 1)
+		if (lpObj->WarehouseLock == 1)
 		{
-			this->GCWarehouseMoneySend(aIndex,0,0,0);
+			this->GCWarehouseMoneySend(aIndex, 0, 0, 0);
 			return;
 		}
 
-		if(lpMsg->money <= 0 || lpMsg->money > MAX_WAREHOUSE_MONEY)
+		if (lpMsg->money <= 0 || lpMsg->money > MAX_WAREHOUSE_MONEY)
 		{
-			this->GCWarehouseMoneySend(aIndex,0,0,0);
+			this->GCWarehouseMoneySend(aIndex, 0, 0, 0);
 			return;
 		}
-		
-		if(lpMsg->money > ((DWORD)lpObj->WarehouseMoney))
+
+		if (lpMsg->money > ((DWORD)lpObj->WarehouseMoney))
 		{
-			this->GCWarehouseMoneySend(aIndex,0,0,0);
+			this->GCWarehouseMoneySend(aIndex, 0, 0, 0);
 			return;
 		}
 
 		lpObj->WarehouseMoney -= lpMsg->money;
 		lpObj->Money += lpMsg->money;
 
-		int tax = this->GetWarehouseTaxMoney(lpObj->Level,lpObj->WarehousePW);
+		int tax = this->GetWarehouseTaxMoney(lpObj->Level, lpObj->WarehousePW);
 
-		if(lpObj->Money >= ((DWORD)tax))
+		if (lpObj->Money >= ((DWORD)tax))
 		{
 			lpObj->Money -= tax;
 		}
-		else if(lpObj->WarehouseMoney >= tax)
+		else if (lpObj->WarehouseMoney >= tax)
 		{
 			lpObj->WarehouseMoney -= tax;
 		}
@@ -131,31 +131,31 @@ void CWarehouse::CGWarehouseMoneyRecv(PMSG_WAREHOUSE_MONEY_RECV* lpMsg,int aInde
 		{
 			lpObj->WarehouseMoney += lpMsg->money;
 			lpObj->Money -= lpMsg->money;
-			this->GCWarehouseMoneySend(aIndex,0,0,0);
+			this->GCWarehouseMoneySend(aIndex, 0, 0, 0);
 			return;
 		}
 	}
 
 	lpObj->WarehouseCount++;
 
-	this->GCWarehouseMoneySend(aIndex,1,lpObj->Money,lpObj->WarehouseMoney);
+	this->GCWarehouseMoneySend(aIndex, 1, lpObj->Money, lpObj->WarehouseMoney);
 }
 
 void CWarehouse::CGWarehouseClose(int aIndex) // OK
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
-	if(gObjIsConnectedGP(aIndex) == 0)
+	if (gObjIsConnectedGP(aIndex) == 0)
 	{
 		return;
 	}
 
-	if(lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state == 0)
+	if (lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state == 0)
 	{
 		return;
 	}
 
-	if(lpObj->LoadWarehouse == 0)
+	if (lpObj->LoadWarehouse == 0)
 	{
 		return;
 	}
@@ -164,9 +164,9 @@ void CWarehouse::CGWarehouseClose(int aIndex) // OK
 
 	this->GDWarehouseItemSaveSend(aIndex);
 
-	memset(lpObj->WarehouseMap,0xFF,WAREHOUSE_SIZE);
+	memset(lpObj->WarehouseMap, 0xFF, WAREHOUSE_SIZE);
 
-	for(int n=0;n < WAREHOUSE_SIZE;n++){lpObj->Warehouse[n].Clear();}
+	for (int n = 0; n < WAREHOUSE_SIZE; n++) { lpObj->Warehouse[n].Clear(); }
 
 	lpObj->WarehouseMoney = 0;
 
@@ -180,70 +180,70 @@ void CWarehouse::CGWarehouseClose(int aIndex) // OK
 
 	PBMSG_HEAD pMsg;
 
-	pMsg.set(0x82,sizeof(pMsg));
+	pMsg.set(0x82, sizeof(pMsg));
 
-	DataSend(aIndex,(BYTE*)&pMsg,pMsg.size);
+	DataSend(aIndex, (BYTE*)&pMsg, pMsg.size);
 }
 
-void CWarehouse::CGWarehousePasswordRecv(PMSG_WAREHOUSE_PASSWORD_RECV* lpMsg,int aIndex) // OK
+void CWarehouse::CGWarehousePasswordRecv(PMSG_WAREHOUSE_PASSWORD_RECV* lpMsg, int aIndex) // OK
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
-	if(gObjIsConnectedGP(aIndex) == 0)
+	if (gObjIsConnectedGP(aIndex) == 0)
 	{
 		return;
 	}
 
-	if(lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state == 0)
+	if (lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state == 0)
 	{
 		return;
 	}
 
-	if(lpMsg->type == 0)
+	if (lpMsg->type == 0)
 	{
-		if(lpObj->WarehouseLock != 0)
+		if (lpObj->WarehouseLock != 0)
 		{
-			if(lpObj->WarehousePW == lpMsg->password)
+			if (lpObj->WarehousePW == lpMsg->password)
 			{
 				lpObj->WarehouseLock = 0;
-				this->GCWarehouseStateSend(aIndex,12);
+				this->GCWarehouseStateSend(aIndex, 12);
 			}
 			else
 			{
-				this->GCWarehouseStateSend(aIndex,10);
+				this->GCWarehouseStateSend(aIndex, 10);
 			}
 		}
 	}
-	else if(lpMsg->type == 1)
+	else if (lpMsg->type == 1)
 	{
-		if(lpObj->WarehouseLock == 0 || lpObj->WarehouseLock == 0xFF)
+		if (lpObj->WarehouseLock == 0 || lpObj->WarehouseLock == 0xFF)
 		{
-			if(gObjCheckPersonalCode(aIndex,lpMsg->PersonalCode) == 0)
+			if (gObjCheckPersonalCode(aIndex, lpMsg->PersonalCode) == 0)
 			{
-				this->GCWarehouseStateSend(aIndex,13);
+				this->GCWarehouseStateSend(aIndex, 13);
 				return;
 			}
 
 			lpObj->WarehousePW = lpMsg->password;
 			lpObj->WarehouseLock = 1;
-			this->GCWarehouseStateSend(aIndex,1);
+			this->GCWarehouseStateSend(aIndex, 1);
 		}
 		else
 		{
-			this->GCWarehouseStateSend(aIndex,11);
+			this->GCWarehouseStateSend(aIndex, 11);
 		}
 	}
-	else if(lpMsg->type == 2)
+	else if (lpMsg->type == 2)
 	{
-		if(gObjCheckPersonalCode(aIndex,lpMsg->PersonalCode) == 0)
+		if (gObjCheckPersonalCode(aIndex, lpMsg->PersonalCode) == 0)
 		{
-			this->GCWarehouseStateSend(aIndex,13);
+			this->GCWarehouseStateSend(aIndex, 13);
 			return;
 		}
 
 		lpObj->WarehousePW = 0;
 		lpObj->WarehouseLock = 0;
-		this->GCWarehouseStateSend(aIndex,0);
+		this->GCWarehouseStateSend(aIndex, 0);
 	}
 }
 
@@ -253,7 +253,7 @@ void CWarehouse::GCWarehouseListSend(LPOBJ lpObj) // OK
 
 	PMSG_SHOP_ITEM_LIST_SEND pMsg;
 
-	pMsg.header.set(0x31,0);
+	pMsg.header.set(0x31, 0);
 
 	int size = sizeof(pMsg);
 
@@ -263,18 +263,18 @@ void CWarehouse::GCWarehouseListSend(LPOBJ lpObj) // OK
 
 	PMSG_SHOP_ITEM_LIST info;
 
-	for(int n=0;n < WAREHOUSE_SIZE;n++)
+	for (int n = 0; n < WAREHOUSE_SIZE; n++)
 	{
-		if(lpObj->Warehouse[n].IsItem() == 0)
+		if (lpObj->Warehouse[n].IsItem() == 0)
 		{
 			continue;
 		}
 
 		info.slot = n;
 
-		gItemManager.ItemByteConvert(info.ItemInfo,lpObj->Warehouse[n]);
+		gItemManager.ItemByteConvert(info.ItemInfo, lpObj->Warehouse[n]);
 
-		memcpy(&send[size],&info,sizeof(info));
+		memcpy(&send[size], &info, sizeof(info));
 		size += sizeof(info);
 
 		pMsg.count++;
@@ -283,195 +283,221 @@ void CWarehouse::GCWarehouseListSend(LPOBJ lpObj) // OK
 	pMsg.header.size[0] = SET_NUMBERHB(size);
 	pMsg.header.size[1] = SET_NUMBERLB(size);
 
-	memcpy(send,&pMsg,sizeof(pMsg));
+	memcpy(send, &pMsg, sizeof(pMsg));
 
-	DataSend(lpObj->Index,send,size);
+	DataSend(lpObj->Index, send, size);
 
-	this->GCWarehouseMoneySend(lpObj->Index,1,lpObj->Money,lpObj->WarehouseMoney);
+	this->GCWarehouseMoneySend(lpObj->Index, 1, lpObj->Money, lpObj->WarehouseMoney);
 }
 
-void CWarehouse::GCWarehouseMoneySend(int aIndex,BYTE result,int InventoryMoney,int WarehouseMoney) // OK
+void CWarehouse::GCWarehouseMoneySend(int aIndex, BYTE result, int InventoryMoney, int WarehouseMoney) // OK
 {
 	PMSG_WAREHOUSE_MONEY_SEND pMsg;
 
-	pMsg.header.set(0x81,sizeof(pMsg));
+	pMsg.header.set(0x81, sizeof(pMsg));
 
 	pMsg.result = result;
 
 	pMsg.WarehouseMoney = WarehouseMoney;
-
 	pMsg.InventoryMoney = InventoryMoney;
 
-	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
+	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
-void CWarehouse::GCWarehouseStateSend(int aIndex,BYTE state) // OK
+void CWarehouse::GCWarehouseStateSend(int aIndex, BYTE state) // OK
 {
 	PMSG_WAREHOUSE_STATE_SEND pMsg;
 
-	pMsg.header.set(0x83,sizeof(pMsg));
+	pMsg.header.set(0x83, sizeof(pMsg));
 
 	pMsg.state = state;
 
-	DataSend(aIndex,(BYTE*)&pMsg,pMsg.header.size);
+	DataSend(aIndex, (BYTE*)&pMsg, pMsg.header.size);
 }
 
 void CWarehouse::DGWarehouseItemRecv(SDHP_WAREHOUSE_ITEM_RECV* lpMsg) // OK
 {
-	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
+	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
 	{
-		LogAdd(LOG_RED,"[DGWarehouseItemRecv] Invalid Account [%d](%s)",lpMsg->index,lpMsg->account);
+		LogAdd(LOG_RED, "[DGWarehouseItemRecv] Invalid Account [%d](%s)", lpMsg->index, lpMsg->account);
 		CloseClient(lpMsg->index);
 		return;
 	}
 
 	LPOBJ lpObj = &gObj[lpMsg->index];
 
-	if(lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state != 0)
+	if (lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state != 0)
 	{
 		return;
 	}
 
-	if(lpObj->LoadWarehouse != 0)
+	if (lpObj->LoadWarehouse != 0)
 	{
 		return;
 	}
 
-	memset(lpObj->WarehouseMap,0xFF,WAREHOUSE_SIZE);
+	memset(lpObj->WarehouseMap, 0xFF, WAREHOUSE_SIZE);
 
-	for(int n=0;n < WAREHOUSE_SIZE;n++)
+	for (int n = 0; n < WAREHOUSE_SIZE; ++n)
 	{
 		CItem item;
 
 		lpObj->Warehouse[n].Clear();
 
-		if(gItemManager.ConvertItemByte(&item,lpMsg->WarehouseItem[n]) != 0){gItemManager.WarehouseAddItem(lpObj->Index,item,n);}
+		if (gItemManager.ConvertItemByte(&item, lpMsg->WarehouseItem[n]) != 0) 
+		{ 
+			gItemManager.WarehouseAddItem(lpObj->Index, item, n); 
+		}
 	}
 
 	lpObj->WarehouseMoney = lpMsg->WarehouseMoney;
-
 	lpObj->WarehousePW = lpMsg->WarehousePassword;
 
 	PMSG_NPC_TALK_SEND pMsg;
 
-	pMsg.header.setE(0x30,sizeof(pMsg));
+	pMsg.header.setE(0x30, sizeof(pMsg));
 
 	pMsg.result = 2;
 
-	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
+	DataSend(lpObj->Index, (BYTE*)&pMsg, pMsg.header.size);
 
 	gWarehouse.GCWarehouseListSend(lpObj);
-
-	gWarehouse.GCWarehouseStateSend(lpObj->Index,((lpObj->WarehousePW>0)?((lpObj->WarehouseLock==0)?12:1):0));
+	gWarehouse.GCWarehouseStateSend(lpObj->Index, ((lpObj->WarehousePW > 0) ? ((lpObj->WarehouseLock == 0) ? 12 : 1) : 0));
 
 	lpObj->Interface.use = 1;
-
 	lpObj->Interface.type = INTERFACE_WAREHOUSE;
-
 	lpObj->Interface.state = 1;
-
 	lpObj->LoadWarehouse = 1;
 
-	GDPetItemInfoSend(lpObj->Index,1);
+	GDPetItemInfoSend(lpObj->Index, 1);
 }
 
 void CWarehouse::DGWarehouseFreeRecv(SDHP_WAREHOUSE_FREE_RECV* lpMsg) // OK
 {
-	if(gObjIsAccountValid(lpMsg->index,lpMsg->account) == 0)
+	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
 	{
-		LogAdd(LOG_RED,"[DGWarehouseFreeRecv] Invalid Account [%d](%s)",lpMsg->index,lpMsg->account);
+		LogAdd(LOG_RED, "[DGWarehouseFreeRecv] Invalid Account [%d](%s)", lpMsg->index, lpMsg->account);
 		CloseClient(lpMsg->index);
 		return;
 	}
 
 	LPOBJ lpObj = &gObj[lpMsg->index];
 
-	if(lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state != 0)
+	if (lpObj->Interface.use == 0 || lpObj->Interface.type != INTERFACE_WAREHOUSE || lpObj->Interface.state != 0)
 	{
 		return;
 	}
 
-	if(lpObj->LoadWarehouse != 0)
+	if (lpObj->LoadWarehouse != 0)
 	{
 		return;
 	}
 
-	memset(lpObj->WarehouseMap,0xFF,WAREHOUSE_SIZE);
+	memset(lpObj->WarehouseMap, 0xFF, WAREHOUSE_SIZE);
 
-	for(int n=0;n < WAREHOUSE_SIZE;n++){lpObj->Warehouse[n].Clear();}
+	for (int n = 0; n < WAREHOUSE_SIZE; ++n)
+	{ 
+		lpObj->Warehouse[n].Clear(); 
+	}
 
 	lpObj->WarehouseMoney = 0;
 
 	PMSG_NPC_TALK_SEND pMsg;
 
-	pMsg.header.setE(0x30,sizeof(pMsg));
+	pMsg.header.setE(0x30, sizeof(pMsg));
 
 	pMsg.result = 2;
 
-	DataSend(lpObj->Index,(BYTE*)&pMsg,pMsg.header.size);
+	DataSend(lpObj->Index, (BYTE*)&pMsg, pMsg.header.size);
 
-	gWarehouse.GCWarehouseMoneySend(lpObj->Index,1,lpObj->Money,lpObj->WarehouseMoney);
+	gWarehouse.GCWarehouseMoneySend(lpObj->Index, 1, lpObj->Money, lpObj->WarehouseMoney);
 
 	lpObj->Interface.use = 1;
-
 	lpObj->Interface.type = INTERFACE_WAREHOUSE;
-
 	lpObj->Interface.state = 1;
-
 	lpObj->LoadWarehouse = 1;
 }
 
-void CWarehouse::GDWarehouseItemSend(int aIndex,char* account) // OK
+void CWarehouse::GDWarehouseItemSend(int aIndex, char* account) // OK
 {
-	if(gObjIsAccountValid(aIndex,gObj[aIndex].Account) == 0)
+	if (gObjIsAccountValid(aIndex, gObj[aIndex].Account) == 0)
 	{
 		return;
 	}
 
-	if(gObj[aIndex].LoadWarehouse != 0)
+	if (gObj[aIndex].LoadWarehouse != 0)
 	{
 		return;
 	}
 
 	SDHP_WAREHOUSE_ITEM_SEND pMsg;
 
-	pMsg.header.set(0x05,0x00,sizeof(pMsg));
+	pMsg.header.set(0x05, 0x00, sizeof(pMsg));
 
 	pMsg.index = aIndex;
 
-	memcpy(pMsg.account,account,sizeof(pMsg.account));
+	memcpy(pMsg.account, account, sizeof(pMsg.account));
 
 	pMsg.WarehouseNumber = gObj[aIndex].WarehouseNumber;
 
-	gDataServerConnection.DataSend((BYTE*)&pMsg,pMsg.header.size);
+	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
 void CWarehouse::GDWarehouseItemSaveSend(int aIndex) // OK
 {
 	LPOBJ lpObj = &gObj[aIndex];
 
-	if(lpObj->LoadWarehouse == 0)
+	if (lpObj->LoadWarehouse == 0)
 	{
 		return;
 	}
 
 	SDHP_WAREHOUSE_ITEM_SAVE_SEND pMsg;
 
-	pMsg.header.set(0x05,0x30,sizeof(pMsg));
+	pMsg.header.set(0x05, 0x30, sizeof(pMsg));
 
 	pMsg.index = aIndex;
 
-	memcpy(pMsg.account,lpObj->Account,sizeof(pMsg.account));
+	memcpy(pMsg.account, lpObj->Account, sizeof(pMsg.account));
 
-	for(int n=0;n < WAREHOUSE_SIZE;n++){gItemManager.DBItemByteConvert(pMsg.WarehouseItem[n],&lpObj->Warehouse[n]);}
+	for (int n = 0; n < WAREHOUSE_SIZE; ++n)
+	{
+		gItemManager.DBItemByteConvert(pMsg.WarehouseItem[n], &lpObj->Warehouse[n]);
+	}
 
 	pMsg.WarehouseMoney = lpObj->WarehouseMoney;
-
 	pMsg.WarehousePassword = lpObj->WarehousePW;
-
 	pMsg.WarehouseNumber = lpObj->WarehouseNumber;
 
-	gDataServerConnection.DataSend((BYTE*)&pMsg,sizeof(pMsg));
+	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
 
-	GDPetItemInfoSaveSend(aIndex,1);
+	GDPetItemInfoSaveSend(aIndex, 1);
+}
+
+void CWarehouse::GDWarehouseInfoSend(int aIndex, char* account)
+{
+	SDHP_WAREHOUSE_INFO_SEND pMsg;
+
+	pMsg.header.set(0x05, 0x02, sizeof(pMsg));
+
+	pMsg.index = aIndex;
+
+	memcpy(pMsg.account, account, sizeof(pMsg.account));
+
+	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
+}
+
+void CWarehouse::DGWarehouseInfoRecv(SDHP_WAREHOUSE_INFO_RECV* lpMsg)
+{
+	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
+	{
+		LogAdd(LOG_RED, "[DGWarehouseInfoRecv] Invalid Account [%d](%s)", lpMsg->index, lpMsg->account);
+		CloseClient(lpMsg->index);
+		return;
+	}
+
+	LPOBJ lpObj = &gObj[lpMsg->index];
+
+	lpObj->WarehouseNumber = lpMsg->WarehouseNumber;
+	lpObj->WarehouseTotal = lpMsg->WarehouseTotal;
 }

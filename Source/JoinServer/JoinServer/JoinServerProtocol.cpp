@@ -512,6 +512,11 @@ void GJPostMessageRecv(SDHP_POST_MESSAGE_RECV* lpMsg, int index)
 
 	for (int i = 0; i < MAX_SERVER; ++i)
 	{
+		if (i == index)
+		{
+			continue;
+		}
+
 		if (gServerManager[i].CheckState())
 		{
 			gSocketManager.DataSend(i, (BYTE*)&pMsg, pMsg.header.size);

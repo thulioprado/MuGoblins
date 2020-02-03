@@ -16,11 +16,8 @@ enum eCommandNumber
 	COMMAND_ADD_POINT3,
 	COMMAND_ADD_POINT4,
 	COMMAND_ADD_POINT5,
-	COMMAND_PK_CLEAR,
-	COMMAND_MONEY,
-	COMMAND_CHANGE,
+	COMMAND_READD_POINTS,
 	COMMAND_WARE,
-	COMMAND_RESET,
 	COMMAND_GM_MOVE,
 	COMMAND_GM_POST,
 	COMMAND_TRACK,
@@ -31,7 +28,6 @@ enum eCommandNumber
 	COMMAND_SKIN,
 	COMMAND_SET_MONEY,
 	COMMAND_NOTICE,
-	COMMAND_MASTER_RESET,
 	COMMAND_GUILD_WAR,
 	COMMAND_BATTLE_SOCCER,
 	COMMAND_REQUEST,
@@ -103,13 +99,8 @@ public:
 	void CommandMove(LPOBJ lpObj, char* arg);
 	void CommandPost(LPOBJ lpObj, char* arg);
 	void CommandAddPoint(LPOBJ lpObj, char* arg, int type);
-	void CommandAddPointAuto(LPOBJ lpObj, char* arg, int type);
-	void CommandPKClear(LPOBJ lpObj, char* arg);
-	void CommandMoney(LPOBJ lpObj, char* arg);
-	void CommandChange(LPOBJ lpObj, char* arg);
+	void CommandReAddPoint(LPOBJ lpObj);
 	void CommandWare(LPOBJ lpObj, char* arg);
-	void CommandReset(LPOBJ lpObj, char* arg);
-	void CommandResetAuto(LPOBJ lpObj, char* arg);
 	void CommandGMMove(LPOBJ lpObj, char* arg);
 	void CommandGMPost(LPOBJ lpObj, char* arg);
 	void CommandTrack(LPOBJ lpObj, char* arg);
@@ -120,15 +111,10 @@ public:
 	void CommandSkin(LPOBJ lpObj, char* arg);
 	void CommandSetMoney(LPOBJ lpObj, char* arg);
 	void CommandNotice(LPOBJ lpObj, char* arg);
-	void CommandMasterReset(LPOBJ lpObj, char* arg);
 	void CommandGuildWar(LPOBJ lpObj, char* arg);
 	void CommandBattleSoccer(LPOBJ lpObj, char* arg);
 	void CommandRequest(LPOBJ lpObj, char* arg);
 	void CommandHide(LPOBJ lpObj, char* arg);
-	void CommandAddPointAutoProc(LPOBJ lpObj);
-	void CommandResetAutoProc(LPOBJ lpObj);
-	void DGCommandResetRecv(SDHP_COMMAND_RESET_RECV* lpMsg);
-	void DGCommandMasterResetRecv(SDHP_COMMAND_MASTER_RESET_RECV* lpMsg);
 
 private:
 	std::unordered_map<BYTE, std::vector<std::string>> m_CommandLabels;

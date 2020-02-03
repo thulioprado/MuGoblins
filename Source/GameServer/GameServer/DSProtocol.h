@@ -175,40 +175,6 @@ struct SDHP_CHARACTER_NAME_CHANGE_RECV
 	BYTE result;
 };
 
-struct SDHP_GLOBAL_NOTICE_RECV
-{
-	PBMSG_HEAD header; // C1:21
-	WORD MapServerGroup;
-	BYTE type;
-	BYTE count;
-	BYTE opacity;
-	WORD delay;
-	DWORD color;
-	BYTE speed;
-	char message[128];
-};
-
-struct SDHP_GLOBAL_WHISPER_RECV
-{
-	PBMSG_HEAD header; // C1:72
-	WORD index;
-	char account[11];
-	char name[11];
-	BYTE result;
-	char TargetName[11];
-	char message[60];
-};
-
-struct SDHP_GLOBAL_WHISPER_ECHO_RECV
-{
-	PBMSG_HEAD header; // C1:73
-	WORD index;
-	char account[11];
-	char name[11];
-	char SourceName[11];
-	char message[60];
-};
-
 //**********************************************//
 //********** GameServer -> DataServer **********//
 //**********************************************//
@@ -329,19 +295,6 @@ struct SDHP_CRYWOLF_INFO_SEND
 {
 	PBMSG_HEAD header; // C1:1F
 	WORD MapServerGroup;
-};
-
-struct SDHP_GLOBAL_NOTICE_SEND
-{
-	PBMSG_HEAD header; // C1:21
-	WORD MapServerGroup;
-	BYTE type;
-	BYTE count;
-	BYTE opacity;
-	WORD delay;
-	DWORD color;
-	BYTE speed;
-	char message[128];
 };
 
 struct SDHP_SNS_DATA_SEND
@@ -490,23 +443,6 @@ struct SDHP_RANKING_DEVIL_SQUARE_SAVE_SEND
 	DWORD score;
 };
 
-struct SDHP_RANKING_ILLUSION_TEMPLE_SAVE_SEND
-{
-	PBMSG_HEAD header; // C1:40
-	WORD index;
-	char account[11];
-	char name[11];
-	DWORD score;
-};
-
-struct SDHP_CREATION_CARD_SAVE_SEND
-{
-	PBMSG_HEAD header; // C1:42
-	WORD index;
-	char account[11];
-	BYTE ExtClass;
-};
-
 struct SDHP_CRYWOLF_INFO_SAVE_SEND
 {
 	PBMSG_HEAD header; // C1:49
@@ -563,16 +499,6 @@ struct SDHP_DISCONNECT_CHARACTER_SEND
 	char name[11];
 };
 
-struct SDHP_GLOBAL_WHISPER_SEND
-{
-	PBMSG_HEAD header; // C1:72
-	WORD index;
-	char account[11];
-	char name[11];
-	char TargetName[11];
-	char message[60];
-};
-
 //**********************************************//
 //**********************************************//
 //**********************************************//
@@ -585,9 +511,6 @@ void DGCharacterDeleteRecv(SDHP_CHARACTER_DELETE_RECV* lpMsg);
 void DGCharacterInfoRecv(SDHP_CHARACTER_INFO_RECV* lpMsg);
 void DGCreateItemRecv(SDHP_CREATE_ITEM_RECV* lpMsg);
 void DGPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg);
-void DGGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg);
-void DGGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg);
-void DGGlobalWhisperEchoRecv(SDHP_GLOBAL_WHISPER_ECHO_RECV* lpMsg);
 void GDServerInfoSend();
 void GDCharacterListSend(int aIndex);
 void GDCharacterCreateSend(int aIndex, char* name, BYTE Class);
@@ -597,7 +520,6 @@ void GDCreateItemSend(int aIndex, BYTE map, BYTE x, BYTE y, int index, BYTE leve
 void GDPetItemInfoSend(int aIndex, int type);
 void GDCrywolfSyncSend(int MapServerGroup, int CrywolfState, int OccupationState);
 void GDCrywolfInfoSend(int MapServerGroup);
-void GDGlobalNoticeSend(int MapServerGroup, BYTE type, BYTE count, BYTE opacity, WORD delay, DWORD color, BYTE speed, char* message);
 void GDCharacterInfoSaveSend(int aIndex);
 void GDInventoryItemSaveSend(int aIndex);
 void GDPetItemInfoSaveSend(int aIndex, int type);
@@ -607,14 +529,11 @@ void GDRankingDuelSaveSend(int aIndex, DWORD WinScore, DWORD LoseScore);
 void GDRankingBloodCastleSaveSend(int aIndex, DWORD Score);
 void GDRankingChaosCastleSaveSend(int aIndex, DWORD Score);
 void GDRankingDevilSquareSaveSend(int aIndex, DWORD Score);
-void GDRankingIllusionTempleSaveSend(int aIndex, DWORD Score);
-void GDCreationCardSaveSend(int aIndex, BYTE ExtClass);
 void GDCrywolfInfoSaveSend(int MapServerGroup, int CrywolfState, int OccupationState);
 void GDCustomMonsterRewardSaveSend(int aIndex, int MonsterClass, int MapNumber, int RewardValue1, int RewardValue2);
 void GDRankingCustomArenaSaveSend(int aIndex, DWORD number, DWORD score, DWORD rank);
 void GDConnectCharacterSend(int aIndex);
 void GDDisconnectCharacterSend(int aIndex);
-void GDGlobalWhisperSend(int aIndex, char* TargetName, char* message);
 
 //**************************************************************************//
 // RAW FUNCTIONS ***********************************************************//

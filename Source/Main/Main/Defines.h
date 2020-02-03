@@ -82,13 +82,16 @@ struct PrismColor
 #define pCameraRotZ							*(float*)(0x7D171A0)
 #define pCameraPosZ							*(float*)(0x6A7770)
 #define pCameraClipX 						*(float*)(0x6A967C)
-#define pCameraClipX2 						*(float*)(0x6A9688)
 #define pCameraClipY 						*(float*)(0x5E9D4E)
 #define pCameraClipY2						*(float*)(0x5E9CFE)
 #define pCameraClipB 						*(float*)(0x6A9680)
 #define pCameraClipGL 						*(float*)(0x62696E)
 #define pCameraClipUnk1						*(float*)(0x6A9684)
 #define pCameraClipUnk2						*(float*)(0x6A8FBC)
+#define pCameraClipCS1						*(float*)(0x6A9694)
+#define pCameraClipCS2						*(float*)(0x6A9690)
+#define pCameraClipCS3						*(float*)(0x6A968C)
+#define pCameraClipCS4						*(float*)(0x6A9688)
 #define pConnectServerPort					*(WORD*)(0x6C41BC)
 #define pConnectServerIpAddress				(char*)(0x6B6694)
 #define pClientVersion						(char*)(0x6B7248)
@@ -198,6 +201,7 @@ struct PrismColor
 // 
 // Outros
 //
+#define MAX_OBJECT							10000
 #define CHAR_SET_SIZE						26
 #define CHAR_SET_SIZE_MAIN					18
 #define INVENTORY_SIZE						108

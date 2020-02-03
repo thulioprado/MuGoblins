@@ -57,6 +57,9 @@ void DataServerProtocolCore(BYTE head, BYTE* lpMsg, int size) // OK
 				case 0x01:
 					gWarehouse.DGWarehouseFreeRecv((SDHP_WAREHOUSE_FREE_RECV*)lpMsg);
 					break;
+				case 0x02:
+					gWarehouse.DGWarehouseInfoRecv((SDHP_WAREHOUSE_INFO_RECV*)lpMsg);
+					break;
 			}
 			break;
 		case 0x07:
@@ -72,26 +75,6 @@ void DataServerProtocolCore(BYTE head, BYTE* lpMsg, int size) // OK
 					gQuest.DGQuestKillCountRecv((SDHP_QUEST_KILL_COUNT_RECV*)lpMsg);
 					break;
 			}
-			break;
-		case 0x0F:
-			switch (((lpMsg[0] == 0xC1) ? lpMsg[3] : lpMsg[4]))
-			{
-				case 0x00:
-					gCommandManager.DGCommandResetRecv((SDHP_COMMAND_RESET_RECV*)lpMsg);
-					break;
-				case 0x01:
-					gCommandManager.DGCommandMasterResetRecv((SDHP_COMMAND_MASTER_RESET_RECV*)lpMsg);
-					break;
-			}
-			break;
-		case 0x21:
-			DGGlobalNoticeRecv((SDHP_GLOBAL_NOTICE_RECV*)lpMsg);
-			break;
-		case 0x72:
-			DGGlobalWhisperRecv((SDHP_GLOBAL_WHISPER_RECV*)lpMsg);
-			break;
-		case 0x73:
-			DGGlobalWhisperEchoRecv((SDHP_GLOBAL_WHISPER_ECHO_RECV*)lpMsg);
 			break;
 		case 0x80:
 			switch (((lpMsg[0] == 0xC1) ? lpMsg[3] : lpMsg[4]))
@@ -224,19 +207,13 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 
 	PMSG_CHARACTER_LIST_SEND pMsg;
 
-	pMsg.header.setE(0xF3, 0x00, 0);
-
 	int size = sizeof(pMsg);
 
-	pMsg.ClassCode = lpMsg->ExtClass;
-
+	pMsg.ClassCode = 4;
 	pMsg.MoveCnt = lpMsg->MoveCnt;
-
 	pMsg.count = 0;
 
 	PMSG_CHARACTER_LIST info;
-
-	WORD CharacterCreationLevel = 0;
 
 	for (int n = 0; n < lpMsg->count; n++)
 	{
@@ -247,9 +224,6 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 		memcpy(info.Name, lpInfo->name, sizeof(info.Name));
 
 		info.Level = lpInfo->level;
-
-		CharacterCreationLevel = ((info.Level > CharacterCreationLevel) ? info.Level : CharacterCreationLevel);
-
 		info.CtlCode = lpInfo->CtlCode;
 
 	#pragma region CHAR_SET_CALC
@@ -497,49 +471,16 @@ void DGCharacterListRecv(SDHP_CHARACTER_LIST_RECV* lpMsg) // OK
 		memcpy(&send[size], &info, sizeof(info));
 		size += sizeof(info);
 
-		pMsg.count++;
+		++pMsg.count;
 	}
 
-	if (gServerInfo.m_MGCreateType == 0 && CharacterCreationLevel >= gServerInfo.m_MGCreateLevel[gObj[lpMsg->index].AccountLevel])
-	{
-		pMsg.ClassCode |= 4;
-	}
-
-	if (gServerInfo.m_DLCreateType == 0 && CharacterCreationLevel >= gServerInfo.m_DLCreateLevel[gObj[lpMsg->index].AccountLevel])
-	{
-		pMsg.ClassCode |= 2;
-	}
-
-	if (gServerInfo.m_SUCreateType == 0 && CharacterCreationLevel >= gServerInfo.m_SUCreateLevel[gObj[lpMsg->index].AccountLevel])
-	{
-		pMsg.ClassCode |= 1;
-	}
-
-	if (gServerInfo.m_RFCreateType == 0 && CharacterCreationLevel >= gServerInfo.m_RFCreateLevel[gObj[lpMsg->index].AccountLevel])
-	{
-		pMsg.ClassCode |= 8;
-	}
-
-
-	gObj[lpMsg->index].ClassCode = pMsg.ClassCode;
-
-	gObj[lpMsg->index].ClassFlag = ((CharacterCreationLevel >= gServerInfo.m_MGCreateLevel[gObj[lpMsg->index].AccountLevel]) ? (gObj[lpMsg->index].ClassFlag | 4) : gObj[lpMsg->index].ClassFlag);
-
-	gObj[lpMsg->index].ClassFlag = ((CharacterCreationLevel >= gServerInfo.m_DLCreateLevel[gObj[lpMsg->index].AccountLevel]) ? (gObj[lpMsg->index].ClassFlag | 2) : gObj[lpMsg->index].ClassFlag);
-
-	gObj[lpMsg->index].ClassFlag = ((CharacterCreationLevel >= gServerInfo.m_SUCreateLevel[gObj[lpMsg->index].AccountLevel]) ? (gObj[lpMsg->index].ClassFlag | 1) : gObj[lpMsg->index].ClassFlag);
-
-	gObj[lpMsg->index].ClassFlag = ((CharacterCreationLevel >= gServerInfo.m_RFCreateLevel[gObj[lpMsg->index].AccountLevel]) ? (gObj[lpMsg->index].ClassFlag | 8) : gObj[lpMsg->index].ClassFlag);
-
-	pMsg.ClassCode = 4;
-
-	pMsg.header.size = size;
+	pMsg.header.setE(0xF3, 0x00, size);
 
 	memcpy(send, &pMsg, sizeof(pMsg));
 
 	DataSend(lpMsg->index, send, size);
 
-	GCCharacterCreationEnableSend(lpMsg->index, 0, gObj[lpMsg->index].ClassCode);
+	GCCharacterCreationEnableSend(lpMsg->index, 0, 4);
 }
 
 void DGCharacterCreateRecv(SDHP_CHARACTER_CREATE_RECV* lpMsg) // OK
@@ -825,52 +766,6 @@ void DGPetItemInfoRecv(SDHP_PET_ITEM_INFO_RECV* lpMsg) // OK
 	}
 }
 
-void DGGlobalNoticeRecv(SDHP_GLOBAL_NOTICE_RECV* lpMsg) // OK
-{
-	if (gMapServerManager.GetMapServerGroup() != lpMsg->MapServerGroup)
-	{
-		return;
-	}
-
-	gNotice.GCNoticeSendToAll(lpMsg->type, lpMsg->count, lpMsg->opacity, lpMsg->delay, lpMsg->color, lpMsg->speed, "%s", lpMsg->message);
-}
-
-void DGGlobalWhisperRecv(SDHP_GLOBAL_WHISPER_RECV* lpMsg) // OK
-{
-	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
-	{
-		LogAdd(LOG_RED, "[DGGlobalWhisperRecv] Invalid Account [%d](%s)", lpMsg->index, lpMsg->account);
-		CloseClient(lpMsg->index);
-		return;
-	}
-
-	if (lpMsg->result == 0)
-	{
-		GCServerMsgSend(lpMsg->index, 0);
-		return;
-	}
-
-	lpMsg->message[(sizeof(lpMsg->message) - 1)] = ((strlen(lpMsg->message) > (sizeof(lpMsg->message) - 1)) ? 0 : lpMsg->message[(sizeof(lpMsg->message) - 1)]);
-
-	gLog.Output(LOG_CHAT, "[Whisper][%s][%s] - (Name: %s, Message: %s)", lpMsg->account, lpMsg->name, lpMsg->TargetName, lpMsg->message);
-}
-
-void DGGlobalWhisperEchoRecv(SDHP_GLOBAL_WHISPER_ECHO_RECV* lpMsg) // OK
-{
-	if (gObjIsAccountValid(lpMsg->index, lpMsg->account) == 0)
-	{
-		LogAdd(LOG_RED, "[DGGlobalWhisperEchoRecv] Invalid Account [%d](%s)", lpMsg->index, lpMsg->account);
-		CloseClient(lpMsg->index);
-		return;
-	}
-
-	lpMsg->message[(sizeof(lpMsg->message) - 1)] = ((strlen(lpMsg->message) > (sizeof(lpMsg->message) - 1)) ? 0 : lpMsg->message[(sizeof(lpMsg->message) - 1)]);
-
-	gFilter.CheckSyntax(lpMsg->message);
-
-	GCChatWhisperSend(lpMsg->index, lpMsg->SourceName, lpMsg->message);
-}
-
 void GDServerInfoSend() // OK
 {
 	SDHP_DATA_SERVER_INFO_SEND pMsg;
@@ -904,6 +799,8 @@ void GDCharacterListSend(int aIndex) // OK
 	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
 
 	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
+
+	gWarehouse.GDWarehouseInfoSend(aIndex, gObj[aIndex].Account);
 }
 
 void GDCharacterCreateSend(int aIndex, char* name, BYTE Class) // OK
@@ -1130,25 +1027,6 @@ void GDCrywolfInfoSend(int MapServerGroup) // OK
 	pMsg.header.set(0x1F, sizeof(pMsg));
 
 	pMsg.MapServerGroup = MapServerGroup;
-
-	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
-}
-
-void GDGlobalNoticeSend(int MapServerGroup, BYTE type, BYTE count, BYTE opacity, WORD delay, DWORD color, BYTE speed, char* message) // OK
-{
-	SDHP_GLOBAL_NOTICE_SEND pMsg;
-
-	pMsg.header.set(0x21, sizeof(pMsg));
-
-	pMsg.MapServerGroup = MapServerGroup;
-	pMsg.type = type;
-	pMsg.count = count;
-	pMsg.opacity = opacity;
-	pMsg.delay = delay;
-	pMsg.color = color;
-	pMsg.speed = speed;
-
-	memcpy(pMsg.message, message, sizeof(pMsg.message));
 
 	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
 }
@@ -1466,40 +1344,6 @@ void GDRankingDevilSquareSaveSend(int aIndex, DWORD Score) // OK
 	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
 }
 
-void GDRankingIllusionTempleSaveSend(int aIndex, DWORD Score) // OK
-{
-	LPOBJ lpObj = &gObj[aIndex];
-
-	SDHP_RANKING_ILLUSION_TEMPLE_SAVE_SEND pMsg;
-
-	pMsg.header.set(0x40, sizeof(pMsg));
-
-	pMsg.index = aIndex;
-
-	memcpy(pMsg.account, lpObj->Account, sizeof(pMsg.account));
-
-	memcpy(pMsg.name, lpObj->Name, sizeof(pMsg.name));
-
-	pMsg.score = Score;
-
-	gDataServerConnection.DataSend((BYTE*)&pMsg, pMsg.header.size);
-}
-
-void GDCreationCardSaveSend(int aIndex, BYTE ExtClass) // OK
-{
-	SDHP_CREATION_CARD_SAVE_SEND pMsg;
-
-	pMsg.header.set(0x42, sizeof(pMsg));
-
-	pMsg.index = aIndex;
-
-	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
-
-	pMsg.ExtClass = ExtClass;
-
-	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
-}
-
 void GDCrywolfInfoSaveSend(int MapServerGroup, int CrywolfState, int OccupationState) // OK
 {
 	SDHP_CRYWOLF_INFO_SAVE_SEND pMsg;
@@ -1587,25 +1431,6 @@ void GDDisconnectCharacterSend(int aIndex) // OK
 	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
 
 	memcpy(pMsg.name, gObj[aIndex].Name, sizeof(pMsg.name));
-
-	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
-}
-
-void GDGlobalWhisperSend(int aIndex, char* TargetName, char* message) // OK
-{
-	SDHP_GLOBAL_WHISPER_SEND pMsg;
-
-	pMsg.header.set(0x72, sizeof(pMsg));
-
-	pMsg.index = aIndex;
-
-	memcpy(pMsg.account, gObj[aIndex].Account, sizeof(pMsg.account));
-
-	memcpy(pMsg.name, gObj[aIndex].Name, sizeof(pMsg.name));
-
-	memcpy(pMsg.TargetName, TargetName, sizeof(pMsg.TargetName));
-
-	memcpy(pMsg.message, message, sizeof(pMsg.message));
 
 	gDataServerConnection.DataSend((BYTE*)&pMsg, sizeof(pMsg));
 }

@@ -1,8 +1,12 @@
 #include "Library.h"
 #include "Monster.h"
 #include "Viewport.h"
+#include "Model.h"
 
-CMonster::CMonster() : Monsters()
+#define NPC_FOLDER		"Data\\Npc\\"
+#define MONSTER_FOLDER	"Data\\Monster\\"
+
+CMonster::CMonster() : Monsters(), Health()
 {
 }
 
@@ -12,20 +16,20 @@ CMonster::~CMonster()
 
 void CMonster::Load()
 {
+	int Count = MODEL_MONSTER - 1;
+
+	//
+	// Monsters
+	//
+	this->Monsters[50] = {++Count, MONSTER_FOLDER, "Monster50", false};
+
 	//
 	// Ganchos
 	//
 	Memory::Call(0x596CEA, this->DrawHealth);
-}
-
-void CMonster::Reset()
-{
-	this->Monsters.clear();
-}
-
-void CMonster::Add(WORD Index, BYTE Percent)
-{
-	this->Monsters[Index] = Percent;
+	Memory::Call(0x50ACE6, this->Renderize);
+	Memory::Jump(0x50AC73, this->SetType);
+	Memory::Jump(0x55B769, this->CanTalk);
 }
 
 char* CMonster::GetName(WORD Index) const
@@ -43,11 +47,31 @@ char* CMonster::GetName(WORD Index) const
 	return (char*)("");
 }
 
-BYTE CMonster::GetPercent(WORD Index) const
+MonsterInfo* CMonster::Get(WORD Index)
 {
 	if (this->Monsters.count(Index) > 0)
 	{
-		return this->Monsters.at(Index);
+		return &this->Monsters.at(Index);
+	}
+
+	return null;
+}
+
+void CMonster::ResetHealth()
+{
+	this->Health.clear();
+}
+
+void CMonster::AddHealth(WORD Index, BYTE Percent)
+{
+	this->Health[Index] = Percent;
+}
+
+BYTE CMonster::GetHealthPercent(WORD Index) const
+{
+	if (this->Health.count(Index) > 0)
+	{
+		return this->Health.at(Index);
 	}
 
 	return (BYTE)(-1);
@@ -74,7 +98,7 @@ void CMonster::DrawHealth()
 
 		if (Viewport->Type == VIEWPORT_MONSTER)
 		{
-			Percent = Monster.GetPercent(Viewport->Index);
+			Percent = Monster.GetHealthPercent(Viewport->Index);
 
 			if (Percent == (BYTE)(-1))
 			{
@@ -155,6 +179,154 @@ void CMonster::DrawHealth()
 	glColor3f(1.f, 1.f, 1.f);
 
 	pDrawMonsterHP();
+}
+
+ViewportInfo* CMonster::Renderize(int Index, DWORD a2, int a3, int a4)
+{
+	auto Mob = Monster.Get((WORD)(Index));
+
+	if (Mob)
+	{
+		auto Model = (ModelInfo*)(Mob->Model * sizeof(ModelInfo) + MODEL_BASE);
+
+		if (!*(BYTE*)(0x6B8D84) || Model->UnkWord26 <= 0)
+		{
+			pLoadModel(Mob->Model, Mob->Folder, Mob->File, -1);
+
+			if (Model->UnkWord26 > 0)
+			{
+				DWORD Address = 0;
+
+				for (short i = 0; i < Model->UnkWord26; ++i)
+				{
+					*(float*)(Address + Model->UnkDword30 + 4) = 0.25f;
+					Address += 16;
+				}
+			}
+		}
+
+		if (Model->UnkWord24 > 0)
+		{
+			pLoadTexture(Mob->Model, &Mob->Folder[5], GL_REPEAT, GL_NEAREST, 1);
+		}
+
+		auto Result = pRenderizeModel(a4, Mob->Model, a2, a3, 0);
+
+		switch (Index)
+		{
+			case 50:
+			{
+				Result->Size = 0.60f;
+				break;
+			}
+			case 259:
+			{
+				Result->Size = 0.95f;
+				Result->Angle1.Z += 140.f;
+				break;
+			}
+			case 350:
+			{
+				Result->Size = 0.95f;
+				break;
+			}
+			case 351:
+			{
+				Result->Size = 0.85f;
+				break;
+			}
+		}
+
+		return Result;
+	}
+
+	return pRenderizeMonster(Index, a2, a3, a4);
+}
+
+void __declspec(naked) CMonster::SetType()
+{
+	static DWORD Back[3] = {0x50AC79, 0x50AC92, 0x50ACBA};
+	static int Index;
+	static MonsterInfo* Mob;
+
+	__asm
+	{
+		MOV Index, ESI;
+		PUSHAD;
+	}
+
+	Mob = Monster.Get((WORD)(Index));
+
+	if (Mob)
+	{
+		if (Mob->IsNPC)
+		{
+			__asm
+			{
+				POPAD;
+				JMP Back[4];
+			}
+		}
+
+		__asm
+		{
+			POPAD;
+			JMP Back[8];
+		}
+	}
+
+	__asm
+	{
+		POPAD;
+		CMP ESI, 0xC8;
+		JMP Back[0];
+	}
+}
+
+void __declspec(naked) CMonster::CanTalk()
+{
+	static DWORD Back[3] = {0x55B76F, 0x55B782, 0x55B789};
+	static WORD Index;
+	static MonsterInfo* Mob;
+
+	__asm
+	{
+		MOV Index, AX;
+		PUSHAD;
+	}
+
+	Mob = Monster.Get(Index);
+
+	if (Mob)
+	{
+		if (Mob->IsNPC)
+		{
+			__asm
+			{
+				POPAD;
+				MOV BYTE PTR DS : [0x788C829] , 0x01;
+				JMP Back[8];
+			}
+		}
+		
+		__asm
+		{
+			POPAD;
+			MOV BYTE PTR DS : [0x788C829] , 0x00;
+			JMP Back[8];
+		}
+	}
+
+	__asm
+	{
+		POPAD;
+		CMP AX, 0xF3;
+		JE Equal;
+		JMP Back[0];
+
+	Equal:
+		JMP Back[4];
+	}
 }
 
 CMonster Monster;

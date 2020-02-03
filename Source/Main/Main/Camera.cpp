@@ -16,11 +16,22 @@ void CCamera::Clip()
 	auto Absolute = abs(pCameraPosZ - 150.f) * 3.f;
 
 	Multiplier += (pResolution >= 4) ? 0.8f : 0.0f;
-
+	
 	pCameraClipX = (1190.f + Absolute) * Multiplier;
 	pCameraClipY = (2400.f + Absolute) * Multiplier;
 	pCameraClipB = (1128.f + Absolute) * Multiplier;
 	pCameraClipGL = (2000.f + Absolute) * Multiplier;
+
+	/*if (pMapNumber == 30)
+	{
+		pCameraClipCS4 = (5000.f + Absolute) * Multiplier;
+		pCameraClipCS3 = (4000.f + Absolute) * Multiplier;
+	}
+	else
+	{
+		pCameraClipCS4 = 580.f;
+		pCameraClipCS3 = 1300.f;
+	}*/
 }
 
 void CCamera::Restore()
@@ -48,14 +59,16 @@ void CCamera::Zoom(int Direction)
 		}
 		else if (Direction < 0)
 		{
-			if (pCameraZoom < 59.f)
+			float MaxZoom = (pMapNumber == 30) ? 47.f : 59.f;
+
+			if (pCameraZoom < MaxZoom)
 			{
 				pCameraZoom += 2.f;
 			}
 
-			if (pCameraZoom > 59.f)
+			if (pCameraZoom > MaxZoom)
 			{
-				pCameraZoom = 59.f;
+				pCameraZoom = MaxZoom;
 			}
 		}
 

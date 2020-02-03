@@ -177,7 +177,7 @@ void CObjectManager::ObjectSetStateCreate(int aIndex) // OK
 
 void CObjectManager::ObjectSetStateProc() // OK
 {
-	for (int n = 0; n < MAX_OBJECT; n++)
+	for (int n = 0; n < MAX_OBJECT; ++n)
 	{
 		if (gObjIsConnected(n) == 0)
 		{
@@ -2730,17 +2730,11 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	}
 
 	lpObj->DefenseSuccessRate += lpObj->Inventory[1].GetDefenseSuccessRate();
-
 	lpObj->DefenseSuccessRate += lpObj->Inventory[2].GetDefenseSuccessRate();
-
 	lpObj->DefenseSuccessRate += lpObj->Inventory[3].GetDefenseSuccessRate();
-
 	lpObj->DefenseSuccessRate += lpObj->Inventory[4].GetDefenseSuccessRate();
-
 	lpObj->DefenseSuccessRate += lpObj->Inventory[5].GetDefenseSuccessRate();
-
 	lpObj->DefenseSuccessRate += lpObj->Inventory[6].GetDefenseSuccessRate();
-
 	lpObj->DefenseSuccessRate += lpObj->Inventory[7].GetDefenseSuccessRate();
 
 	if (lpObj->Class == CLASS_DW)
@@ -2853,17 +2847,11 @@ void CObjectManager::CharacterCalcAttribute(int aIndex) // OK
 	}
 
 	lpObj->Defense += lpObj->Inventory[1].GetDefense();
-
 	lpObj->Defense += lpObj->Inventory[2].GetDefense();
-
 	lpObj->Defense += lpObj->Inventory[3].GetDefense();
-
 	lpObj->Defense += lpObj->Inventory[4].GetDefense();
-
 	lpObj->Defense += lpObj->Inventory[5].GetDefense();
-
 	lpObj->Defense += lpObj->Inventory[6].GetDefense();
-
 	lpObj->Defense += lpObj->Inventory[7].GetDefense();
 
 	if (Helper->IsItem() != 0 && Helper->m_IsValidItem != 0 && Helper->m_Durability != 0)
@@ -3019,6 +3007,7 @@ bool CObjectManager::CharacterInfoSet(BYTE* aRecv, int aIndex) // OK
 	lpObj->ChangeUp = lpMsg->Class % 16;
 	lpObj->Reset = lpMsg->Reset;
 	lpObj->MasterReset = lpMsg->MasterReset;
+	lpObj->PostOn = true;
 
 	memcpy(lpObj->Name, lpMsg->name, sizeof(lpObj->Name));
 

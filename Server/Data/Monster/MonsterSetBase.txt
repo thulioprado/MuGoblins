@@ -143,6 +143,8 @@ end
 // SPOTS
 //=========================================================================================================================================
 1
+050            00             30         114            83             115          84           -1             1             //Divine Boss
+
 //Monster      MapNumber      Range      BeginPosX      BeginPosY      EndPosX      EndPosY      Direction      Quantity      Comment
 003            00             30         180            090            226          244          -1             45            //Spider
 002            00             30         180            090            226          244          -1             40            //Budge Dragon

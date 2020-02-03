@@ -231,12 +231,12 @@ void CCastleDeep::ProcState_EMPTY() // OK
 	{
 		this->m_TimeNotify = 1;
 
-		GDGlobalNoticeSend(gMapServerManager.GetMapServerGroup(),0,0,0,0,0,0,gMessage.GetMessage(352));
+		//GDGlobalNoticeSend(gMapServerManager.GetMapServerGroup(),0,0,0,0,0,0,gMessage.GetMessage(352));
 	}
 
 	if(this->m_RemainTime <= 0)
 	{
-		GDGlobalNoticeSend(gMapServerManager.GetMapServerGroup(),0,0,0,0,0,0,gMessage.GetMessage(353));
+		//GDGlobalNoticeSend(gMapServerManager.GetMapServerGroup(),0,0,0,0,0,0,gMessage.GetMessage(353));
 
 		this->SetState(CD_STATE_START);
 	}

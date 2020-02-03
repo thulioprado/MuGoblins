@@ -32,6 +32,7 @@ public:
 	void PaintAllInfo();
 	void LogTextPaint();
 	void LogAddText(eLogColor color,char* text,int size);
+	void ScriptLogColor(eLogColor color, char* text, int size);
 private:
 	HWND m_hwnd;
 	HFONT m_font;

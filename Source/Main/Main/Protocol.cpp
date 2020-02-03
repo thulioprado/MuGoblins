@@ -18,7 +18,7 @@ CProtocol::~CProtocol()
 
 void CProtocol::Load()
 {
-	Memory::Call(0x4DB63D, this->Core);
+	//Memory::Call(0x4DB63D, this->Core);
 }
 
 int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
@@ -165,6 +165,10 @@ int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
 				case 0x14:
 				{
 					return ::Protocol.ItemModify(Index, (PMSG_ITEM_MODIFY_RECV*)(Data));
+				}
+				case 0xFA:
+				{
+					return ::Protocol.CharacterUpdate(Index, (PMSG_CHARACTER_UPDATE_RECV*)(Data));
 				}
 				case 0xFB:
 				{
@@ -869,7 +873,7 @@ int CProtocol::CharacterList(int Index, LPBYTE Data)
 
 	int Size = sizeof(PMSG_CHARACTER_LIST_RECV);
 
-	PMSG_CHARACTER_LIST_RECV pMsg;
+	PMSG_CHARACTER_LIST_RECV2 pMsg;
 	PMSG_CHARACTER_LIST2 pCharacter;
 
 	pMsg.header.set(0xF3, 0x00, 0);
@@ -1196,6 +1200,29 @@ int CProtocol::ItemModify(int Index, PMSG_ITEM_MODIFY_RECV* Data)
 	return pProtocolCore(0xF3, (LPBYTE)(&pMsg), sizeof(pMsg), Index);
 }
 
+int CProtocol::CharacterUpdate(int Index, PMSG_CHARACTER_UPDATE_RECV* Data)
+{
+	Player.LevelUpPoints = Data->LevelUpPoint;
+	Player.HP = Data->HP;
+	Player.MaxHP = Data->MaxHP;
+	Player.MP = Data->MP;
+	Player.MaxMP = Data->MaxMP;
+	Player.BP = Data->BP;
+	Player.MaxBP = Data->MaxBP;
+
+	Player.Execute(Index, [&](PlayerObject* Player) {
+		Player->Level = Data->Level;
+		Player->LevelUpPoint = Data->LevelUpPoint > 0;
+		Player->Strength = Data->Strength;
+		Player->Dexterity = Data->Dexterity;
+		Player->Vitality = Data->Vitality;
+		Player->Energy = Data->Energy;
+		Player->Leadership = Data->Leadership;
+	});
+	
+	return 1;
+}
+
 int CProtocol::PostMessage(PMSG_POST_MESSAGE_RECV* Data)
 {
 	pShowMessage("", Data->message, 97);
@@ -1221,13 +1248,13 @@ int CProtocol::MonsterHealth(LPBYTE Data)
 
 	int Size = sizeof(PMSG_MONSTER_HEALTH_RECV);
 
-	Monster.Reset();
+	Monster.ResetHealth();
 
 	for (BYTE i = 0; i < Info->count; ++i)
 	{
 		Health = (PMSG_MONSTER_HEALTH*)(&Data[Size]);
 
-		Monster.Add(Health->index, Health->percent);
+		Monster.AddHealth(Health->index, Health->percent);
 
 		Size += sizeof(PMSG_MONSTER_HEALTH);
 	}

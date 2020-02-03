@@ -284,76 +284,123 @@ bool gObjSetMonster(int aIndex, int MonsterClass) // OK
 			gSkillManager.AddSkill(lpObj, lpObj->AttackType, 0);
 		}
 
-		if (MonsterClass == 66 || MonsterClass == 73) // Cursed King,Drakan
+		switch (MonsterClass)
 		{
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-		}
+			case 66: // Cursed King
+			case 73: // Drakan
+			case 144:
+			case 145:
+			case 146:
+			case 147:
+			case 148:
+			case 160:
+			case 163:
+			case 165:
+			case 167:
+			case 169:
+			case 171:
+			case 173:
+			case 174: 
+			case 175:
+			case 176:
+			case 177:
+			case 178:
+			case 180:
+			case 182:
+			case 183:
+			case 184:
+			case 185:
+			case 186:
+			case 188:
+			case 190:
+			case 191:
+			case 192:
+			case 193:
+			case 194:
+			case 196:
+			case 260: 
+			case 261:
+			case 262:
+			case 263:
+			case 264:
+			case 266:
+			case 268:
+			case 269:
+			case 270:
+			case 271:
+			case 272:
+			case 274:
+			case 331:
+			case 332:
+			case 333:
+			case 334:
+			case 335:
+			case 337:
+			{
+				gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
+				break;
+			}
+			case 77: // Phoenix of Darkness
+			case 89:
+			case 95:
+			case 112:
+			case 118:
+			case 124:
+			case 130:
+			case 143:
+			{
+				gSkillManager.AddSkill(lpObj, SKILL_LIGHTNING, 0);
+				break;
+			}
+			case 149:
+			case 179:
+			case 187:
+			case 195:
+			case 265:
+			case 273:
+			case 336:
+			{
+				gSkillManager.AddSkill(lpObj, SKILL_POISON, 0);
+				gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
+				break;
+			}
+			case 161:
+			case 181:
+			case 189:
+			case 197:
+			case 267:
+			case 275:
+			case 338:
+			{
+				gSkillManager.AddSkill(lpObj, SKILL_POISON, 0);
+				gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
+				gSkillManager.AddSkill(lpObj, SKILL_FIRE_SLASH, 0);
+				gSkillManager.AddSkill(lpObj, SKILL_MONSTER_SUMMON, 0);
+				gSkillManager.AddSkill(lpObj, SKILL_MAGIC_DAMAGE_IMMUNITY, 0);
+				gSkillManager.AddSkill(lpObj, SKILL_PHYSI_DAMAGE_IMMUNITY, 0);
+				break;
+			}
+			case 50:
+			{
+				gSkillManager.AddSkill(lpObj, SKILL_EXPLOSION, 0);
 
-		if (MonsterClass == 77) // Phoenix of Darkness
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_LIGHTNING, 0);
-		}
+				CItem item;
 
-		if (MonsterClass == 89 || MonsterClass == 95 || MonsterClass == 112 || MonsterClass == 118 || MonsterClass == 124 || MonsterClass == 130 || MonsterClass == 143) // Spirit Sorcerer
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_LIGHTNING, 0);
-		}
-
-		if (MonsterClass == 144 || MonsterClass == 174 || MonsterClass == 182 || MonsterClass == 190 || MonsterClass == 260 || MonsterClass == 268 && MonsterClass == 331) // Kalima Death Angel
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-		}
-
-		if (MonsterClass == 145 || MonsterClass == 175 || MonsterClass == 183 || MonsterClass == 191 || MonsterClass == 261 || MonsterClass == 269 && MonsterClass == 332) // Kalima Death Centurion
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-		}
-
-		if (MonsterClass == 146 || MonsterClass == 176 || MonsterClass == 184 || MonsterClass == 192 || MonsterClass == 262 || MonsterClass == 270 && MonsterClass == 333) // Kalima Bloody Soldier
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-		}
-
-		if (MonsterClass == 147 || MonsterClass == 177 || MonsterClass == 185 || MonsterClass == 193 || MonsterClass == 263 || MonsterClass == 271 && MonsterClass == 334) // Kalima Aegis
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-		}
-
-		if (MonsterClass == 148 || MonsterClass == 178 || MonsterClass == 186 || MonsterClass == 194 || MonsterClass == 264 || MonsterClass == 272 && MonsterClass == 335) // Kalima Lord Centurion
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-		}
-
-		if (MonsterClass == 149 || MonsterClass == 179 || MonsterClass == 187 || MonsterClass == 195 || MonsterClass == 265 || MonsterClass == 273 && MonsterClass == 336) // Kalima Necron
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_POISON, 0);
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-		}
-
-		if (MonsterClass == 160 || MonsterClass == 180 || MonsterClass == 188 || MonsterClass == 196 || MonsterClass == 266 || MonsterClass == 274 && MonsterClass == 337) // Kalima Schriker
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-		}
-
-		if (MonsterClass == 161 || MonsterClass == 181 || MonsterClass == 189 || MonsterClass == 197 || MonsterClass == 267 || MonsterClass == 275 && MonsterClass == 338) // Shadow of Kundun
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_POISON, 0);
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
-			gSkillManager.AddSkill(lpObj, SKILL_FIRE_SLASH, 0);
-			gSkillManager.AddSkill(lpObj, SKILL_MONSTER_SUMMON, 0);
-			gSkillManager.AddSkill(lpObj, SKILL_MAGIC_DAMAGE_IMMUNITY, 0);
-			gSkillManager.AddSkill(lpObj, SKILL_PHYSI_DAMAGE_IMMUNITY, 0);
-		}
-
-		if (MonsterClass == 163 || MonsterClass == 165 || MonsterClass == 167 || MonsterClass == 169 || MonsterClass == 171 || MonsterClass == 173) // Chaos Castle Wizard
-		{
-			gSkillManager.AddSkill(lpObj, SKILL_ENERGY_BALL, 0);
+				item.m_Level = 0;
+				item.m_Serial = 0;
+				item.m_Durability = (float)gItemManager.GetItemDurability(GET_ITEM(1, 9), 0, 0, 0);
+				
+				gItemManager.InventoryAddItem(lpObj->Index, item, 0);
+				break;
+			}
 		}
 	}
 
 	gMap[lpObj->Map].SetStandAttr(lpObj->X, lpObj->Y);
+
 	lpObj->OldX = lpObj->X;
 	lpObj->OldY = lpObj->Y;
+
 	return 1;
 }
 
@@ -999,6 +1046,35 @@ void gObjMonsterAttack(LPOBJ lpObj, LPOBJ lpTarget) // OK
 		pMsg.dis = 0;
 
 		gSkillManager.CGSkillAttackRecv(&pMsg, lpObj->Index);
+	}
+	else if (lpObj->Class == 50)
+	{
+		if ((GetLargeRand() % 5) == 0)
+		{
+			PMSG_ATTACK_RECV pMsg;
+
+			pMsg.header.set(PROTOCOL_CODE2, sizeof(pMsg));
+
+			pMsg.index[0] = SET_NUMBERHB(lpObj->TargetNumber);
+			pMsg.index[1] = SET_NUMBERLB(lpObj->TargetNumber);
+			pMsg.action = ACTION_ATTACK1;
+			pMsg.dir = lpObj->Dir;
+
+			gAttack.CGAttackRecv(&pMsg, lpObj->Index);
+		} 
+		else
+		{
+			PMSG_SKILL_ATTACK_RECV pMsg;
+
+			pMsg.header.set(0x19, sizeof(pMsg));
+
+			pMsg.skill = 1;
+			pMsg.index[0] = SET_NUMBERHB(lpObj->TargetNumber);
+			pMsg.index[1] = SET_NUMBERLB(lpObj->TargetNumber);
+			pMsg.dis = 0;
+
+			gSkillManager.CGSkillAttackRecv(&pMsg, lpObj->Index);
+		}
 	}
 	else
 	{

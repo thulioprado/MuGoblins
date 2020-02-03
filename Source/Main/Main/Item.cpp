@@ -862,9 +862,12 @@ void CItem::Load()
 	Memory::Jump(0x5E5CC4, this->RenderizingInventory);
 	Memory::Jump(0x5E5D0B, this->RenderizingShop);
 
-	Memory::Call(0x506DAE, this->TestEffect);
-	Memory::Call(0x506DFA, this->TestEffect);
-	Memory::Call(0x506E46, this->TestEffect);
+	Memory::Change<BYTE>(0x506DA7, 0x53); // Push Viewport
+	Memory::Call(0x506DAE, this->FullArmorGlowEffect);
+	Memory::Change<BYTE>(0x506DF0, 0x53); // Push Viewport
+	Memory::Call(0x506DFA, this->FullArmorGlowEffect);
+	Memory::Change<BYTE>(0x506E3F, 0x53); // Push Viewport
+	Memory::Call(0x506E46, this->FullArmorGlowEffect);
 }
 
 void CItem::LoadModels()
@@ -896,8 +899,15 @@ void CItem::LoadModels()
 	pLoadModel(GET_ITEM_MODEL(14, 35), "Data\\Item\\", "pipe_r", -1);
 	pLoadModel(GET_ITEM_MODEL(14, 36), "Data\\Item\\", "pipe_g", -1);
 	pLoadModel(GET_ITEM_MODEL(14, 37), "Data\\Item\\", "pipe_b", -1);
-	pLoadModel(GET_ITEM_MODEL(14, 38), "Data\\Item\\", "pipe_g", -1);
-	pLoadModel(GET_ITEM_MODEL(14, 39), "Data\\Item\\", "pipe_g", -1);
+	pLoadModel(GET_ITEM_MODEL(14, 38), "Data\\Item\\", "Lightning", 1);
+	pLoadModel(GET_ITEM_MODEL(14, 39), "Data\\Item\\", "Lightning", 1);
+	pLoadModel(GET_ITEM_MODEL(14, 40), "Data\\Item\\", "Lightning", 1);
+	pLoadModel(GET_ITEM_MODEL(14, 41), "Data\\Item\\", "Lightning", 1);
+
+	//
+	// Vikran
+	//
+	pLoadModel(GET_ITEM_MODEL(1, 9), "Data\\Item\\", "Axe", 10);
 }
 
 void CItem::LoadTextures()
@@ -931,6 +941,13 @@ void CItem::LoadTextures()
 	pLoadTexture(GET_ITEM_MODEL(14, 37), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 	pLoadTexture(GET_ITEM_MODEL(14, 38), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 	pLoadTexture(GET_ITEM_MODEL(14, 39), "Item\\", GL_REPEAT, GL_NEAREST, 1);
+	pLoadTexture(GET_ITEM_MODEL(14, 40), "Item\\", GL_REPEAT, GL_NEAREST, 1);
+	pLoadTexture(GET_ITEM_MODEL(14, 41), "Item\\", GL_REPEAT, GL_NEAREST, 1);
+
+	//
+	// Vikran
+	//
+	pLoadTexture(GET_ITEM_MODEL(1, 9), "Item\\", GL_REPEAT, GL_NEAREST, 1);
 }
 
 bool CItem::GetModelPosition(DWORD Index)
@@ -980,14 +997,24 @@ bool CItem::GetModelSize(DWORD Index)
 		(Index == GET_ITEM_MODEL(13, 39) || Index == GET_ITEM_MODEL(13, 40)))												// Aneis de prisma
 	{
 		this->ModelSize = 0.0025f;
-
 		return true;
 	}
 
 	if (Index == GET_ITEM_MODEL(13, 41))	// Colar de prisma
 	{
 		this->ModelSize = 0.0013f;
+		return true;
+	}
 
+	if (Index >= GET_ITEM_MODEL(14, 38) && Index <= GET_ITEM_MODEL(14, 41))		// Energias
+	{
+		this->ModelSize = 0.0013f;
+		return true;
+	}
+
+	if (Index == GET_ITEM_MODEL(1, 9))	// Machado de Vikran
+	{
+		this->ModelSize = 0.0018f;
 		return true;
 	}
 
@@ -1201,14 +1228,40 @@ void CItem::SetDescription(ItemInfo* Item)
 				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(6));
 				break;
 			}
-			case GET_ITEM(14, 38): // Energia Positiva
+			case GET_ITEM(14, 38): // Energia Solar Positiva
 			{
+				this->SetNameColor(RGBA(0, 0, 0, 0), RGBA(240, 240, 0, 255));
 				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(7));
+				this->AddLine();
+				this->AddLine();
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(240, 240, 0, 255), Message.Get(15));
 				break;
 			}
-			case GET_ITEM(14, 39): // Energia Negativa
+			case GET_ITEM(14, 39): // Energia Solar Negativa
 			{
+				this->SetNameColor(RGBA(0, 0, 0, 0), RGBA(200, 200, 0, 255));
 				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(8));
+				this->AddLine();
+				this->AddLine();
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(200, 200, 0, 255), Message.Get(15));
+				break;
+			}
+			case GET_ITEM(14, 40): // Energia Lunar Positiva
+			{
+				this->SetNameColor(RGBA(0, 0, 0, 0), RGBA(0, 240, 240, 255));
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(7));
+				this->AddLine();
+				this->AddLine();
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(0, 240, 240, 255), Message.Get(16));
+				break;
+			}
+			case GET_ITEM(14, 41): // Energia Lunar Negativa
+			{
+				this->SetNameColor(RGBA(0, 0, 0, 0), RGBA(0, 200, 200, 255));
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(255, 255, 255, 255), Message.Get(8));
+				this->AddLine();
+				this->AddLine();
+				this->AddDescription(RGBA(0, 0, 0, 0), RGBA(0, 200, 200, 255), Message.Get(16));
 				break;
 			}
 		}
@@ -1475,7 +1528,7 @@ void __declspec(naked) CItem::EnableGlow()
 
 	if ((Index == GET_ITEM_MODEL(13, 10) || (Index >= GET_ITEM_MODEL(13, 32) && Index <= GET_ITEM_MODEL(13, 38))) ||	// Aneis de transformação
 		(Index >= GET_ITEM_MODEL(14, 32) && Index <= GET_ITEM_MODEL(14, 34)) ||											// Tintas
-		(Index == GET_ITEM_MODEL(14, 38)))																				// Energia Positiva
+		(Index == GET_ITEM_MODEL(14, 38) || Index == GET_ITEM_MODEL(14, 40)))																				// Energia Positiva
 	{
 		__asm
 		{
@@ -1485,7 +1538,7 @@ void __declspec(naked) CItem::EnableGlow()
 	}
 
 	if ((Index >= GET_ITEM_MODEL(14, 35) && Index <= GET_ITEM_MODEL(14, 37)) ||		// Neutralizadores
-		(Index == GET_ITEM_MODEL(14, 39)))											// Energia Negativa
+		(Index == GET_ITEM_MODEL(14, 39) || Index == GET_ITEM_MODEL(14, 41)))											// Energia Negativa
 	{
 		__asm
 		{
@@ -1543,12 +1596,20 @@ void CItem::SetGlow(int ItemModel, float Alpha, DWORD Unk2, FloatColor* Color, D
 			Color->Blue = 0.2f;
 			return;
 		}
-		case GET_ITEM_MODEL(14, 38):	// Energia Positiva
-		case GET_ITEM_MODEL(14, 39):	// Energia Negativa
+		case GET_ITEM_MODEL(14, 38):	// Energia Solar Positiva
+		case GET_ITEM_MODEL(14, 39):	// Energia Solar Negativa
 		{
-			Color->Red = 1.0f;
-			Color->Green = 1.0f;
+			Color->Red = 0.8f;
+			Color->Green = 0.8f;
 			Color->Blue = 0.0f;
+			return;
+		}
+		case GET_ITEM_MODEL(14, 40):	// Energia Lunar Positiva
+		case GET_ITEM_MODEL(14, 41):	// Energia Lunar Negativa
+		{
+			Color->Red = 0.0f;
+			Color->Green = 0.8f;
+			Color->Blue = 0.8f;
 			return;
 		}
 	}
@@ -2317,10 +2378,30 @@ void __declspec(naked) CItem::RenderizingShop()
 	}
 }
 
-int CItem::TestEffect(int Index, DWORD Unk1, DWORD Unk2, float* Color, DWORD Count, float Size, DWORD Unk3)
+int CItem::FullArmorGlowEffect(int Index, DWORD Unk1, ViewportInfo* Viewport, FloatColor* Color, DWORD Count, float Size, DWORD Unk3)
 {
-	Prism.GetEffect((FloatColor*)(Color), Player.PrismArmor.Color, Player.Index, Player.PrismArmor.Speed);
-	return pShowEffect2(Index, Unk1, Unk2, Color, Count, Size, Unk3);
+	PrismColor* PrismColor = null;
+
+	if (Viewport->Index == Player.Index)
+	{
+		PrismColor = &Player.PrismArmor;
+	}
+	else
+	{
+		auto Custom = ::Viewport.GetCustom(Viewport->Index);
+
+		if (Custom)
+		{
+			PrismColor = &Custom->PrismArmor;
+		}
+	}
+
+	if (PrismColor)
+	{
+		Prism.GetEffect(Color, PrismColor->Color, Viewport->Index, PrismColor->Speed);
+	}
+
+	return pShowEffect2(Index, Unk1, (DWORD)(&Viewport->EffectAngle), (float*)(Color), Count, Size, Unk3);
 }
 
 CItem Item;

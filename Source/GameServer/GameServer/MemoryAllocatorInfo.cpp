@@ -58,7 +58,7 @@ void CMemoryAllocatorInfo::Alloc() // OK
 	this->m_HitDamage = new HIT_DAMAGE_STRUCT[MAX_HIT_DAMAGE];
 	this->m_Effect = new CEffect[MAX_EFFECT_LIST];
 
-	if(OBJECT_USER_RANGE(this->m_Index) != 0)
+	if (OBJECT_USER_RANGE(this->m_Index) != 0)
 	{
 		this->m_PerSocketContext = new PER_SOCKET_CONTEXT;
 		this->m_Inventory1 = new CItem[INVENTORY_SIZE];

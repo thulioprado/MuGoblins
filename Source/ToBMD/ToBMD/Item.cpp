@@ -71,6 +71,7 @@ void CItem::Convert(const char* From, const char* To, const char* To2)
 				Bmd[Index].Skill = lpMemScript->GetAsNumber();
 				Bmd[Index].Width = lpMemScript->GetAsNumber();
 				Bmd[Index].Height = lpMemScript->GetAsNumber();
+				Bmd[Index].TwoHand = (Bmd[Index].Width >= 2) ? 1 : 0;
 				
 				lpMemScript->GetAsNumber();
 				lpMemScript->GetAsNumber();
@@ -96,7 +97,6 @@ void CItem::Convert(const char* From, const char* To, const char* To2)
 					Bmd[Index].RequireEnergy = lpMemScript->GetAsNumber();
 					Bmd[Index].RequireVitality = lpMemScript->GetAsNumber();
 					Bmd[Index].RequireLeadership = lpMemScript->GetAsNumber();
-					Bmd[Index].TwoHand = ((Bmd[Index].Width >= 2) ? 1 : 0);
 					Bmd[Index].Durability += Bmd[Index].MagicDurability;
 				}
 				else if (Group >= 6 && Group <= 11)

@@ -74,7 +74,7 @@ public:
 	static void ConfirmToSell();
 	static void RenderizingInventory();
 	static void RenderizingShop();
-	static int TestEffect(int Unk1, DWORD Unk2, DWORD Unk3, float* Color, DWORD Unk4, float Unk5, DWORD Unk6);
+	static int FullArmorGlowEffect(int Unk1, DWORD Unk2, struct ViewportInfo* Viewport, struct FloatColor* Color, DWORD Unk4, float Unk5, DWORD Unk6);
 	
 public:
 	std::unique_ptr<ItemInfoEx[]> ExBmd;

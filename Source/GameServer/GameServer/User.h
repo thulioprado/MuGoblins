@@ -31,7 +31,7 @@
 #define MAX_MONEY 2000000000
 #define MAX_CHECKSUM_KEY 1024
 #define MAX_CHARACTER_LEVEL 10000
-#define MAX_ACCOUNT_LEVEL 4
+#define MAX_ACCOUNT_LEVEL 2
 #define MAX_DAMAGE_REDUCTION 6
 #define MAX_MESSAGE_SIZE 255
 #define MAX_CHAT_MESSAGE_SIZE 59
@@ -417,13 +417,12 @@ struct OBJECTSTRUCT
 	struct PER_SOCKET_CONTEXT* PerSocketContext;
 	SOCKET Socket;
 	char IpAddr[16];
-	BYTE ClassCode;
-	BYTE ClassFlag;
 	DWORD AutoSaveTime;
 	DWORD ConnectTickCount;
 	DWORD ClientTickCount;
 	DWORD ServerTickCount;
 	BYTE CheckTickCount;
+	bool PostOn;
 	DWORD PostTime;
 	DWORD TimeCount;
 	DWORD PKTickCount;
@@ -662,6 +661,7 @@ struct OBJECTSTRUCT
 	int ExtInventory;
 	int ExtWarehouse;
 	int WarehouseNumber;
+	int WarehouseTotal;
 	int AccountLevel;
 	char AccountExpireDate[20];
 	char AutoPartyPassword[11];

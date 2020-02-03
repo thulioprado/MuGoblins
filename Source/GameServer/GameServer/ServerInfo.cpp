@@ -73,7 +73,6 @@ void CServerInfo::ReadInit() // OK
 
 	this->ReadChaosMixInfo();
 	this->ReadCharacterInfo();
-	this->ReadCommandInfo();
 	this->ReadCommonInfo();
 	this->ReadCustomInfo();
 	this->ReadEventInfo();
@@ -103,13 +102,6 @@ void CServerInfo::ReadCharacterInfo() // OK
 	gDefaultClassInfo.Load(gPath.GetFullPath("Character\\DefaultClassInfo.txt"));
 
 	LogAdd(LOG_BLUE, "[ServerInfo] Character loaded successfully");
-}
-
-void CServerInfo::ReadCommandInfo() // OK
-{
-	this->ReadCommandInfo("GameServerInfo", ".\\Data\\GameServerInfo - Command.dat");
-
-	LogAdd(LOG_BLUE, "[ServerInfo] Command loaded successfully");
 }
 
 void CServerInfo::ReadCommonInfo() // OK
@@ -386,188 +378,96 @@ void CServerInfo::ReadChaosMixInfo(char* section, char* path) // OK
 
 	this->m_ChaosItemMixRate[0] = GetPrivateProfileInt(section, "ChaosItemMixRate_AL0", 0, path);
 	this->m_ChaosItemMixRate[1] = GetPrivateProfileInt(section, "ChaosItemMixRate_AL1", 0, path);
-	this->m_ChaosItemMixRate[2] = GetPrivateProfileInt(section, "ChaosItemMixRate_AL2", 0, path);
-	this->m_ChaosItemMixRate[3] = GetPrivateProfileInt(section, "ChaosItemMixRate_AL3", 0, path);
 	this->m_DevilSquareMixRate1[0] = GetPrivateProfileInt(section, "DevilSquareMixRate1_AL0", 0, path);
 	this->m_DevilSquareMixRate1[1] = GetPrivateProfileInt(section, "DevilSquareMixRate1_AL1", 0, path);
-	this->m_DevilSquareMixRate1[2] = GetPrivateProfileInt(section, "DevilSquareMixRate1_AL2", 0, path);
-	this->m_DevilSquareMixRate1[3] = GetPrivateProfileInt(section, "DevilSquareMixRate1_AL3", 0, path);
 	this->m_DevilSquareMixRate2[0] = GetPrivateProfileInt(section, "DevilSquareMixRate2_AL0", 0, path);
 	this->m_DevilSquareMixRate2[1] = GetPrivateProfileInt(section, "DevilSquareMixRate2_AL1", 0, path);
-	this->m_DevilSquareMixRate2[2] = GetPrivateProfileInt(section, "DevilSquareMixRate2_AL2", 0, path);
-	this->m_DevilSquareMixRate2[3] = GetPrivateProfileInt(section, "DevilSquareMixRate2_AL3", 0, path);
 	this->m_DevilSquareMixRate3[0] = GetPrivateProfileInt(section, "DevilSquareMixRate3_AL0", 0, path);
 	this->m_DevilSquareMixRate3[1] = GetPrivateProfileInt(section, "DevilSquareMixRate3_AL1", 0, path);
-	this->m_DevilSquareMixRate3[2] = GetPrivateProfileInt(section, "DevilSquareMixRate3_AL2", 0, path);
-	this->m_DevilSquareMixRate3[3] = GetPrivateProfileInt(section, "DevilSquareMixRate3_AL3", 0, path);
 	this->m_DevilSquareMixRate4[0] = GetPrivateProfileInt(section, "DevilSquareMixRate4_AL0", 0, path);
 	this->m_DevilSquareMixRate4[1] = GetPrivateProfileInt(section, "DevilSquareMixRate4_AL1", 0, path);
-	this->m_DevilSquareMixRate4[2] = GetPrivateProfileInt(section, "DevilSquareMixRate4_AL2", 0, path);
-	this->m_DevilSquareMixRate4[3] = GetPrivateProfileInt(section, "DevilSquareMixRate4_AL3", 0, path);
 	this->m_DevilSquareMixRate5[0] = GetPrivateProfileInt(section, "DevilSquareMixRate5_AL0", 0, path);
 	this->m_DevilSquareMixRate5[1] = GetPrivateProfileInt(section, "DevilSquareMixRate5_AL1", 0, path);
-	this->m_DevilSquareMixRate5[2] = GetPrivateProfileInt(section, "DevilSquareMixRate5_AL2", 0, path);
-	this->m_DevilSquareMixRate5[3] = GetPrivateProfileInt(section, "DevilSquareMixRate5_AL3", 0, path);
 	this->m_DevilSquareMixRate6[0] = GetPrivateProfileInt(section, "DevilSquareMixRate6_AL0", 0, path);
 	this->m_DevilSquareMixRate6[1] = GetPrivateProfileInt(section, "DevilSquareMixRate6_AL1", 0, path);
-	this->m_DevilSquareMixRate6[2] = GetPrivateProfileInt(section, "DevilSquareMixRate6_AL2", 0, path);
-	this->m_DevilSquareMixRate6[3] = GetPrivateProfileInt(section, "DevilSquareMixRate6_AL3", 0, path);
 	this->m_DevilSquareMixRate7[0] = GetPrivateProfileInt(section, "DevilSquareMixRate7_AL0", 0, path);
 	this->m_DevilSquareMixRate7[1] = GetPrivateProfileInt(section, "DevilSquareMixRate7_AL1", 0, path);
-	this->m_DevilSquareMixRate7[2] = GetPrivateProfileInt(section, "DevilSquareMixRate7_AL2", 0, path);
-	this->m_DevilSquareMixRate7[3] = GetPrivateProfileInt(section, "DevilSquareMixRate7_AL3", 0, path);
 	this->m_PlusItemLevelMixRate1[0] = GetPrivateProfileInt(section, "PlusItemLevelMixRate1_AL0", 0, path);
 	this->m_PlusItemLevelMixRate1[1] = GetPrivateProfileInt(section, "PlusItemLevelMixRate1_AL1", 0, path);
-	this->m_PlusItemLevelMixRate1[2] = GetPrivateProfileInt(section, "PlusItemLevelMixRate1_AL2", 0, path);
-	this->m_PlusItemLevelMixRate1[3] = GetPrivateProfileInt(section, "PlusItemLevelMixRate1_AL3", 0, path);
 	this->m_PlusItemLevelMixRate2[0] = GetPrivateProfileInt(section, "PlusItemLevelMixRate2_AL0", 0, path);
 	this->m_PlusItemLevelMixRate2[1] = GetPrivateProfileInt(section, "PlusItemLevelMixRate2_AL1", 0, path);
-	this->m_PlusItemLevelMixRate2[2] = GetPrivateProfileInt(section, "PlusItemLevelMixRate2_AL2", 0, path);
-	this->m_PlusItemLevelMixRate2[3] = GetPrivateProfileInt(section, "PlusItemLevelMixRate2_AL3", 0, path);
 	this->m_PlusItemLevelMixRate3[0] = GetPrivateProfileInt(section, "PlusItemLevelMixRate3_AL0", 0, path);
 	this->m_PlusItemLevelMixRate3[1] = GetPrivateProfileInt(section, "PlusItemLevelMixRate3_AL1", 0, path);
-	this->m_PlusItemLevelMixRate3[2] = GetPrivateProfileInt(section, "PlusItemLevelMixRate3_AL2", 0, path);
-	this->m_PlusItemLevelMixRate3[3] = GetPrivateProfileInt(section, "PlusItemLevelMixRate3_AL3", 0, path);
 	this->m_PlusItemLevelMixRate4[0] = GetPrivateProfileInt(section, "PlusItemLevelMixRate4_AL0", 0, path);
 	this->m_PlusItemLevelMixRate4[1] = GetPrivateProfileInt(section, "PlusItemLevelMixRate4_AL1", 0, path);
-	this->m_PlusItemLevelMixRate4[2] = GetPrivateProfileInt(section, "PlusItemLevelMixRate4_AL2", 0, path);
-	this->m_PlusItemLevelMixRate4[3] = GetPrivateProfileInt(section, "PlusItemLevelMixRate4_AL3", 0, path);
 	this->m_DinorantMixRate[0] = GetPrivateProfileInt(section, "DinorantMixRate_AL0", 0, path);
 	this->m_DinorantMixRate[1] = GetPrivateProfileInt(section, "DinorantMixRate_AL1", 0, path);
-	this->m_DinorantMixRate[2] = GetPrivateProfileInt(section, "DinorantMixRate_AL2", 0, path);
-	this->m_DinorantMixRate[3] = GetPrivateProfileInt(section, "DinorantMixRate_AL3", 0, path);
 	this->m_FruitMixRate[0] = GetPrivateProfileInt(section, "FruitMixRate_AL0", 0, path);
 	this->m_FruitMixRate[1] = GetPrivateProfileInt(section, "FruitMixRate_AL1", 0, path);
-	this->m_FruitMixRate[2] = GetPrivateProfileInt(section, "FruitMixRate_AL2", 0, path);
-	this->m_FruitMixRate[3] = GetPrivateProfileInt(section, "FruitMixRate_AL3", 0, path);
 	this->m_Wing2MixRate[0] = GetPrivateProfileInt(section, "Wing2MixRate_AL0", 0, path);
 	this->m_Wing2MixRate[1] = GetPrivateProfileInt(section, "Wing2MixRate_AL1", 0, path);
-	this->m_Wing2MixRate[2] = GetPrivateProfileInt(section, "Wing2MixRate_AL2", 0, path);
-	this->m_Wing2MixRate[3] = GetPrivateProfileInt(section, "Wing2MixRate_AL3", 0, path);
 	this->m_BloodCastleMixRate1[0] = GetPrivateProfileInt(section, "BloodCastleMixRate1_AL0", 0, path);
 	this->m_BloodCastleMixRate1[1] = GetPrivateProfileInt(section, "BloodCastleMixRate1_AL1", 0, path);
-	this->m_BloodCastleMixRate1[2] = GetPrivateProfileInt(section, "BloodCastleMixRate1_AL2", 0, path);
-	this->m_BloodCastleMixRate1[3] = GetPrivateProfileInt(section, "BloodCastleMixRate1_AL3", 0, path);
 	this->m_BloodCastleMixRate2[0] = GetPrivateProfileInt(section, "BloodCastleMixRate2_AL0", 0, path);
 	this->m_BloodCastleMixRate2[1] = GetPrivateProfileInt(section, "BloodCastleMixRate2_AL1", 0, path);
-	this->m_BloodCastleMixRate2[2] = GetPrivateProfileInt(section, "BloodCastleMixRate2_AL2", 0, path);
-	this->m_BloodCastleMixRate2[3] = GetPrivateProfileInt(section, "BloodCastleMixRate2_AL3", 0, path);
 	this->m_BloodCastleMixRate3[0] = GetPrivateProfileInt(section, "BloodCastleMixRate3_AL0", 0, path);
 	this->m_BloodCastleMixRate3[1] = GetPrivateProfileInt(section, "BloodCastleMixRate3_AL1", 0, path);
-	this->m_BloodCastleMixRate3[2] = GetPrivateProfileInt(section, "BloodCastleMixRate3_AL2", 0, path);
-	this->m_BloodCastleMixRate3[3] = GetPrivateProfileInt(section, "BloodCastleMixRate3_AL3", 0, path);
 	this->m_BloodCastleMixRate4[0] = GetPrivateProfileInt(section, "BloodCastleMixRate4_AL0", 0, path);
 	this->m_BloodCastleMixRate4[1] = GetPrivateProfileInt(section, "BloodCastleMixRate4_AL1", 0, path);
-	this->m_BloodCastleMixRate4[2] = GetPrivateProfileInt(section, "BloodCastleMixRate4_AL2", 0, path);
-	this->m_BloodCastleMixRate4[3] = GetPrivateProfileInt(section, "BloodCastleMixRate4_AL3", 0, path);
 	this->m_BloodCastleMixRate5[0] = GetPrivateProfileInt(section, "BloodCastleMixRate5_AL0", 0, path);
 	this->m_BloodCastleMixRate5[1] = GetPrivateProfileInt(section, "BloodCastleMixRate5_AL1", 0, path);
-	this->m_BloodCastleMixRate5[2] = GetPrivateProfileInt(section, "BloodCastleMixRate5_AL2", 0, path);
-	this->m_BloodCastleMixRate5[3] = GetPrivateProfileInt(section, "BloodCastleMixRate5_AL3", 0, path);
 	this->m_BloodCastleMixRate6[0] = GetPrivateProfileInt(section, "BloodCastleMixRate6_AL0", 0, path);
 	this->m_BloodCastleMixRate6[1] = GetPrivateProfileInt(section, "BloodCastleMixRate6_AL1", 0, path);
-	this->m_BloodCastleMixRate6[2] = GetPrivateProfileInt(section, "BloodCastleMixRate6_AL2", 0, path);
-	this->m_BloodCastleMixRate6[3] = GetPrivateProfileInt(section, "BloodCastleMixRate6_AL3", 0, path);
 	this->m_BloodCastleMixRate7[0] = GetPrivateProfileInt(section, "BloodCastleMixRate7_AL0", 0, path);
 	this->m_BloodCastleMixRate7[1] = GetPrivateProfileInt(section, "BloodCastleMixRate7_AL1", 0, path);
-	this->m_BloodCastleMixRate7[2] = GetPrivateProfileInt(section, "BloodCastleMixRate7_AL2", 0, path);
-	this->m_BloodCastleMixRate7[3] = GetPrivateProfileInt(section, "BloodCastleMixRate7_AL3", 0, path);
 	this->m_BloodCastleMixRate8[0] = GetPrivateProfileInt(section, "BloodCastleMixRate8_AL0", 0, path);
 	this->m_BloodCastleMixRate8[1] = GetPrivateProfileInt(section, "BloodCastleMixRate8_AL1", 0, path);
-	this->m_BloodCastleMixRate8[2] = GetPrivateProfileInt(section, "BloodCastleMixRate8_AL2", 0, path);
-	this->m_BloodCastleMixRate8[3] = GetPrivateProfileInt(section, "BloodCastleMixRate8_AL3", 0, path);
 	this->m_Wing1MixRate[0] = GetPrivateProfileInt(section, "Wing1MixRate_AL0", 0, path);
 	this->m_Wing1MixRate[1] = GetPrivateProfileInt(section, "Wing1MixRate_AL1", 0, path);
-	this->m_Wing1MixRate[2] = GetPrivateProfileInt(section, "Wing1MixRate_AL2", 0, path);
-	this->m_Wing1MixRate[3] = GetPrivateProfileInt(section, "Wing1MixRate_AL3", 0, path);
 	this->m_PetMixRate[0] = GetPrivateProfileInt(section, "PetMixRate_AL0", 0, path);
 	this->m_PetMixRate[1] = GetPrivateProfileInt(section, "PetMixRate_AL1", 0, path);
-	this->m_PetMixRate[2] = GetPrivateProfileInt(section, "PetMixRate_AL2", 0, path);
-	this->m_PetMixRate[3] = GetPrivateProfileInt(section, "PetMixRate_AL3", 0, path);
 	this->m_PieceOfHornMixRate[0] = GetPrivateProfileInt(section, "PieceOfHornMixRate_AL0", 0, path);
 	this->m_PieceOfHornMixRate[1] = GetPrivateProfileInt(section, "PieceOfHornMixRate_AL1", 0, path);
-	this->m_PieceOfHornMixRate[2] = GetPrivateProfileInt(section, "PieceOfHornMixRate_AL2", 0, path);
-	this->m_PieceOfHornMixRate[3] = GetPrivateProfileInt(section, "PieceOfHornMixRate_AL3", 0, path);
 	this->m_BrokenHornMixRate[0] = GetPrivateProfileInt(section, "BrokenHornMixRate_AL0", 0, path);
 	this->m_BrokenHornMixRate[1] = GetPrivateProfileInt(section, "BrokenHornMixRate_AL1", 0, path);
-	this->m_BrokenHornMixRate[2] = GetPrivateProfileInt(section, "BrokenHornMixRate_AL2", 0, path);
-	this->m_BrokenHornMixRate[3] = GetPrivateProfileInt(section, "BrokenHornMixRate_AL3", 0, path);
 	this->m_HornOfFenrirMixRate[0] = GetPrivateProfileInt(section, "HornOfFenrirMixRate_AL0", 0, path);
 	this->m_HornOfFenrirMixRate[1] = GetPrivateProfileInt(section, "HornOfFenrirMixRate_AL1", 0, path);
-	this->m_HornOfFenrirMixRate[2] = GetPrivateProfileInt(section, "HornOfFenrirMixRate_AL2", 0, path);
-	this->m_HornOfFenrirMixRate[3] = GetPrivateProfileInt(section, "HornOfFenrirMixRate_AL3", 0, path);
 	this->m_HornOfFenrirUpgradeMixRate[0] = GetPrivateProfileInt(section, "HornOfFenrirUpgradeMixRate_AL0", 0, path);
 	this->m_HornOfFenrirUpgradeMixRate[1] = GetPrivateProfileInt(section, "HornOfFenrirUpgradeMixRate_AL1", 0, path);
-	this->m_HornOfFenrirUpgradeMixRate[2] = GetPrivateProfileInt(section, "HornOfFenrirUpgradeMixRate_AL2", 0, path);
-	this->m_HornOfFenrirUpgradeMixRate[3] = GetPrivateProfileInt(section, "HornOfFenrirUpgradeMixRate_AL3", 0, path);
 	this->m_ShieldPotionMixRate1[0] = GetPrivateProfileInt(section, "ShieldPotionMixRate1_AL0", 0, path);
 	this->m_ShieldPotionMixRate1[1] = GetPrivateProfileInt(section, "ShieldPotionMixRate1_AL1", 0, path);
-	this->m_ShieldPotionMixRate1[2] = GetPrivateProfileInt(section, "ShieldPotionMixRate1_AL2", 0, path);
-	this->m_ShieldPotionMixRate1[3] = GetPrivateProfileInt(section, "ShieldPotionMixRate1_AL3", 0, path);
 	this->m_ShieldPotionMixRate2[0] = GetPrivateProfileInt(section, "ShieldPotionMixRate2_AL0", 0, path);
 	this->m_ShieldPotionMixRate2[1] = GetPrivateProfileInt(section, "ShieldPotionMixRate2_AL1", 0, path);
-	this->m_ShieldPotionMixRate2[2] = GetPrivateProfileInt(section, "ShieldPotionMixRate2_AL2", 0, path);
-	this->m_ShieldPotionMixRate2[3] = GetPrivateProfileInt(section, "ShieldPotionMixRate2_AL3", 0, path);
 	this->m_ShieldPotionMixRate3[0] = GetPrivateProfileInt(section, "ShieldPotionMixRate3_AL0", 0, path);
 	this->m_ShieldPotionMixRate3[1] = GetPrivateProfileInt(section, "ShieldPotionMixRate3_AL1", 0, path);
-	this->m_ShieldPotionMixRate3[2] = GetPrivateProfileInt(section, "ShieldPotionMixRate3_AL2", 0, path);
-	this->m_ShieldPotionMixRate3[3] = GetPrivateProfileInt(section, "ShieldPotionMixRate3_AL3", 0, path);
 	this->m_JewelOfHarmonyItemPurityMixRate[0] = GetPrivateProfileInt(section, "JewelOfHarmonyItemPurityMixRate_AL0", 0, path);
 	this->m_JewelOfHarmonyItemPurityMixRate[1] = GetPrivateProfileInt(section, "JewelOfHarmonyItemPurityMixRate_AL1", 0, path);
-	this->m_JewelOfHarmonyItemPurityMixRate[2] = GetPrivateProfileInt(section, "JewelOfHarmonyItemPurityMixRate_AL2", 0, path);
-	this->m_JewelOfHarmonyItemPurityMixRate[3] = GetPrivateProfileInt(section, "JewelOfHarmonyItemPurityMixRate_AL3", 0, path);
 	this->m_JewelOfHarmonyItemSmeltMixRate1[0] = GetPrivateProfileInt(section, "JewelOfHarmonyItemSmeltMixRate1_AL0", 0, path);
 	this->m_JewelOfHarmonyItemSmeltMixRate1[1] = GetPrivateProfileInt(section, "JewelOfHarmonyItemSmeltMixRate1_AL1", 0, path);
-	this->m_JewelOfHarmonyItemSmeltMixRate1[2] = GetPrivateProfileInt(section, "JewelOfHarmonyItemSmeltMixRate1_AL2", 0, path);
-	this->m_JewelOfHarmonyItemSmeltMixRate1[3] = GetPrivateProfileInt(section, "JewelOfHarmonyItemSmeltMixRate1_AL3", 0, path);
 	this->m_JewelOfHarmonyItemSmeltMixRate2[0] = GetPrivateProfileInt(section, "JewelOfHarmonyItemSmeltMixRate2_AL0", 0, path);
 	this->m_JewelOfHarmonyItemSmeltMixRate2[1] = GetPrivateProfileInt(section, "JewelOfHarmonyItemSmeltMixRate2_AL1", 0, path);
-	this->m_JewelOfHarmonyItemSmeltMixRate2[2] = GetPrivateProfileInt(section, "JewelOfHarmonyItemSmeltMixRate2_AL2", 0, path);
-	this->m_JewelOfHarmonyItemSmeltMixRate2[3] = GetPrivateProfileInt(section, "JewelOfHarmonyItemSmeltMixRate2_AL3", 0, path);
 	this->m_JewelOfHarmonyItemRestoreMixRate[0] = GetPrivateProfileInt(section, "JewelOfHarmonyItemRestoreMixRate_AL0", 0, path);
 	this->m_JewelOfHarmonyItemRestoreMixRate[1] = GetPrivateProfileInt(section, "JewelOfHarmonyItemRestoreMixRate_AL1", 0, path);
-	this->m_JewelOfHarmonyItemRestoreMixRate[2] = GetPrivateProfileInt(section, "JewelOfHarmonyItemRestoreMixRate_AL2", 0, path);
-	this->m_JewelOfHarmonyItemRestoreMixRate[3] = GetPrivateProfileInt(section, "JewelOfHarmonyItemRestoreMixRate_AL3", 0, path);
 	this->m_Item380MixRate1[0] = GetPrivateProfileInt(section, "Item380MixRate1_AL0", 0, path);
 	this->m_Item380MixRate1[1] = GetPrivateProfileInt(section, "Item380MixRate1_AL1", 0, path);
-	this->m_Item380MixRate1[2] = GetPrivateProfileInt(section, "Item380MixRate1_AL2", 0, path);
-	this->m_Item380MixRate1[3] = GetPrivateProfileInt(section, "Item380MixRate1_AL3", 0, path);
 	this->m_Item380MixRate2[0] = GetPrivateProfileInt(section, "Item380MixRate2_AL0", 0, path);
 	this->m_Item380MixRate2[1] = GetPrivateProfileInt(section, "Item380MixRate2_AL1", 0, path);
-	this->m_Item380MixRate2[2] = GetPrivateProfileInt(section, "Item380MixRate2_AL2", 0, path);
-	this->m_Item380MixRate2[3] = GetPrivateProfileInt(section, "Item380MixRate2_AL3", 0, path);
 	this->m_IllusionTempleMixRate1[0] = GetPrivateProfileInt(section, "IllusionTempleMixRate1_AL0", 0, path);
 	this->m_IllusionTempleMixRate1[1] = GetPrivateProfileInt(section, "IllusionTempleMixRate1_AL1", 0, path);
-	this->m_IllusionTempleMixRate1[2] = GetPrivateProfileInt(section, "IllusionTempleMixRate1_AL2", 0, path);
-	this->m_IllusionTempleMixRate1[3] = GetPrivateProfileInt(section, "IllusionTempleMixRate1_AL3", 0, path);
 	this->m_IllusionTempleMixRate2[0] = GetPrivateProfileInt(section, "IllusionTempleMixRate2_AL0", 0, path);
 	this->m_IllusionTempleMixRate2[1] = GetPrivateProfileInt(section, "IllusionTempleMixRate2_AL1", 0, path);
-	this->m_IllusionTempleMixRate2[2] = GetPrivateProfileInt(section, "IllusionTempleMixRate2_AL2", 0, path);
-	this->m_IllusionTempleMixRate2[3] = GetPrivateProfileInt(section, "IllusionTempleMixRate2_AL3", 0, path);
 	this->m_IllusionTempleMixRate3[0] = GetPrivateProfileInt(section, "IllusionTempleMixRate3_AL0", 0, path);
 	this->m_IllusionTempleMixRate3[1] = GetPrivateProfileInt(section, "IllusionTempleMixRate3_AL1", 0, path);
-	this->m_IllusionTempleMixRate3[2] = GetPrivateProfileInt(section, "IllusionTempleMixRate3_AL2", 0, path);
-	this->m_IllusionTempleMixRate3[3] = GetPrivateProfileInt(section, "IllusionTempleMixRate3_AL3", 0, path);
 	this->m_IllusionTempleMixRate4[0] = GetPrivateProfileInt(section, "IllusionTempleMixRate4_AL0", 0, path);
 	this->m_IllusionTempleMixRate4[1] = GetPrivateProfileInt(section, "IllusionTempleMixRate4_AL1", 0, path);
-	this->m_IllusionTempleMixRate4[2] = GetPrivateProfileInt(section, "IllusionTempleMixRate4_AL2", 0, path);
-	this->m_IllusionTempleMixRate4[3] = GetPrivateProfileInt(section, "IllusionTempleMixRate4_AL3", 0, path);
 	this->m_IllusionTempleMixRate5[0] = GetPrivateProfileInt(section, "IllusionTempleMixRate5_AL0", 0, path);
 	this->m_IllusionTempleMixRate5[1] = GetPrivateProfileInt(section, "IllusionTempleMixRate5_AL1", 0, path);
-	this->m_IllusionTempleMixRate5[2] = GetPrivateProfileInt(section, "IllusionTempleMixRate5_AL2", 0, path);
-	this->m_IllusionTempleMixRate5[3] = GetPrivateProfileInt(section, "IllusionTempleMixRate5_AL3", 0, path);
 	this->m_IllusionTempleMixRate6[0] = GetPrivateProfileInt(section, "IllusionTempleMixRate6_AL0", 0, path);
 	this->m_IllusionTempleMixRate6[1] = GetPrivateProfileInt(section, "IllusionTempleMixRate6_AL1", 0, path);
-	this->m_IllusionTempleMixRate6[2] = GetPrivateProfileInt(section, "IllusionTempleMixRate6_AL2", 0, path);
-	this->m_IllusionTempleMixRate6[3] = GetPrivateProfileInt(section, "IllusionTempleMixRate6_AL3", 0, path);
 	this->m_FeatherOfCondorMixRate[0] = GetPrivateProfileInt(section, "FeatherOfCondorMixRate_AL0", 0, path);
 	this->m_FeatherOfCondorMixRate[1] = GetPrivateProfileInt(section, "FeatherOfCondorMixRate_AL1", 0, path);
-	this->m_FeatherOfCondorMixRate[2] = GetPrivateProfileInt(section, "FeatherOfCondorMixRate_AL2", 0, path);
-	this->m_FeatherOfCondorMixRate[3] = GetPrivateProfileInt(section, "FeatherOfCondorMixRate_AL3", 0, path);
 	this->m_Wing3MixRate[0] = GetPrivateProfileInt(section, "Wing3MixRate_AL0", 0, path);
 	this->m_Wing3MixRate[1] = GetPrivateProfileInt(section, "Wing3MixRate_AL1", 0, path);
-	this->m_Wing3MixRate[2] = GetPrivateProfileInt(section, "Wing3MixRate_AL2", 0, path);
-	this->m_Wing3MixRate[3] = GetPrivateProfileInt(section, "Wing3MixRate_AL3", 0, path);
 }
 
 void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
@@ -575,7 +475,7 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 	char GameServerInfo[100] = {0};
 
 	this->m_DuelDamageRate = GetPrivateProfileInt(section, "DuelDamageRate", 0, path);
-	
+
 	this->m_CustomArenaDamageRate = GetPrivateProfileInt(section, "CustomArenaDamageRate", 0, path);
 
 	this->m_ChaosCastleDamageRate = GetPrivateProfileInt(section, "ChaosCastleDamageRate", 0, path);
@@ -606,14 +506,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 
 	this->m_DamageRatePvP[4] = GetPrivateProfileInt(section, "DLDamageRatePvP", 0, path);
 
-	this->m_DamageRatePvP[5] = GetPrivateProfileInt(section, "SUDamageRatePvP", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageRatePvP[6] = GetPrivateProfileInt(section, "RFDamageRatePvP", 0, path);
-
-#endif
-
 	this->m_DamageRatePvM[0] = GetPrivateProfileInt(section, "DWDamageRatePvM", 0, path);
 
 	this->m_DamageRatePvM[1] = GetPrivateProfileInt(section, "DKDamageRatePvM", 0, path);
@@ -623,14 +515,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 	this->m_DamageRatePvM[3] = GetPrivateProfileInt(section, "MGDamageRatePvM", 0, path);
 
 	this->m_DamageRatePvM[4] = GetPrivateProfileInt(section, "DLDamageRatePvM", 0, path);
-
-	this->m_DamageRatePvM[5] = GetPrivateProfileInt(section, "SUDamageRatePvM", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageRatePvM[6] = GetPrivateProfileInt(section, "RFDamageRatePvM", 0, path);
-
-#endif
 
 	this->m_DamageRateTo[0][0] = GetPrivateProfileInt(section, "DWDamageRateToDW", 0, path);
 
@@ -642,14 +526,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 
 	this->m_DamageRateTo[0][4] = GetPrivateProfileInt(section, "DWDamageRateToDL", 0, path);
 
-	this->m_DamageRateTo[0][5] = GetPrivateProfileInt(section, "DWDamageRateToSU", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageRateTo[0][6] = GetPrivateProfileInt(section, "DWDamageRateToRF", 0, path);
-
-#endif
-
 	this->m_DamageRateTo[1][0] = GetPrivateProfileInt(section, "DKDamageRateToDW", 0, path);
 
 	this->m_DamageRateTo[1][1] = GetPrivateProfileInt(section, "DKDamageRateToDK", 0, path);
@@ -659,14 +535,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 	this->m_DamageRateTo[1][3] = GetPrivateProfileInt(section, "DKDamageRateToMG", 0, path);
 
 	this->m_DamageRateTo[1][4] = GetPrivateProfileInt(section, "DKDamageRateToDL", 0, path);
-
-	this->m_DamageRateTo[1][5] = GetPrivateProfileInt(section, "DKDamageRateToSU", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageRateTo[1][6] = GetPrivateProfileInt(section, "DKDamageRateToRF", 0, path);
-
-#endif
 
 	this->m_DamageRateTo[2][0] = GetPrivateProfileInt(section, "FEDamageRateToDW", 0, path);
 
@@ -678,14 +546,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 
 	this->m_DamageRateTo[2][4] = GetPrivateProfileInt(section, "FEDamageRateToDL", 0, path);
 
-	this->m_DamageRateTo[2][5] = GetPrivateProfileInt(section, "FEDamageRateToSU", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageRateTo[2][6] = GetPrivateProfileInt(section, "FEDamageRateToRF", 0, path);
-
-#endif
-
 	this->m_DamageRateTo[3][0] = GetPrivateProfileInt(section, "MGDamageRateToDW", 0, path);
 
 	this->m_DamageRateTo[3][1] = GetPrivateProfileInt(section, "MGDamageRateToDK", 0, path);
@@ -695,14 +555,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 	this->m_DamageRateTo[3][3] = GetPrivateProfileInt(section, "MGDamageRateToMG", 0, path);
 
 	this->m_DamageRateTo[3][4] = GetPrivateProfileInt(section, "MGDamageRateToDL", 0, path);
-
-	this->m_DamageRateTo[3][5] = GetPrivateProfileInt(section, "MGDamageRateToSU", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageRateTo[3][6] = GetPrivateProfileInt(section, "MGDamageRateToRF", 0, path);
-
-#endif
 
 	this->m_DamageRateTo[4][0] = GetPrivateProfileInt(section, "DLDamageRateToDW", 0, path);
 
@@ -714,50 +566,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 
 	this->m_DamageRateTo[4][4] = GetPrivateProfileInt(section, "DLDamageRateToDL", 0, path);
 
-	this->m_DamageRateTo[4][5] = GetPrivateProfileInt(section, "DLDamageRateToSU", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageRateTo[4][6] = GetPrivateProfileInt(section, "DLDamageRateToRF", 0, path);
-
-#endif
-
-	this->m_DamageRateTo[5][0] = GetPrivateProfileInt(section, "SUDamageRateToDW", 0, path);
-
-	this->m_DamageRateTo[5][1] = GetPrivateProfileInt(section, "SUDamageRateToDK", 0, path);
-
-	this->m_DamageRateTo[5][2] = GetPrivateProfileInt(section, "SUDamageRateToFE", 0, path);
-
-	this->m_DamageRateTo[5][3] = GetPrivateProfileInt(section, "SUDamageRateToMG", 0, path);
-
-	this->m_DamageRateTo[5][4] = GetPrivateProfileInt(section, "SUDamageRateToDL", 0, path);
-
-	this->m_DamageRateTo[5][5] = GetPrivateProfileInt(section, "SUDamageRateToSU", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageRateTo[5][6] = GetPrivateProfileInt(section, "SUDamageRateToRF", 0, path);
-
-#endif
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageRateTo[6][0] = GetPrivateProfileInt(section, "RFDamageRateToDW", 0, path);
-
-	this->m_DamageRateTo[6][1] = GetPrivateProfileInt(section, "RFDamageRateToDK", 0, path);
-
-	this->m_DamageRateTo[6][2] = GetPrivateProfileInt(section, "RFDamageRateToFE", 0, path);
-
-	this->m_DamageRateTo[6][3] = GetPrivateProfileInt(section, "RFDamageRateToMG", 0, path);
-
-	this->m_DamageRateTo[6][4] = GetPrivateProfileInt(section, "RFDamageRateToDL", 0, path);
-
-	this->m_DamageRateTo[6][5] = GetPrivateProfileInt(section, "RFDamageRateToSU", 0, path);
-
-	this->m_DamageRateTo[6][6] = GetPrivateProfileInt(section, "RFDamageRateToRF", 0, path);
-
-#endif
-
 	this->m_DamageStuckRate[0] = GetPrivateProfileInt(section, "DWDamageStuckRate", 0, path);
 
 	this->m_DamageStuckRate[1] = GetPrivateProfileInt(section, "DKDamageStuckRate", 0, path);
@@ -768,37 +576,13 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 
 	this->m_DamageStuckRate[4] = GetPrivateProfileInt(section, "DLDamageStuckRate", 0, path);
 
-	this->m_DamageStuckRate[5] = GetPrivateProfileInt(section, "SUDamageStuckRate", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_DamageStuckRate[6] = GetPrivateProfileInt(section, "RFDamageStuckRate", 0, path);
-
-#endif
-
 	this->m_DKDamageMultiplierConstA = GetPrivateProfileInt(section, "DKDamageMultiplierConstA", 0, path);
 
 	this->m_DLDamageMultiplierConstA = GetPrivateProfileInt(section, "DLDamageMultiplierConstA", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_RFDamageMultiplierConstA = GetPrivateProfileInt(section, "RFDamageMultiplierConstA", 0, path);
-
-	this->m_RFDamageMultiplierConstB = GetPrivateProfileInt(section, "RFDamageMultiplierConstB", 0, path);
-
-	this->m_RFDamageMultiplierConstC = GetPrivateProfileInt(section, "RFDamageMultiplierConstC", 0, path);
-
-#endif
-
+	
 	this->m_DKDamageMultiplierMaxRate = GetPrivateProfileInt(section, "DKDamageMultiplierMaxRate", 0, path);
 
 	this->m_DLDamageMultiplierMaxRate = GetPrivateProfileInt(section, "DLDamageMultiplierMaxRate", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_RFDamageMultiplierMaxRate = GetPrivateProfileInt(section, "RFDamageMultiplierMaxRate", 0, path);
-
-#endif
 
 	this->m_DarkSpiritRangeAttackRate = GetPrivateProfileInt(section, "DarkSpiritRangeAttackRate", 0, path);
 
@@ -890,14 +674,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 
 	this->m_HPRecoveryRate[4] = GetPrivateProfileInt(section, "DLHPRecoveryRate", 0, path);
 
-	this->m_HPRecoveryRate[5] = GetPrivateProfileInt(section, "SUHPRecoveryRate", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_HPRecoveryRate[6] = GetPrivateProfileInt(section, "RFHPRecoveryRate", 0, path);
-
-#endif
-
 	this->m_MPRecoveryRate[0] = GetPrivateProfileInt(section, "DWMPRecoveryRate", 0, path);
 
 	this->m_MPRecoveryRate[1] = GetPrivateProfileInt(section, "DKMPRecoveryRate", 0, path);
@@ -907,14 +683,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 	this->m_MPRecoveryRate[3] = GetPrivateProfileInt(section, "MGMPRecoveryRate", 0, path);
 
 	this->m_MPRecoveryRate[4] = GetPrivateProfileInt(section, "DLMPRecoveryRate", 0, path);
-
-	this->m_MPRecoveryRate[5] = GetPrivateProfileInt(section, "SUMPRecoveryRate", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_MPRecoveryRate[6] = GetPrivateProfileInt(section, "RFMPRecoveryRate", 0, path);
-
-#endif
 
 	this->m_BPRecoveryRate[0] = GetPrivateProfileInt(section, "DWBPRecoveryRate", 0, path);
 
@@ -926,14 +694,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 
 	this->m_BPRecoveryRate[4] = GetPrivateProfileInt(section, "DLBPRecoveryRate", 0, path);
 
-	this->m_BPRecoveryRate[5] = GetPrivateProfileInt(section, "SUBPRecoveryRate", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_BPRecoveryRate[6] = GetPrivateProfileInt(section, "RFBPRecoveryRate", 0, path);
-
-#endif
-
 	this->m_SDRecoveryRate[0] = GetPrivateProfileInt(section, "DWSDRecoveryRate", 0, path);
 
 	this->m_SDRecoveryRate[1] = GetPrivateProfileInt(section, "DKSDRecoveryRate", 0, path);
@@ -943,8 +703,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 	this->m_SDRecoveryRate[3] = GetPrivateProfileInt(section, "MGSDRecoveryRate", 0, path);
 
 	this->m_SDRecoveryRate[4] = GetPrivateProfileInt(section, "DLSDRecoveryRate", 0, path);
-
-	this->m_SDRecoveryRate[5] = GetPrivateProfileInt(section, "SUSDRecoveryRate", 0, path);
 
 	this->m_DWPlasmaStormDamageConstA = GetPrivateProfileInt(section, "DWPlasmaStormDamageConstA", 0, path);
 
@@ -1193,7 +951,7 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 	this->m_DLDefenseSuccessRateConstA = GetPrivateProfileInt(section, "DLDefenseSuccessRateConstA", 0, path);
 
 	this->m_SUDefenseSuccessRateConstA = GetPrivateProfileInt(section, "SUDefenseSuccessRateConstA", 0, path);
-	
+
 	this->m_DWDefenseSuccessRatePvPConstA = GetPrivateProfileInt(section, "DWDefenseSuccessRatePvPConstA", 0, path);
 
 	this->m_DWDefenseSuccessRatePvPConstB = GetPrivateProfileInt(section, "DWDefenseSuccessRatePvPConstB", 0, path);
@@ -1229,7 +987,7 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 	this->m_SUDefenseSuccessRatePvPConstB = GetPrivateProfileInt(section, "SUDefenseSuccessRatePvPConstB", 0, path);
 
 	this->m_SUDefenseSuccessRatePvPConstC = GetPrivateProfileInt(section, "SUDefenseSuccessRatePvPConstC", 0, path);
-	
+
 	this->m_DWDefenseConstA = GetPrivateProfileInt(section, "DWDefenseConstA", 0, path);
 
 	this->m_DKDefenseConstA = GetPrivateProfileInt(section, "DKDefenseConstA", 0, path);
@@ -1241,489 +999,6 @@ void CServerInfo::ReadCharacterInfo(char* section, char* path) // OK
 	this->m_DLDefenseConstA = GetPrivateProfileInt(section, "DLDefenseConstA", 0, path);
 
 	this->m_SUDefenseConstA = GetPrivateProfileInt(section, "SUDefenseConstA", 0, path);
-}
-
-void CServerInfo::ReadCommandInfo(char* section, char* path) // OK
-{
-	char GameServerInfo[100] = {0};
-
-	this->m_CommandPostSwitch = GetPrivateProfileInt(section, "CommandPostSwitch", 0, path);
-
-	this->m_CommandPostType = GetPrivateProfileInt(section, "CommandPostType", 0, path);
-
-	this->m_CommandPostEnable[0] = GetPrivateProfileInt(section, "CommandPostEnable_AL0", 0, path);
-
-	this->m_CommandPostEnable[1] = GetPrivateProfileInt(section, "CommandPostEnable_AL1", 0, path);
-
-	this->m_CommandPostEnable[2] = GetPrivateProfileInt(section, "CommandPostEnable_AL2", 0, path);
-
-	this->m_CommandPostEnable[3] = GetPrivateProfileInt(section, "CommandPostEnable_AL3", 0, path);
-
-	this->m_CommandPostLevel[0] = GetPrivateProfileInt(section, "CommandPostLevel_AL0", 0, path);
-
-	this->m_CommandPostLevel[1] = GetPrivateProfileInt(section, "CommandPostLevel_AL1", 0, path);
-
-	this->m_CommandPostLevel[2] = GetPrivateProfileInt(section, "CommandPostLevel_AL2", 0, path);
-
-	this->m_CommandPostLevel[3] = GetPrivateProfileInt(section, "CommandPostLevel_AL3", 0, path);
-
-	this->m_CommandPostReset[0] = GetPrivateProfileInt(section, "CommandPostReset_AL0", 0, path);
-
-	this->m_CommandPostReset[1] = GetPrivateProfileInt(section, "CommandPostReset_AL1", 0, path);
-
-	this->m_CommandPostReset[2] = GetPrivateProfileInt(section, "CommandPostReset_AL2", 0, path);
-
-	this->m_CommandPostReset[3] = GetPrivateProfileInt(section, "CommandPostReset_AL3", 0, path);
-
-	this->m_CommandPostMoney[0] = GetPrivateProfileInt(section, "CommandPostMoney_AL0", 0, path);
-
-	this->m_CommandPostMoney[1] = GetPrivateProfileInt(section, "CommandPostMoney_AL1", 0, path);
-
-	this->m_CommandPostMoney[2] = GetPrivateProfileInt(section, "CommandPostMoney_AL2", 0, path);
-
-	this->m_CommandPostMoney[3] = GetPrivateProfileInt(section, "CommandPostMoney_AL3", 0, path);
-
-	this->m_CommandPostDelay[0] = GetPrivateProfileInt(section, "CommandPostDelay_AL0", 0, path);
-
-	this->m_CommandPostDelay[1] = GetPrivateProfileInt(section, "CommandPostDelay_AL1", 0, path);
-
-	this->m_CommandPostDelay[2] = GetPrivateProfileInt(section, "CommandPostDelay_AL2", 0, path);
-
-	this->m_CommandPostDelay[3] = GetPrivateProfileInt(section, "CommandPostDelay_AL3", 0, path);
-
-	this->m_CommandAddPointSwitch = GetPrivateProfileInt(section, "CommandAddPointSwitch", 0, path);
-
-	this->m_CommandAddPointEnable[0] = GetPrivateProfileInt(section, "CommandAddPointEnable_AL0", 0, path);
-
-	this->m_CommandAddPointEnable[1] = GetPrivateProfileInt(section, "CommandAddPointEnable_AL1", 0, path);
-
-	this->m_CommandAddPointEnable[2] = GetPrivateProfileInt(section, "CommandAddPointEnable_AL2", 0, path);
-
-	this->m_CommandAddPointEnable[3] = GetPrivateProfileInt(section, "CommandAddPointEnable_AL3", 0, path);
-
-	this->m_CommandAddPointAutoEnable[0] = GetPrivateProfileInt(section, "CommandAddPointAutoEnable_AL0", 0, path);
-
-	this->m_CommandAddPointAutoEnable[1] = GetPrivateProfileInt(section, "CommandAddPointAutoEnable_AL1", 0, path);
-
-	this->m_CommandAddPointAutoEnable[2] = GetPrivateProfileInt(section, "CommandAddPointAutoEnable_AL2", 0, path);
-
-	this->m_CommandAddPointAutoEnable[3] = GetPrivateProfileInt(section, "CommandAddPointAutoEnable_AL3", 0, path);
-
-	this->m_CommandAddPointMoney[0] = GetPrivateProfileInt(section, "CommandAddPointMoney_AL0", 0, path);
-
-	this->m_CommandAddPointMoney[1] = GetPrivateProfileInt(section, "CommandAddPointMoney_AL1", 0, path);
-
-	this->m_CommandAddPointMoney[2] = GetPrivateProfileInt(section, "CommandAddPointMoney_AL2", 0, path);
-
-	this->m_CommandAddPointMoney[3] = GetPrivateProfileInt(section, "CommandAddPointMoney_AL3", 0, path);
-
-	this->m_CommandPKClearSwitch = GetPrivateProfileInt(section, "CommandPKClearSwitch", 0, path);
-
-	this->m_CommandPKClearEnable[0] = GetPrivateProfileInt(section, "CommandPKClearEnable_AL0", 0, path);
-
-	this->m_CommandPKClearEnable[1] = GetPrivateProfileInt(section, "CommandPKClearEnable_AL1", 0, path);
-
-	this->m_CommandPKClearEnable[2] = GetPrivateProfileInt(section, "CommandPKClearEnable_AL2", 0, path);
-
-	this->m_CommandPKClearEnable[3] = GetPrivateProfileInt(section, "CommandPKClearEnable_AL3", 0, path);
-
-	this->m_CommandPKClearMoney[0] = GetPrivateProfileInt(section, "CommandPKClearMoney_AL0", 0, path);
-
-	this->m_CommandPKClearMoney[1] = GetPrivateProfileInt(section, "CommandPKClearMoney_AL1", 0, path);
-
-	this->m_CommandPKClearMoney[2] = GetPrivateProfileInt(section, "CommandPKClearMoney_AL2", 0, path);
-
-	this->m_CommandPKClearMoney[3] = GetPrivateProfileInt(section, "CommandPKClearMoney_AL3", 0, path);
-
-	this->m_CommandMoneySwitch = GetPrivateProfileInt(section, "CommandMoneySwitch", 0, path);
-
-	this->m_CommandMoneyEnable[0] = GetPrivateProfileInt(section, "CommandMoneyEnable_AL0", 0, path);
-
-	this->m_CommandMoneyEnable[1] = GetPrivateProfileInt(section, "CommandMoneyEnable_AL1", 0, path);
-
-	this->m_CommandMoneyEnable[2] = GetPrivateProfileInt(section, "CommandMoneyEnable_AL2", 0, path);
-
-	this->m_CommandMoneyEnable[3] = GetPrivateProfileInt(section, "CommandMoneyEnable_AL3", 0, path);
-
-	this->m_CommandChangeSwitch = GetPrivateProfileInt(section, "CommandChangeSwitch", 0, path);
-
-	this->m_CommandChangeEnable[0] = GetPrivateProfileInt(section, "CommandChangeEnable_AL0", 0, path);
-
-	this->m_CommandChangeEnable[1] = GetPrivateProfileInt(section, "CommandChangeEnable_AL1", 0, path);
-
-	this->m_CommandChangeEnable[2] = GetPrivateProfileInt(section, "CommandChangeEnable_AL2", 0, path);
-
-	this->m_CommandChangeEnable[3] = GetPrivateProfileInt(section, "CommandChangeEnable_AL3", 0, path);
-
-	this->m_CommandChangeMoney[0] = GetPrivateProfileInt(section, "CommandChangeMoney_AL0", 0, path);
-
-	this->m_CommandChangeMoney[1] = GetPrivateProfileInt(section, "CommandChangeMoney_AL1", 0, path);
-
-	this->m_CommandChangeMoney[2] = GetPrivateProfileInt(section, "CommandChangeMoney_AL2", 0, path);
-
-	this->m_CommandChangeMoney[3] = GetPrivateProfileInt(section, "CommandChangeMoney_AL3", 0, path);
-
-	this->m_CommandChangeLimit[0] = GetPrivateProfileInt(section, "CommandChangeLimit_AL0", 0, path);
-
-	this->m_CommandChangeLimit[1] = GetPrivateProfileInt(section, "CommandChangeLimit_AL1", 0, path);
-
-	this->m_CommandChangeLimit[2] = GetPrivateProfileInt(section, "CommandChangeLimit_AL2", 0, path);
-
-	this->m_CommandChangeLimit[3] = GetPrivateProfileInt(section, "CommandChangeLimit_AL3", 0, path);
-
-	this->m_CommandWareSwitch = GetPrivateProfileInt(section, "CommandWareSwitch", 0, path);
-
-	this->m_CommandWareEnable[0] = GetPrivateProfileInt(section, "CommandWareEnable_AL0", 0, path);
-
-	this->m_CommandWareEnable[1] = GetPrivateProfileInt(section, "CommandWareEnable_AL1", 0, path);
-
-	this->m_CommandWareEnable[2] = GetPrivateProfileInt(section, "CommandWareEnable_AL2", 0, path);
-
-	this->m_CommandWareEnable[3] = GetPrivateProfileInt(section, "CommandWareEnable_AL3", 0, path);
-
-	this->m_CommandWareNumber[0] = GetPrivateProfileInt(section, "CommandWareNumber_AL0", 0, path);
-
-	this->m_CommandWareNumber[1] = GetPrivateProfileInt(section, "CommandWareNumber_AL1", 0, path);
-
-	this->m_CommandWareNumber[2] = GetPrivateProfileInt(section, "CommandWareNumber_AL2", 0, path);
-
-	this->m_CommandWareNumber[3] = GetPrivateProfileInt(section, "CommandWareNumber_AL3", 0, path);
-
-	this->m_CommandResetSwitch = GetPrivateProfileInt(section, "CommandResetSwitch", 0, path);
-
-	this->m_CommandResetType = GetPrivateProfileInt(section, "CommandResetType", 0, path);
-
-	this->m_CommandResetEnable[0] = GetPrivateProfileInt(section, "CommandResetEnable_AL0", 0, path);
-
-	this->m_CommandResetEnable[1] = GetPrivateProfileInt(section, "CommandResetEnable_AL1", 0, path);
-
-	this->m_CommandResetEnable[2] = GetPrivateProfileInt(section, "CommandResetEnable_AL2", 0, path);
-
-	this->m_CommandResetEnable[3] = GetPrivateProfileInt(section, "CommandResetEnable_AL3", 0, path);
-
-	this->m_CommandResetAutoEnable[0] = GetPrivateProfileInt(section, "CommandResetAutoEnable_AL0", 0, path);
-
-	this->m_CommandResetAutoEnable[1] = GetPrivateProfileInt(section, "CommandResetAutoEnable_AL1", 0, path);
-
-	this->m_CommandResetAutoEnable[2] = GetPrivateProfileInt(section, "CommandResetAutoEnable_AL2", 0, path);
-
-	this->m_CommandResetAutoEnable[3] = GetPrivateProfileInt(section, "CommandResetAutoEnable_AL3", 0, path);
-
-	this->m_CommandResetCheckItem[0] = GetPrivateProfileInt(section, "CommandResetCheckItem_AL0", 0, path);
-
-	this->m_CommandResetCheckItem[1] = GetPrivateProfileInt(section, "CommandResetCheckItem_AL1", 0, path);
-
-	this->m_CommandResetCheckItem[2] = GetPrivateProfileInt(section, "CommandResetCheckItem_AL2", 0, path);
-
-	this->m_CommandResetCheckItem[3] = GetPrivateProfileInt(section, "CommandResetCheckItem_AL3", 0, path);
-
-	this->m_CommandResetMove[0] = GetPrivateProfileInt(section, "CommandResetMove_AL0", 0, path);
-
-	this->m_CommandResetMove[1] = GetPrivateProfileInt(section, "CommandResetMove_AL1", 0, path);
-
-	this->m_CommandResetMove[2] = GetPrivateProfileInt(section, "CommandResetMove_AL2", 0, path);
-
-	this->m_CommandResetMove[3] = GetPrivateProfileInt(section, "CommandResetMove_AL3", 0, path);
-
-	this->m_CommandResetQuest[0] = GetPrivateProfileInt(section, "CommandResetQuest_AL0", 0, path);
-
-	this->m_CommandResetQuest[1] = GetPrivateProfileInt(section, "CommandResetQuest_AL1", 0, path);
-
-	this->m_CommandResetQuest[2] = GetPrivateProfileInt(section, "CommandResetQuest_AL2", 0, path);
-
-	this->m_CommandResetQuest[3] = GetPrivateProfileInt(section, "CommandResetQuest_AL3", 0, path);
-
-	this->m_CommandResetSkill[0] = GetPrivateProfileInt(section, "CommandResetSkill_AL0", 0, path);
-
-	this->m_CommandResetSkill[1] = GetPrivateProfileInt(section, "CommandResetSkill_AL1", 0, path);
-
-	this->m_CommandResetSkill[2] = GetPrivateProfileInt(section, "CommandResetSkill_AL2", 0, path);
-
-	this->m_CommandResetSkill[3] = GetPrivateProfileInt(section, "CommandResetSkill_AL3", 0, path);
-
-	this->m_CommandResetLevel[0] = GetPrivateProfileInt(section, "CommandResetLevel_AL0", 0, path);
-
-	this->m_CommandResetLevel[1] = GetPrivateProfileInt(section, "CommandResetLevel_AL1", 0, path);
-
-	this->m_CommandResetLevel[2] = GetPrivateProfileInt(section, "CommandResetLevel_AL2", 0, path);
-
-	this->m_CommandResetLevel[3] = GetPrivateProfileInt(section, "CommandResetLevel_AL3", 0, path);
-
-	this->m_CommandResetMoney[0] = GetPrivateProfileInt(section, "CommandResetMoney_AL0", 0, path);
-
-	this->m_CommandResetMoney[1] = GetPrivateProfileInt(section, "CommandResetMoney_AL1", 0, path);
-
-	this->m_CommandResetMoney[2] = GetPrivateProfileInt(section, "CommandResetMoney_AL2", 0, path);
-
-	this->m_CommandResetMoney[3] = GetPrivateProfileInt(section, "CommandResetMoney_AL3", 0, path);
-
-	this->m_CommandResetCount[0] = GetPrivateProfileInt(section, "CommandResetCount_AL0", 0, path);
-
-	this->m_CommandResetCount[1] = GetPrivateProfileInt(section, "CommandResetCount_AL1", 0, path);
-
-	this->m_CommandResetCount[2] = GetPrivateProfileInt(section, "CommandResetCount_AL2", 0, path);
-
-	this->m_CommandResetCount[3] = GetPrivateProfileInt(section, "CommandResetCount_AL3", 0, path);
-
-	this->m_CommandResetLimit[0] = GetPrivateProfileInt(section, "CommandResetLimit_AL0", 0, path);
-
-	this->m_CommandResetLimit[1] = GetPrivateProfileInt(section, "CommandResetLimit_AL1", 0, path);
-
-	this->m_CommandResetLimit[2] = GetPrivateProfileInt(section, "CommandResetLimit_AL2", 0, path);
-
-	this->m_CommandResetLimit[3] = GetPrivateProfileInt(section, "CommandResetLimit_AL3", 0, path);
-
-	this->m_CommandResetLimitDay[0] = GetPrivateProfileInt(section, "CommandResetLimitDay_AL0", 0, path);
-
-	this->m_CommandResetLimitDay[1] = GetPrivateProfileInt(section, "CommandResetLimitDay_AL1", 0, path);
-
-	this->m_CommandResetLimitDay[2] = GetPrivateProfileInt(section, "CommandResetLimitDay_AL2", 0, path);
-
-	this->m_CommandResetLimitDay[3] = GetPrivateProfileInt(section, "CommandResetLimitDay_AL3", 0, path);
-
-	this->m_CommandResetLimitWek[0] = GetPrivateProfileInt(section, "CommandResetLimitWek_AL0", 0, path);
-
-	this->m_CommandResetLimitWek[1] = GetPrivateProfileInt(section, "CommandResetLimitWek_AL1", 0, path);
-
-	this->m_CommandResetLimitWek[2] = GetPrivateProfileInt(section, "CommandResetLimitWek_AL2", 0, path);
-
-	this->m_CommandResetLimitWek[3] = GetPrivateProfileInt(section, "CommandResetLimitWek_AL3", 0, path);
-
-	this->m_CommandResetLimitMon[0] = GetPrivateProfileInt(section, "CommandResetLimitMon_AL0", 0, path);
-
-	this->m_CommandResetLimitMon[1] = GetPrivateProfileInt(section, "CommandResetLimitMon_AL1", 0, path);
-
-	this->m_CommandResetLimitMon[2] = GetPrivateProfileInt(section, "CommandResetLimitMon_AL2", 0, path);
-
-	this->m_CommandResetLimitMon[3] = GetPrivateProfileInt(section, "CommandResetLimitMon_AL3", 0, path);
-
-	this->m_CommandResetStartLevel[0] = GetPrivateProfileInt(section, "CommandResetStartLevel_AL0", 0, path);
-
-	this->m_CommandResetStartLevel[1] = GetPrivateProfileInt(section, "CommandResetStartLevel_AL1", 0, path);
-
-	this->m_CommandResetStartLevel[2] = GetPrivateProfileInt(section, "CommandResetStartLevel_AL2", 0, path);
-
-	this->m_CommandResetStartLevel[3] = GetPrivateProfileInt(section, "CommandResetStartLevel_AL3", 0, path);
-
-	this->m_CommandResetPoint[0] = GetPrivateProfileInt(section, "CommandResetPoint_AL0", 0, path);
-
-	this->m_CommandResetPoint[1] = GetPrivateProfileInt(section, "CommandResetPoint_AL1", 0, path);
-
-	this->m_CommandResetPoint[2] = GetPrivateProfileInt(section, "CommandResetPoint_AL2", 0, path);
-
-	this->m_CommandResetPoint[3] = GetPrivateProfileInt(section, "CommandResetPoint_AL3", 0, path);
-
-	this->m_CommandResetPointRate[0] = GetPrivateProfileInt(section, "CommandResetPointRateDW", 0, path);
-
-	this->m_CommandResetPointRate[1] = GetPrivateProfileInt(section, "CommandResetPointRateDK", 0, path);
-
-	this->m_CommandResetPointRate[2] = GetPrivateProfileInt(section, "CommandResetPointRateFE", 0, path);
-
-	this->m_CommandResetPointRate[3] = GetPrivateProfileInt(section, "CommandResetPointRateMG", 0, path);
-
-	this->m_CommandResetPointRate[4] = GetPrivateProfileInt(section, "CommandResetPointRateDL", 0, path);
-
-	this->m_CommandResetPointRate[5] = GetPrivateProfileInt(section, "CommandResetPointRateSU", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_CommandResetPointRate[6] = GetPrivateProfileInt(section, "CommandResetPointRateRF", 0, path);
-
-#endif
-
-	this->m_CommandMasterResetSwitch = GetPrivateProfileInt(section, "CommandMasterResetSwitch", 0, path);
-
-	this->m_CommandMasterResetType = GetPrivateProfileInt(section, "CommandMasterResetType", 0, path);
-
-	this->m_CommandMasterResetEnable[0] = GetPrivateProfileInt(section, "CommandMasterResetEnable_AL0", 0, path);
-
-	this->m_CommandMasterResetEnable[1] = GetPrivateProfileInt(section, "CommandMasterResetEnable_AL1", 0, path);
-
-	this->m_CommandMasterResetEnable[2] = GetPrivateProfileInt(section, "CommandMasterResetEnable_AL2", 0, path);
-
-	this->m_CommandMasterResetEnable[3] = GetPrivateProfileInt(section, "CommandMasterResetEnable_AL3", 0, path);
-
-	this->m_CommandMasterResetCheckItem[0] = GetPrivateProfileInt(section, "CommandMasterResetCheckItem_AL0", 0, path);
-
-	this->m_CommandMasterResetCheckItem[1] = GetPrivateProfileInt(section, "CommandMasterResetCheckItem_AL1", 0, path);
-
-	this->m_CommandMasterResetCheckItem[2] = GetPrivateProfileInt(section, "CommandMasterResetCheckItem_AL2", 0, path);
-
-	this->m_CommandMasterResetCheckItem[3] = GetPrivateProfileInt(section, "CommandMasterResetCheckItem_AL3", 0, path);
-
-	this->m_CommandMasterResetMove[0] = GetPrivateProfileInt(section, "CommandMasterResetMove_AL0", 0, path);
-
-	this->m_CommandMasterResetMove[1] = GetPrivateProfileInt(section, "CommandMasterResetMove_AL1", 0, path);
-
-	this->m_CommandMasterResetMove[2] = GetPrivateProfileInt(section, "CommandMasterResetMove_AL2", 0, path);
-
-	this->m_CommandMasterResetMove[3] = GetPrivateProfileInt(section, "CommandMasterResetMove_AL3", 0, path);
-
-	this->m_CommandMasterResetQuest[0] = GetPrivateProfileInt(section, "CommandMasterResetQuest_AL0", 0, path);
-
-	this->m_CommandMasterResetQuest[1] = GetPrivateProfileInt(section, "CommandMasterResetQuest_AL1", 0, path);
-
-	this->m_CommandMasterResetQuest[2] = GetPrivateProfileInt(section, "CommandMasterResetQuest_AL2", 0, path);
-
-	this->m_CommandMasterResetQuest[3] = GetPrivateProfileInt(section, "CommandMasterResetQuest_AL3", 0, path);
-
-	this->m_CommandMasterResetSkill[0] = GetPrivateProfileInt(section, "CommandMasterResetSkill_AL0", 0, path);
-
-	this->m_CommandMasterResetSkill[1] = GetPrivateProfileInt(section, "CommandMasterResetSkill_AL1", 0, path);
-
-	this->m_CommandMasterResetSkill[2] = GetPrivateProfileInt(section, "CommandMasterResetSkill_AL2", 0, path);
-
-	this->m_CommandMasterResetSkill[3] = GetPrivateProfileInt(section, "CommandMasterResetSkill_AL3", 0, path);
-
-	this->m_CommandMasterResetLevel[0] = GetPrivateProfileInt(section, "CommandMasterResetLevel_AL0", 0, path);
-
-	this->m_CommandMasterResetLevel[1] = GetPrivateProfileInt(section, "CommandMasterResetLevel_AL1", 0, path);
-
-	this->m_CommandMasterResetLevel[2] = GetPrivateProfileInt(section, "CommandMasterResetLevel_AL2", 0, path);
-
-	this->m_CommandMasterResetLevel[3] = GetPrivateProfileInt(section, "CommandMasterResetLevel_AL3", 0, path);
-
-	this->m_CommandMasterResetReset[0] = GetPrivateProfileInt(section, "CommandMasterResetReset_AL0", 0, path);
-
-	this->m_CommandMasterResetReset[1] = GetPrivateProfileInt(section, "CommandMasterResetReset_AL1", 0, path);
-
-	this->m_CommandMasterResetReset[2] = GetPrivateProfileInt(section, "CommandMasterResetReset_AL2", 0, path);
-
-	this->m_CommandMasterResetReset[3] = GetPrivateProfileInt(section, "CommandMasterResetReset_AL3", 0, path);
-
-	this->m_CommandMasterResetMoney[0] = GetPrivateProfileInt(section, "CommandMasterResetMoney_AL0", 0, path);
-
-	this->m_CommandMasterResetMoney[1] = GetPrivateProfileInt(section, "CommandMasterResetMoney_AL1", 0, path);
-
-	this->m_CommandMasterResetMoney[2] = GetPrivateProfileInt(section, "CommandMasterResetMoney_AL2", 0, path);
-
-	this->m_CommandMasterResetMoney[3] = GetPrivateProfileInt(section, "CommandMasterResetMoney_AL3", 0, path);
-
-	this->m_CommandMasterResetCount[0] = GetPrivateProfileInt(section, "CommandMasterResetCount_AL0", 0, path);
-
-	this->m_CommandMasterResetCount[1] = GetPrivateProfileInt(section, "CommandMasterResetCount_AL1", 0, path);
-
-	this->m_CommandMasterResetCount[2] = GetPrivateProfileInt(section, "CommandMasterResetCount_AL2", 0, path);
-
-	this->m_CommandMasterResetCount[3] = GetPrivateProfileInt(section, "CommandMasterResetCount_AL3", 0, path);
-
-	this->m_CommandMasterResetLimit[0] = GetPrivateProfileInt(section, "CommandMasterResetLimit_AL0", 0, path);
-
-	this->m_CommandMasterResetLimit[1] = GetPrivateProfileInt(section, "CommandMasterResetLimit_AL1", 0, path);
-
-	this->m_CommandMasterResetLimit[2] = GetPrivateProfileInt(section, "CommandMasterResetLimit_AL2", 0, path);
-
-	this->m_CommandMasterResetLimit[3] = GetPrivateProfileInt(section, "CommandMasterResetLimit_AL3", 0, path);
-
-	this->m_CommandMasterResetLimitDay[0] = GetPrivateProfileInt(section, "CommandMasterResetLimitDay_AL0", 0, path);
-
-	this->m_CommandMasterResetLimitDay[1] = GetPrivateProfileInt(section, "CommandMasterResetLimitDay_AL1", 0, path);
-
-	this->m_CommandMasterResetLimitDay[2] = GetPrivateProfileInt(section, "CommandMasterResetLimitDay_AL2", 0, path);
-
-	this->m_CommandMasterResetLimitDay[3] = GetPrivateProfileInt(section, "CommandMasterResetLimitDay_AL3", 0, path);
-
-	this->m_CommandMasterResetLimitWek[0] = GetPrivateProfileInt(section, "CommandMasterResetLimitWek_AL0", 0, path);
-
-	this->m_CommandMasterResetLimitWek[1] = GetPrivateProfileInt(section, "CommandMasterResetLimitWek_AL1", 0, path);
-
-	this->m_CommandMasterResetLimitWek[2] = GetPrivateProfileInt(section, "CommandMasterResetLimitWek_AL2", 0, path);
-
-	this->m_CommandMasterResetLimitWek[3] = GetPrivateProfileInt(section, "CommandMasterResetLimitWek_AL3", 0, path);
-
-	this->m_CommandMasterResetLimitMon[0] = GetPrivateProfileInt(section, "CommandMasterResetLimitMon_AL0", 0, path);
-
-	this->m_CommandMasterResetLimitMon[1] = GetPrivateProfileInt(section, "CommandMasterResetLimitMon_AL1", 0, path);
-
-	this->m_CommandMasterResetLimitMon[2] = GetPrivateProfileInt(section, "CommandMasterResetLimitMon_AL2", 0, path);
-
-	this->m_CommandMasterResetLimitMon[3] = GetPrivateProfileInt(section, "CommandMasterResetLimitMon_AL3", 0, path);
-
-	this->m_CommandMasterResetStartLevel[0] = GetPrivateProfileInt(section, "CommandMasterResetStartLevel_AL0", 0, path);
-
-	this->m_CommandMasterResetStartLevel[1] = GetPrivateProfileInt(section, "CommandMasterResetStartLevel_AL1", 0, path);
-
-	this->m_CommandMasterResetStartLevel[2] = GetPrivateProfileInt(section, "CommandMasterResetStartLevel_AL2", 0, path);
-
-	this->m_CommandMasterResetStartLevel[3] = GetPrivateProfileInt(section, "CommandMasterResetStartLevel_AL3", 0, path);
-
-	this->m_CommandMasterResetStartReset[0] = GetPrivateProfileInt(section, "CommandMasterResetStartReset_AL0", 0, path);
-
-	this->m_CommandMasterResetStartReset[1] = GetPrivateProfileInt(section, "CommandMasterResetStartReset_AL1", 0, path);
-
-	this->m_CommandMasterResetStartReset[2] = GetPrivateProfileInt(section, "CommandMasterResetStartReset_AL2", 0, path);
-
-	this->m_CommandMasterResetStartReset[3] = GetPrivateProfileInt(section, "CommandMasterResetStartReset_AL3", 0, path);
-
-	this->m_CommandMasterResetPoint[0] = GetPrivateProfileInt(section, "CommandMasterResetPoint_AL0", 0, path);
-
-	this->m_CommandMasterResetPoint[1] = GetPrivateProfileInt(section, "CommandMasterResetPoint_AL1", 0, path);
-
-	this->m_CommandMasterResetPoint[2] = GetPrivateProfileInt(section, "CommandMasterResetPoint_AL2", 0, path);
-
-	this->m_CommandMasterResetPoint[3] = GetPrivateProfileInt(section, "CommandMasterResetPoint_AL3", 0, path);
-
-	this->m_CommandMasterResetPointRate[0] = GetPrivateProfileInt(section, "CommandMasterResetPointRateDW", 0, path);
-
-	this->m_CommandMasterResetPointRate[1] = GetPrivateProfileInt(section, "CommandMasterResetPointRateDK", 0, path);
-
-	this->m_CommandMasterResetPointRate[2] = GetPrivateProfileInt(section, "CommandMasterResetPointRateFE", 0, path);
-
-	this->m_CommandMasterResetPointRate[3] = GetPrivateProfileInt(section, "CommandMasterResetPointRateMG", 0, path);
-
-	this->m_CommandMasterResetPointRate[4] = GetPrivateProfileInt(section, "CommandMasterResetPointRateDL", 0, path);
-
-	this->m_CommandMasterResetPointRate[5] = GetPrivateProfileInt(section, "CommandMasterResetPointRateSU", 0, path);
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_CommandMasterResetPointRate[6] = GetPrivateProfileInt(section, "CommandMasterResetPointRateRF", 0, path);
-
-#endif
-
-	this->m_CommandGMMoveSwitch = GetPrivateProfileInt(section, "CommandGMMoveSwitch", 0, path);
-
-	this->m_CommandGMMoveGameMasterLevel = GetPrivateProfileInt(section, "CommandGMMoveGameMasterLevel", 0, path);
-
-	this->m_CommandGMPostSwitch = GetPrivateProfileInt(section, "CommandGMPostSwitch", 0, path);
-
-	this->m_CommandGMPostGameMasterLevel = GetPrivateProfileInt(section, "CommandGMPostGameMasterLevel", 0, path);
-
-	this->m_CommandTrackSwitch = GetPrivateProfileInt(section, "CommandTrackSwitch", 0, path);
-
-	this->m_CommandTrackGameMasterLevel = GetPrivateProfileInt(section, "CommandTrackGameMasterLevel", 0, path);
-
-	this->m_CommandTraceSwitch = GetPrivateProfileInt(section, "CommandTraceSwitch", 0, path);
-
-	this->m_CommandTraceGameMasterLevel = GetPrivateProfileInt(section, "CommandTraceGameMasterLevel", 0, path);
-
-	this->m_CommandDisconnectSwitch = GetPrivateProfileInt(section, "CommandDisconnectSwitch", 0, path);
-
-	this->m_CommandDisconnectGameMasterLevel = GetPrivateProfileInt(section, "CommandDisconnectGameMasterLevel", 0, path);
-
-	this->m_CommandFireworksSwitch = GetPrivateProfileInt(section, "CommandFireworksSwitch", 0, path);
-
-	this->m_CommandFireworksGameMasterLevel = GetPrivateProfileInt(section, "CommandFireworksGameMasterLevel", 0, path);
-
-	this->m_CommandMakeSwitch = GetPrivateProfileInt(section, "CommandMakeSwitch", 0, path);
-
-	this->m_CommandMakeGameMasterLevel = GetPrivateProfileInt(section, "CommandMakeGameMasterLevel", 0, path);
-
-	this->m_CommandSkinSwitch = GetPrivateProfileInt(section, "CommandSkinSwitch", 0, path);
-
-	this->m_CommandSkinGameMasterLevel = GetPrivateProfileInt(section, "CommandSkinGameMasterLevel", 0, path);
-
-	this->m_CommandSetMoneySwitch = GetPrivateProfileInt(section, "CommandSetMoneySwitch", 0, path);
-
-	this->m_CommandSetMoneyGameMasterLevel = GetPrivateProfileInt(section, "CommandSetMoneyGameMasterLevel", 0, path);
-
-	this->m_CommandNoticeSwitch = GetPrivateProfileInt(section, "CommandNoticeSwitch", 0, path);
-
-	this->m_CommandNoticeGameMasterLevel = GetPrivateProfileInt(section, "CommandNoticeGameMasterLevel", 0, path);
-
-	this->m_CommandHideSwitch = GetPrivateProfileInt(section, "CommandHideSwitch", 0, path);
-
-	this->m_CommandHideGameMasterLevel = GetPrivateProfileInt(section, "CommandHideGameMasterLevel", 0, path);
 }
 
 void CServerInfo::ReadCommonInfo(char* section, char* path) // OK
@@ -1761,61 +1036,25 @@ void CServerInfo::ReadCommonInfo(char* section, char* path) // OK
 	this->m_TradeSwitch = GetPrivateProfileInt(section, "TradeSwitch", 0, path);
 
 	this->m_PersonalShopSwitch = GetPrivateProfileInt(section, "PersonalShopSwitch", 0, path);
-
-#if(GAMESERVER_UPDATE>=802)
-
-	this->m_PersonalShopMoneyCommisionRate = GetPrivateProfileInt(section, "PersonalShopMoneyCommisionRate", 0, path);
-
-	this->m_PersonalShopJewelCommisionRate = GetPrivateProfileInt(section, "PersonalShopJewelCommisionRate", 0, path);
-
-#endif
-
 	this->m_DuelSwitch = GetPrivateProfileInt(section, "DuelSwitch", 0, path);
 
-#if(GAMESERVER_UPDATE>=402)
-
-	this->m_DuelArenaAnnounceSwitch = GetPrivateProfileInt(section, "DuelArenaAnnounceSwitch", 0, path);
-
-#endif
-
 	this->m_GuildCreateSwitch = GetPrivateProfileInt(section, "GuildCreateSwitch", 0, path);
-
 	this->m_GuildDeleteSwitch = GetPrivateProfileInt(section, "GuildDeleteSwitch", 0, path);
-
 	this->m_GuildCreateMinLevel = GetPrivateProfileInt(section, "GuildCreateMinLevel", 0, path);
-
 	this->m_GuildInsertMaxUser1 = GetPrivateProfileInt(section, "GuildInsertMaxUser1", 0, path);
-
 	this->m_GuildInsertMaxUser2 = GetPrivateProfileInt(section, "GuildInsertMaxUser2", 0, path);
-
 	this->m_GuildAllianceMinUser = GetPrivateProfileInt(section, "GuildAllianceMinUser", 0, path);
-
 	this->m_GuildAllianceMaxCount = GetPrivateProfileInt(section, "GuildAllianceMaxCount", 0, path);
-
 	this->m_GuildOwnerDestroyLimit = GetPrivateProfileInt(section, "GuildOwnerDestroyLimit", 0, path);
 
 	this->m_ElfBufferMaxLevel[0] = GetPrivateProfileInt(section, "ElfBufferMaxLevel_AL0", 0, path);
-
 	this->m_ElfBufferMaxLevel[1] = GetPrivateProfileInt(section, "ElfBufferMaxLevel_AL1", 0, path);
-
-	this->m_ElfBufferMaxLevel[2] = GetPrivateProfileInt(section, "ElfBufferMaxLevel_AL2", 0, path);
-
-	this->m_ElfBufferMaxLevel[3] = GetPrivateProfileInt(section, "ElfBufferMaxLevel_AL3", 0, path);
-
 	this->m_ElfBufferMaxReset[0] = GetPrivateProfileInt(section, "ElfBufferMaxReset_AL0", 0, path);
-
 	this->m_ElfBufferMaxReset[1] = GetPrivateProfileInt(section, "ElfBufferMaxReset_AL1", 0, path);
 
-	this->m_ElfBufferMaxReset[2] = GetPrivateProfileInt(section, "ElfBufferMaxReset_AL2", 0, path);
-
-	this->m_ElfBufferMaxReset[3] = GetPrivateProfileInt(section, "ElfBufferMaxReset_AL3", 0, path);
-
 	this->m_ElfBufferDamageConstA = GetPrivateProfileInt(section, "ElfBufferDamageConstA", 0, path);
-
 	this->m_ElfBufferDamageConstB = GetPrivateProfileInt(section, "ElfBufferDamageConstB", 0, path);
-
 	this->m_ElfBufferDefenseConstA = GetPrivateProfileInt(section, "ElfBufferDefenseConstA", 0, path);
-
 	this->m_ElfBufferDefenseConstB = GetPrivateProfileInt(section, "ElfBufferDefenseConstB", 0, path);
 
 	char temp[100];
@@ -1824,204 +1063,55 @@ void CServerInfo::ReadCommonInfo(char* section, char* path) // OK
 	this->m_ExperienceRate = _atoi64(temp);
 
 	this->m_AddExperienceRate[0] = GetPrivateProfileInt(section, "AddExperienceRate_AL0", 0, path);
-
 	this->m_AddExperienceRate[1] = GetPrivateProfileInt(section, "AddExperienceRate_AL1", 0, path);
 
-	this->m_AddExperienceRate[2] = GetPrivateProfileInt(section, "AddExperienceRate_AL2", 0, path);
-
-	this->m_AddExperienceRate[3] = GetPrivateProfileInt(section, "AddExperienceRate_AL3", 0, path);
-
-#if(GAMESERVER_UPDATE>=401)
-
-	this->m_AddMasterExperienceRate[0] = GetPrivateProfileInt(section, "AddMasterExperienceRate_AL0", 0, path);
-
-	this->m_AddMasterExperienceRate[1] = GetPrivateProfileInt(section, "AddMasterExperienceRate_AL1", 0, path);
-
-	this->m_AddMasterExperienceRate[2] = GetPrivateProfileInt(section, "AddMasterExperienceRate_AL2", 0, path);
-
-	this->m_AddMasterExperienceRate[3] = GetPrivateProfileInt(section, "AddMasterExperienceRate_AL3", 0, path);
-
-	this->m_MinMasterExperienceMonsterLevel[0] = GetPrivateProfileInt(section, "MinMasterExperienceMonsterLevel_AL0", 0, path);
-
-	this->m_MinMasterExperienceMonsterLevel[1] = GetPrivateProfileInt(section, "MinMasterExperienceMonsterLevel_AL1", 0, path);
-
-	this->m_MinMasterExperienceMonsterLevel[2] = GetPrivateProfileInt(section, "MinMasterExperienceMonsterLevel_AL2", 0, path);
-
-	this->m_MinMasterExperienceMonsterLevel[3] = GetPrivateProfileInt(section, "MinMasterExperienceMonsterLevel_AL3", 0, path);
-
-#endif
-
 	this->m_AddEventExperienceRate[0] = GetPrivateProfileInt(section, "AddEventExperienceRate_AL0", 0, path);
-
 	this->m_AddEventExperienceRate[1] = GetPrivateProfileInt(section, "AddEventExperienceRate_AL1", 0, path);
-
-	this->m_AddEventExperienceRate[2] = GetPrivateProfileInt(section, "AddEventExperienceRate_AL2", 0, path);
-
-	this->m_AddEventExperienceRate[3] = GetPrivateProfileInt(section, "AddEventExperienceRate_AL3", 0, path);
-
-#if(GAMESERVER_UPDATE>=501)
-
-	this->m_AddQuestExperienceRate[0] = GetPrivateProfileInt(section, "AddQuestExperienceRate_AL0", 0, path);
-
-	this->m_AddQuestExperienceRate[1] = GetPrivateProfileInt(section, "AddQuestExperienceRate_AL1", 0, path);
-
-	this->m_AddQuestExperienceRate[2] = GetPrivateProfileInt(section, "AddQuestExperienceRate_AL2", 0, path);
-
-	this->m_AddQuestExperienceRate[3] = GetPrivateProfileInt(section, "AddQuestExperienceRate_AL3", 0, path);
-
-#endif
-
+	
 	this->m_ItemDropTime = GetPrivateProfileInt(section, "ItemDropTime", 0, path);
-
 	this->m_ItemDropRate[0] = GetPrivateProfileInt(section, "ItemDropRate_AL0", 0, path);
-
 	this->m_ItemDropRate[1] = GetPrivateProfileInt(section, "ItemDropRate_AL1", 0, path);
 
-	this->m_ItemDropRate[2] = GetPrivateProfileInt(section, "ItemDropRate_AL2", 0, path);
-
-	this->m_ItemDropRate[3] = GetPrivateProfileInt(section, "ItemDropRate_AL3", 0, path);
-
 	this->m_MoneyDropTime = GetPrivateProfileInt(section, "MoneyDropTime", 0, path);
-
 	this->m_MoneyRate = GetPrivateProfileInt(section, "MoneyAmountDropRate", 0, path);
-
 	this->m_MoneyAmountDropRate[0] = GetPrivateProfileInt(section, "MoneyAmountDropRate_AL0", 0, path);
-
 	this->m_MoneyAmountDropRate[1] = GetPrivateProfileInt(section, "MoneyAmountDropRate_AL1", 0, path);
 
-	this->m_MoneyAmountDropRate[2] = GetPrivateProfileInt(section, "MoneyAmountDropRate_AL2", 0, path);
-
-	this->m_MoneyAmountDropRate[3] = GetPrivateProfileInt(section, "MoneyAmountDropRate_AL3", 0, path);
-
 	this->m_WeaponDurabilityRate = GetPrivateProfileInt(section, "WeaponDurabilityRate", 0, path);
-
 	this->m_ArmorDurabilityRate = GetPrivateProfileInt(section, "ArmorDurabilityRate", 0, path);
-
 	this->m_WingDurabilityRate = GetPrivateProfileInt(section, "WingDurabilityRate", 0, path);
-
 	this->m_GuardianDurabilityRate = GetPrivateProfileInt(section, "GuardianDurabilityRate", 0, path);
-
 	this->m_PendantDurabilityRate = GetPrivateProfileInt(section, "PendantDurabilityRate", 0, path);
-
 	this->m_RingDurabilityRate = GetPrivateProfileInt(section, "RingDurabilityRate", 0, path);
-
 	this->m_PetDurabilityRate = GetPrivateProfileInt(section, "PetDurabilityRate", 0, path);
 
-#if(GAMESERVER_UPDATE>=803)
-
-	this->m_MuunDurabilityRate = GetPrivateProfileInt(section, "MuunDurabilityRate", 0, path);
-
-#endif
-
 	this->m_TradeItemBlock = GetPrivateProfileInt(section, "TradeItemBlock", 0, path);
-
 	this->m_TradeItemBlockExc = GetPrivateProfileInt(section, "TradeItemBlockExc", 0, path);
-
 	this->m_TradeItemBlockSet = GetPrivateProfileInt(section, "TradeItemBlockSet", 0, path);
-
 	this->m_TradeItemBlockHarmony = GetPrivateProfileInt(section, "TradeItemBlockHarmony", 0, path);
-
 	this->m_TradeItemBlockSell = GetPrivateProfileInt(section, "TradeItemBlockSell", 0, path);
-
 	this->m_MaxLevelUp = GetPrivateProfileInt(section, "MaxLevelUp", 0, path);
-
 	this->m_MaxLevelUpEvent = GetPrivateProfileInt(section, "MaxLevelUpEvent", 0, path);
 
-#if(GAMESERVER_UPDATE>=501)
-
-	this->m_MaxLevelUpQuest = GetPrivateProfileInt(section, "MaxLevelUpQuest", 0, path);
-
-#endif
-
 	this->m_MaxStatPoint[0] = GetPrivateProfileInt(section, "MaxStatPoint_AL0", 0, path);
-
 	this->m_MaxStatPoint[1] = GetPrivateProfileInt(section, "MaxStatPoint_AL1", 0, path);
 
-	this->m_MaxStatPoint[2] = GetPrivateProfileInt(section, "MaxStatPoint_AL2", 0, path);
-
-	this->m_MaxStatPoint[3] = GetPrivateProfileInt(section, "MaxStatPoint_AL3", 0, path);
-
 	this->m_LevelUpPoint[0] = GetPrivateProfileInt(section, "DWLevelUpPoint", 0, path);
-
 	this->m_LevelUpPoint[1] = GetPrivateProfileInt(section, "DKLevelUpPoint", 0, path);
-
 	this->m_LevelUpPoint[2] = GetPrivateProfileInt(section, "FELevelUpPoint", 0, path);
-
 	this->m_LevelUpPoint[3] = GetPrivateProfileInt(section, "MGLevelUpPoint", 0, path);
-
 	this->m_LevelUpPoint[4] = GetPrivateProfileInt(section, "DLLevelUpPoint", 0, path);
 
-#if(GAMESERVER_UPDATE>=301)
-
-	this->m_LevelUpPoint[5] = GetPrivateProfileInt(section, "SULevelUpPoint", 0, path);
-
-#endif
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_LevelUpPoint[6] = GetPrivateProfileInt(section, "RFLevelUpPoint", 0, path);
-
-#endif
-
 	this->m_PlusStatPoint = GetPrivateProfileInt(section, "PlusStatPoint", 0, path);
-
 	this->m_CharacterCreateSwitch = GetPrivateProfileInt(section, "CharacterCreateSwitch", 0, path);
-
 	this->m_MGCreateType = GetPrivateProfileInt(section, "MGCreateType", 0, path);
-
 	this->m_DLCreateType = GetPrivateProfileInt(section, "DLCreateType", 0, path);
 
-#if(GAMESERVER_UPDATE>=301)
-
-	this->m_SUCreateType = GetPrivateProfileInt(section, "SUCreateType", 0, path);
-
-#endif
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_RFCreateType = GetPrivateProfileInt(section, "RFCreateType", 0, path);
-
-#endif
-
 	this->m_MGCreateLevel[0] = GetPrivateProfileInt(section, "MGCreateLevel_AL0", 0, path);
-
 	this->m_MGCreateLevel[1] = GetPrivateProfileInt(section, "MGCreateLevel_AL1", 0, path);
 
-	this->m_MGCreateLevel[2] = GetPrivateProfileInt(section, "MGCreateLevel_AL2", 0, path);
-
-	this->m_MGCreateLevel[3] = GetPrivateProfileInt(section, "MGCreateLevel_AL3", 0, path);
-
 	this->m_DLCreateLevel[0] = GetPrivateProfileInt(section, "DLCreateLevel_AL0", 0, path);
-
 	this->m_DLCreateLevel[1] = GetPrivateProfileInt(section, "DLCreateLevel_AL1", 0, path);
-
-	this->m_DLCreateLevel[2] = GetPrivateProfileInt(section, "DLCreateLevel_AL2", 0, path);
-
-	this->m_DLCreateLevel[3] = GetPrivateProfileInt(section, "DLCreateLevel_AL3", 0, path);
-
-#if(GAMESERVER_UPDATE>=301)
-
-	this->m_SUCreateLevel[0] = GetPrivateProfileInt(section, "SUCreateLevel_AL0", 0, path);
-
-	this->m_SUCreateLevel[1] = GetPrivateProfileInt(section, "SUCreateLevel_AL1", 0, path);
-
-	this->m_SUCreateLevel[2] = GetPrivateProfileInt(section, "SUCreateLevel_AL2", 0, path);
-
-	this->m_SUCreateLevel[3] = GetPrivateProfileInt(section, "SUCreateLevel_AL3", 0, path);
-
-#endif
-
-#if(GAMESERVER_UPDATE>=601)
-
-	this->m_RFCreateLevel[0] = GetPrivateProfileInt(section, "RFCreateLevel_AL0", 0, path);
-
-	this->m_RFCreateLevel[1] = GetPrivateProfileInt(section, "RFCreateLevel_AL1", 0, path);
-
-	this->m_RFCreateLevel[2] = GetPrivateProfileInt(section, "RFCreateLevel_AL2", 0, path);
-
-	this->m_RFCreateLevel[3] = GetPrivateProfileInt(section, "RFCreateLevel_AL3", 0, path);
-
-#endif
 
 	this->m_ShieldGaugeRate = GetPrivateProfileInt(section, "ShieldGaugeRate", 0, path);
 
@@ -2109,57 +1199,29 @@ void CServerInfo::ReadCommonInfo(char* section, char* path) // OK
 
 	this->m_SoulSuccessRate[1] = GetPrivateProfileInt(section, "SoulSuccessRate_AL1", 0, path);
 
-	this->m_SoulSuccessRate[2] = GetPrivateProfileInt(section, "SoulSuccessRate_AL2", 0, path);
-
-	this->m_SoulSuccessRate[3] = GetPrivateProfileInt(section, "SoulSuccessRate_AL3", 0, path);
-
 	this->m_LifeSuccessRate[0] = GetPrivateProfileInt(section, "LifeSuccessRate_AL0", 0, path);
 
 	this->m_LifeSuccessRate[1] = GetPrivateProfileInt(section, "LifeSuccessRate_AL1", 0, path);
-
-	this->m_LifeSuccessRate[2] = GetPrivateProfileInt(section, "LifeSuccessRate_AL2", 0, path);
-
-	this->m_LifeSuccessRate[3] = GetPrivateProfileInt(section, "LifeSuccessRate_AL3", 0, path);
 
 	this->m_HarmonySuccessRate[0] = GetPrivateProfileInt(section, "HarmonySuccessRate_AL0", 0, path);
 
 	this->m_HarmonySuccessRate[1] = GetPrivateProfileInt(section, "HarmonySuccessRate_AL1", 0, path);
 
-	this->m_HarmonySuccessRate[2] = GetPrivateProfileInt(section, "HarmonySuccessRate_AL2", 0, path);
-
-	this->m_HarmonySuccessRate[3] = GetPrivateProfileInt(section, "HarmonySuccessRate_AL3", 0, path);
-
 	this->m_SmeltStoneSuccessRate1[0] = GetPrivateProfileInt(section, "SmeltStoneSuccessRate1_AL0", 0, path);
 
 	this->m_SmeltStoneSuccessRate1[1] = GetPrivateProfileInt(section, "SmeltStoneSuccessRate1_AL1", 0, path);
-
-	this->m_SmeltStoneSuccessRate1[2] = GetPrivateProfileInt(section, "SmeltStoneSuccessRate1_AL2", 0, path);
-
-	this->m_SmeltStoneSuccessRate1[3] = GetPrivateProfileInt(section, "SmeltStoneSuccessRate1_AL3", 0, path);
 
 	this->m_SmeltStoneSuccessRate2[0] = GetPrivateProfileInt(section, "SmeltStoneSuccessRate2_AL0", 0, path);
 
 	this->m_SmeltStoneSuccessRate2[1] = GetPrivateProfileInt(section, "SmeltStoneSuccessRate2_AL1", 0, path);
 
-	this->m_SmeltStoneSuccessRate2[2] = GetPrivateProfileInt(section, "SmeltStoneSuccessRate2_AL2", 0, path);
-
-	this->m_SmeltStoneSuccessRate2[3] = GetPrivateProfileInt(section, "SmeltStoneSuccessRate2_AL3", 0, path);
-
 	this->m_AddLuckSuccessRate1[0] = GetPrivateProfileInt(section, "AddLuckSuccessRate1_AL0", 0, path);
 
 	this->m_AddLuckSuccessRate1[1] = GetPrivateProfileInt(section, "AddLuckSuccessRate1_AL1", 0, path);
 
-	this->m_AddLuckSuccessRate1[2] = GetPrivateProfileInt(section, "AddLuckSuccessRate1_AL2", 0, path);
-
-	this->m_AddLuckSuccessRate1[3] = GetPrivateProfileInt(section, "AddLuckSuccessRate1_AL3", 0, path);
-
 	this->m_AddLuckSuccessRate2[0] = GetPrivateProfileInt(section, "AddLuckSuccessRate2_AL0", 0, path);
 
 	this->m_AddLuckSuccessRate2[1] = GetPrivateProfileInt(section, "AddLuckSuccessRate2_AL1", 0, path);
-
-	this->m_AddLuckSuccessRate2[2] = GetPrivateProfileInt(section, "AddLuckSuccessRate2_AL2", 0, path);
-
-	this->m_AddLuckSuccessRate2[3] = GetPrivateProfileInt(section, "AddLuckSuccessRate2_AL3", 0, path);
 
 	this->m_FruitAddPointMin = GetPrivateProfileInt(section, "FruitAddPointMin", 0, path);
 
@@ -2169,10 +1231,6 @@ void CServerInfo::ReadCommonInfo(char* section, char* path) // OK
 
 	this->m_FruitAddPointSuccessRate[1] = GetPrivateProfileInt(section, "FruitAddPointSuccessRate_AL1", 0, path);
 
-	this->m_FruitAddPointSuccessRate[2] = GetPrivateProfileInt(section, "FruitAddPointSuccessRate_AL2", 0, path);
-
-	this->m_FruitAddPointSuccessRate[3] = GetPrivateProfileInt(section, "FruitAddPointSuccessRate_AL3", 0, path);
-
 	this->m_FruitSubPointMin = GetPrivateProfileInt(section, "FruitSubPointMin", 0, path);
 
 	this->m_FruitSubPointMax = GetPrivateProfileInt(section, "FruitSubPointMax", 0, path);
@@ -2180,10 +1238,6 @@ void CServerInfo::ReadCommonInfo(char* section, char* path) // OK
 	this->m_FruitSubPointSuccessRate[0] = GetPrivateProfileInt(section, "FruitSubPointSuccessRate_AL0", 0, path);
 
 	this->m_FruitSubPointSuccessRate[1] = GetPrivateProfileInt(section, "FruitSubPointSuccessRate_AL1", 0, path);
-
-	this->m_FruitSubPointSuccessRate[2] = GetPrivateProfileInt(section, "FruitSubPointSuccessRate_AL2", 0, path);
-
-	this->m_FruitSubPointSuccessRate[3] = GetPrivateProfileInt(section, "FruitSubPointSuccessRate_AL3", 0, path);
 }
 
 void CServerInfo::ReadCustomInfo(char* section, char* path) // OK
@@ -2247,45 +1301,15 @@ void CServerInfo::ReadEventInfo(char* section, char* path) // OK
 
 	this->m_DevilSquareMaxUser = GetPrivateProfileInt(section, "DevilSquareMaxUser", 0, path);
 
-#if(GAMESERVER_UPDATE>=501)
-
-	this->m_DoubleGoerEvent = GetPrivateProfileInt(section, "DoubleGoerEvent", 0, path);
-
-	this->m_DoubleGoerDifficultRate = GetPrivateProfileInt(section, "DoubleGoerDifficultRate", 0, path);
-
-#endif
-
 	this->m_IllusionTempleEvent = GetPrivateProfileInt(section, "IllusionTempleEvent", 0, path);
 
 	this->m_IllusionTempleMinUser = GetPrivateProfileInt(section, "IllusionTempleMinUser", 0, path);
 
 	this->m_IllusionTempleRewardFenrirRate = GetPrivateProfileInt(section, "IllusionTempleRewardFenrirRate", 0, path);
-
-#if(GAMESERVER_UPDATE>=501)
-
-	this->m_ImperialGuardianEvent = GetPrivateProfileInt(section, "ImperialGuardianEvent", 0, path);
-
-	this->m_ImperialGuardianDifficultRate = GetPrivateProfileInt(section, "ImperialGuardianDifficultRate", 0, path);
-
-#endif
-
+	
 	this->m_InvasionManagerSwitch = GetPrivateProfileInt(section, "InvasionManagerSwitch", 0, path);
 
 	this->m_KanturuEvent = GetPrivateProfileInt(section, "KanturuEvent", 0, path);
-
-#if(GAMESERVER_UPDATE>=402)
-
-	this->m_MossMerchantEvent = GetPrivateProfileInt(section, "MossMerchantEvent", 0, path);
-
-	this->m_MossMerchantEventTime = GetPrivateProfileInt(section, "MossMerchantEventTime", 0, path);
-
-#endif
-
-#if(GAMESERVER_UPDATE>=401)
-
-	this->m_RaklionEvent = GetPrivateProfileInt(section, "RaklionEvent", 0, path);
-
-#endif
 }
 
 void CServerInfo::ReadHackInfo(char* section, char* path) // OK

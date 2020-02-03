@@ -13,11 +13,11 @@ ServerMaxUserNumber = 1000
 ;==================================================
 ; Connection Settings
 ;==================================================
-DataServerAddress = 127.0.0.1
+DataServerAddress = 192.168.254.7
 DataServerPort = 55960
-JoinServerAddress = 127.0.0.1
+JoinServerAddress = 192.168.254.7
 JoinServerPort = 55970
-ConnectServerAddress = 127.0.0.1
+ConnectServerAddress = 192.168.254.7
 ConnectServerPort = 55557
 
 ;==================================================

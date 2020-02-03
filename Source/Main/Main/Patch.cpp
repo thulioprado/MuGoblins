@@ -80,9 +80,9 @@ bool Patch()
 	// Conexão
 	//
 	Memory::Change<WORD>(0x6C41BC, 44405);							// ConnectServer Porta
-	Memory::Change<const char*>(0x6B6694, "25.42.153.247");			// ConnectServer IP
-	Memory::Change<const char*>(0x6B7248, "2274:");					// Version
-	Memory::Change<const char*>(0x6B7250, "TbYehR2hFUPBKgZj");		// Serial
+	Memory::Change<const char*>(0x6B6694, "192.168.254.7");			// ConnectServer IP
+	Memory::Change<const char*>(0x6B7248, "2248;");					// Version
+	Memory::Change<const char*>(0x6B7250, "1111111111111111");		// Serial
 	Memory::Change<BYTE>(0x4E0F1B, 0xEB);							// Liberar conexão com ip local
 
 	//
@@ -294,6 +294,11 @@ bool Patch()
 	// Correção ao mover item para o baú com clique direito do mouse
 	//
 	Memory::Change<std::vector<BYTE>>(0x5B7985, {0xE8, 0x26, 0x12, 0x09, 0x00, 0x84, 0xC0, 0x74, 0x33, 0xC7, 0x05, 0x48, 0xC8, 0x88, 0x07});
+	
+	//
+	// Melhoria na camera no mapa do siege
+	//
+	//Memory::Change<float>(0x5E9CFE, 12000.f);
 
 	return true;
 }

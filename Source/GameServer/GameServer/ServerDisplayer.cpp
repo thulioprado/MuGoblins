@@ -49,7 +49,7 @@ void CServerDisplayer::Init(HWND hWnd) // OK
 	gLog.AddLog(gServerInfo.m_WriteConnectLog,"CONNECT_LOG");
 	gLog.AddLog(gServerInfo.m_WriteHackLog,"HACK_LOG");
 	gLog.AddLog(gServerInfo.m_WriteChaosMixLog,"CHAOS_MIX_LOG");
-	gLog.AddLog(gServerInfo.m_WriteCashShopLog, "SCRIPT_LOG");
+	gLog.AddLog(1, "SCRIPT_LOG");
 }
 
 void CServerDisplayer::Run() // OK
@@ -163,4 +163,19 @@ void CServerDisplayer::LogAddText(eLogColor color,char* text,int size) // OK
 	this->m_count = (((++this->m_count)>=MAX_LOG_TEXT_LINE)?0:this->m_count);
 
 	gLog.Output(LOG_GENERAL,"%s",&text[9]);
+}
+
+void CServerDisplayer::ScriptLogColor(eLogColor color, char* text, int size) // OK
+{
+	size = ((size >= MAX_LOG_TEXT_SIZE) ? (MAX_LOG_TEXT_SIZE - 1) : size);
+
+	memset(&this->m_log[this->m_count].text, 0, sizeof(this->m_log[this->m_count].text));
+
+	memcpy(&this->m_log[this->m_count].text, text, size);
+
+	this->m_log[this->m_count].color = color;
+
+	this->m_count = (((++this->m_count) >= MAX_LOG_TEXT_LINE) ? 0 : this->m_count);
+
+	gLog.Output(LOG_SCRIPT, "%s", &text[9]);
 }

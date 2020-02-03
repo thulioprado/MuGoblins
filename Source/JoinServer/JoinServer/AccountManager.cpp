@@ -147,5 +147,6 @@ long CAccountManager::GetAccountCount() // OK
 
 	this->m_critical.unlock();
 
+
 	return AccountCount;
 }
