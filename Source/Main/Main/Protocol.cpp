@@ -18,7 +18,7 @@ CProtocol::~CProtocol()
 
 void CProtocol::Load()
 {
-	//Memory::Call(0x4DB63D, this->Core);
+	Memory::Call(0x4DB63D, this->Core);
 }
 
 int CProtocol::Core(DWORD Protocol, BYTE* Data, int Size, int Index)
